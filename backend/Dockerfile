@@ -23,4 +23,4 @@ ENV PORT=3001
 EXPOSE ${PORT}
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \
   CMD wget -qO- http://localhost:${PORT}/health || exit 1
-CMD ["node", "dist/main.js"]
+CMD ["node", "dist/src/main.js"]

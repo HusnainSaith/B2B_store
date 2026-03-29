@@ -115,7 +115,7 @@ jobs:
 
             # Run database migrations (one-off container)
             echo "Running database migrations..."
-            docker compose run --rm backend npx typeorm migration:run -d dist/config/data-source.js
+            docker compose run --rm backend npx typeorm migration:run -d dist/src/config/data-source.js
 
             # Start all services
             docker compose up -d
