@@ -18,6 +18,7 @@ COPY --from=build /app/package-lock.json ./
 RUN npm ci --omit=dev
 
 USER appuser
+ENV NODE_ENV=production
 ENV PORT=3001
 EXPOSE ${PORT}
 HEALTHCHECK --interval=30s --timeout=5s --start-period=30s --retries=3 \

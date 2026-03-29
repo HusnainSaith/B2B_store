@@ -6,7 +6,6 @@ dist
 *.md
 test
 test_scripts
-seeds
 .vscode
 .idea
 *.log

@@ -1,0 +1,135 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Cache npm
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-npm-
+
+      - name: Build Customer Portal
+        working-directory: frontend/customer-portal
+        run: npm ci && npm run build
+        env:
+          VITE_API_BASE_URL: https://api.zaroox.com
+          VITE_APP_NAME: ShopVerse
+
+      - name: Build Admin Portal
+        working-directory: frontend/admin-portal
+        run: npm ci && npm run build
+        env:
+          VITE_API_BASE_URL: https://api.zaroox.com
+          VITE_APP_NAME: Admin Portal
+
+      - name: Build Seller Portal
+        working-directory: frontend/seller-portal
+        run: npm ci && npm run build
+        env:
+          VITE_API_BASE_URL: https://api.zaroox.com
+          VITE_APP_NAME: Seller Portal
+
+      - name: Package deployment
+        run: |
+          mkdir -p deploy-pkg/frontends
+          cp -r frontend/customer-portal/dist deploy-pkg/frontends/customer-portal
+          cp -r frontend/admin-portal/dist deploy-pkg/frontends/admin-portal
+          cp -r frontend/seller-portal/dist deploy-pkg/frontends/seller-portal
+          rsync -a \
+            --exclude=node_modules --exclude=dist --exclude='.env*' \
+            --exclude=test --exclude=test_scripts --exclude=coverage \
+            backend/ deploy-pkg/backend/
+          cp docker-compose.yml deploy-pkg/
+          tar -czf deploy.tar.gz -C deploy-pkg .
+
+      - name: Upload to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          source: deploy.tar.gz
+          target: /tmp
+
+      - name: Deploy on server
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DOTENV: ${{ secrets.PRODUCTION_ENV }}
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
+          envs: DOTENV
+          command_timeout: 10m
+          script: |
+            set -e
+
+            APP_DIR=$HOME/zerox-store
+
+            # Extract deployment package
+            mkdir -p /tmp/zerox-deploy
+            tar -xzf /tmp/deploy.tar.gz -C /tmp/zerox-deploy
+
+            # Write production environment file
+            mkdir -p $APP_DIR
+            printf '%s\n' "$DOTENV" > $APP_DIR/.env
+            chmod 600 $APP_DIR/.env
+
+            # Deploy frontend assets
+            sudo rsync -a --delete /tmp/zerox-deploy/frontends/customer-portal/ /var/www/customer-portal/
+            sudo rsync -a --delete /tmp/zerox-deploy/frontends/admin-portal/ /var/www/admin-portal/
+            sudo rsync -a --delete /tmp/zerox-deploy/frontends/seller-portal/ /var/www/seller-portal/
+
+            # Deploy backend source + compose file
+            rsync -a --delete /tmp/zerox-deploy/backend/ $APP_DIR/backend/
+            cp /tmp/zerox-deploy/docker-compose.yml $APP_DIR/docker-compose.yml
+
+            # Build and deploy
+            cd $APP_DIR
+            docker compose build backend
+
+            # Ensure DB and Redis are running
+            docker compose up -d postgres redis
+            sleep 5
+
+            # Run database migrations (one-off container)
+            echo "Running database migrations..."
+            docker compose run --rm backend npx typeorm migration:run -d dist/config/data-source.js
+
+            # Start all services
+            docker compose up -d
+
+            # Cleanup
+            rm -rf /tmp/zerox-deploy /tmp/deploy.tar.gz
+
+            # Health check
+            echo "Waiting for backend to start..."
+            sleep 10
+            if curl -sf http://127.0.0.1:3001/health > /dev/null; then
+              echo "Deployment successful - backend is healthy"
+            else
+              echo "ERROR: Backend health check failed"
+              docker compose logs --tail=30 backend
+              exit 1
+            fi
