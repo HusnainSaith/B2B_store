@@ -13,9 +13,9 @@ export const AppDataSource = new DataSource({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE || 'postgres',
   entities: isCompiled
-    ? ['dist/modules/**/entities/*.entity.js']
+    ? ['dist/src/modules/**/entities/*.entity.js']
     : ['src/modules/**/entities/*.entity.ts'],
-  migrations: isCompiled ? ['dist/migrations/*.js'] : ['src/migrations/*.ts'],
+  migrations: isCompiled ? ['dist/src/migrations/*.js'] : ['src/migrations/*.ts'],
   synchronize: false,
   logging: process.env.TYPEORM_LOGGING === 'true',
   namingStrategy: new SnakeNamingStrategy(),
