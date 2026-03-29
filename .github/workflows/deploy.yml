@@ -33,21 +33,21 @@ jobs:
         working-directory: frontend/customer-portal
         run: npm ci && npm run build
         env:
-          VITE_API_BASE_URL: https://api.zaroox.com
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
           VITE_APP_NAME: ShopVerse
 
       - name: Build Admin Portal
         working-directory: frontend/admin-portal
         run: npm ci && npm run build
         env:
-          VITE_API_BASE_URL: https://api.zaroox.com
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
           VITE_APP_NAME: Admin Portal
 
       - name: Build Seller Portal
         working-directory: frontend/seller-portal
         run: npm ci && npm run build
         env:
-          VITE_API_BASE_URL: https://api.zaroox.com
+          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
           VITE_APP_NAME: Seller Portal
 
       - name: Package deployment
@@ -127,7 +127,7 @@ jobs:
             echo "Waiting for backend to start..."
             sleep 10
             if curl -sf http://127.0.0.1:3001/health > /dev/null; then
-              echo "Deployment successful - backend is healthy"
+              echo "Deployment successful — backend is healthy"
             else
               echo "ERROR: Backend health check failed"
               docker compose logs --tail=30 backend
