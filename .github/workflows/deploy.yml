@@ -61,6 +61,8 @@ jobs:
             --exclude=test --exclude=test_scripts --exclude=coverage \
             backend/ deploy-pkg/backend/
           cp docker-compose.yml deploy-pkg/
+          mkdir -p deploy-pkg/nginx
+          cp deploy/nginx/zerox.conf deploy-pkg/nginx/zerox.conf
           tar -czf deploy.tar.gz -C deploy-pkg .
 
       - name: Upload to server
@@ -100,6 +102,11 @@ jobs:
             sudo rsync -a --delete /tmp/zerox-deploy/frontends/customer-portal/ /var/www/customer-portal/
             sudo rsync -a --delete /tmp/zerox-deploy/frontends/admin-portal/ /var/www/admin-portal/
             sudo rsync -a --delete /tmp/zerox-deploy/frontends/seller-portal/ /var/www/seller-portal/
+
+            # Deploy nginx config
+            sudo cp /tmp/zerox-deploy/nginx/zerox.conf /etc/nginx/sites-available/zerox.conf
+            sudo ln -sf /etc/nginx/sites-available/zerox.conf /etc/nginx/sites-enabled/
+            sudo nginx -t && sudo systemctl reload nginx
 
             # Deploy backend source + compose file
             rsync -a --delete /tmp/zerox-deploy/backend/ $APP_DIR/backend/
