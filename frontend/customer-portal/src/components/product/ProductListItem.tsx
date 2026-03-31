@@ -19,20 +19,20 @@ export function ProductListItem({ product, onAddToCart, onToggleWishlist, isWish
   const discountPercent = displayPrice < product.basePrice ? calculateDiscount(product.basePrice, displayPrice) : null
 
   return (
-    <div className="bg-card rounded-xl border border-border p-4 flex gap-4 hover:shadow-card transition-shadow">
+    <div className="bg-card rounded-2xl border border-border p-5 flex gap-5 hover:border-primary/20 hover:shadow-[var(--shadow-card-hover)] transition-all duration-300">
       {/* Image */}
-      <Link to={`/products/${product.slug}`} className="shrink-0 w-[180px] h-[180px] bg-background rounded overflow-hidden">
+      <Link to={`/products/${product.slug}`} className="shrink-0 w-[180px] h-[180px] bg-surface rounded-xl overflow-hidden">
         {primaryImage ? (
-          <img src={primaryImage.url} alt={primaryImage.altText ?? product.name} className="h-full w-full object-contain" loading="lazy" />
+          <img src={primaryImage.url} alt={primaryImage.altText ?? product.name} className="h-full w-full object-cover" loading="lazy" />
         ) : (
-          <div className="h-full w-full flex items-center justify-center text-text-secondary text-sm">No image</div>
+          <div className="h-full w-full flex items-center justify-center text-text-muted text-sm">No image</div>
         )}
       </Link>
 
       {/* Content */}
       <div className="flex-1 min-w-0 flex flex-col">
         <Link to={`/products/${product.slug}`}>
-          <h3 className="text-base font-medium text-text-primary hover:text-primary-hover line-clamp-2 mb-1">
+          <h3 className="text-base font-semibold text-text-primary hover:text-primary line-clamp-2 mb-1.5 transition-colors">
             {product.name}
           </h3>
         </Link>
@@ -44,7 +44,7 @@ export function ProductListItem({ product, onAddToCart, onToggleWishlist, isWish
         )}
 
         <div className="flex items-baseline gap-2 mb-2">
-          <span className="text-xl font-bold text-danger">{formatPrice(displayPrice)}</span>
+          <span className="text-xl font-bold text-text-primary">{formatPrice(displayPrice)}</span>
           {discountPercent && discountPercent > 0 && (
             <>
               <span className="text-sm text-text-secondary line-through">{formatPrice(product.basePrice)}</span>
@@ -58,8 +58,8 @@ export function ProductListItem({ product, onAddToCart, onToggleWishlist, isWish
         )}
 
         <div className="mt-auto flex items-center gap-2">
-          <Button size="sm" onClick={onAddToCart}>
-            <ShoppingCart className="h-4 w-4 mr-1" /> Add to Cart
+          <Button size="sm" onClick={onAddToCart} className="rounded-xl">
+            <ShoppingCart className="h-4 w-4 mr-1.5" /> Add to Cart
           </Button>
           <button
             onClick={onToggleWishlist}

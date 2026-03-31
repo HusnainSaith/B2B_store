@@ -52,12 +52,12 @@ export function FilterSidebar() {
   ]
 
   return (
-    <aside className="w-full bg-card rounded-xl border border-border p-4">
-      <h2 className="font-bold text-base text-text-primary mb-4">Filters</h2>
+    <aside className="w-full bg-card rounded-2xl border border-border p-5">
+      <h2 className="font-bold text-base text-text-primary mb-5">Filters</h2>
 
       {groups.map((group, i) => (
         <div key={group.key}>
-          {i > 0 && <Separator className="my-3" />}
+          {i > 0 && <Separator className="my-4" />}
           <button
             onClick={() => toggleExpand(group.key)}
             className="flex items-center justify-between w-full text-left py-1 cursor-pointer"
@@ -67,9 +67,9 @@ export function FilterSidebar() {
           </button>
 
           {group.open && group.key === 'category' && (
-            <div className="mt-2 space-y-1.5 max-h-[200px] overflow-y-auto">
+            <div className="mt-3 space-y-2.5 max-h-[200px] overflow-y-auto">
               {categories.map((cat) => (
-                <label key={cat.id} className="flex items-center gap-2 text-sm text-text-primary cursor-pointer hover:text-primary-hover">
+                <label key={cat.id} className="flex items-center gap-2.5 text-sm text-text-primary cursor-pointer hover:text-primary-hover">
                   <Checkbox
                     checked={selectedCategory === cat.id}
                     onCheckedChange={() => toggleSingle('categoryId', cat.id, selectedCategory)}
@@ -81,9 +81,9 @@ export function FilterSidebar() {
           )}
 
           {group.open && group.key === 'brand' && (
-            <div className="mt-2 space-y-1.5 max-h-[200px] overflow-y-auto">
+            <div className="mt-3 space-y-2.5 max-h-[200px] overflow-y-auto">
               {brands.map((brand) => (
-                <label key={brand.id} className="flex items-center gap-2 text-sm text-text-primary cursor-pointer hover:text-primary-hover">
+                <label key={brand.id} className="flex items-center gap-2.5 text-sm text-text-primary cursor-pointer hover:text-primary-hover">
                   <Checkbox
                     checked={selectedBrand === brand.id}
                     onCheckedChange={() => toggleSingle('brandId', brand.id, selectedBrand)}
@@ -95,22 +95,22 @@ export function FilterSidebar() {
           )}
 
           {group.open && group.key === 'price' && (
-            <div className="mt-2 flex items-center gap-2">
+            <div className="mt-3 flex items-center gap-2">
               <input
                 type="number"
                 placeholder="Min"
                 value={minPrice}
                 onChange={(e) => updateFilter('minPrice', e.target.value)}
-                className="w-full border border-border rounded px-2 py-1.5 text-sm focus:border-primary focus:outline-none"
+                className="w-full border border-border rounded-lg bg-surface px-3 py-2 text-sm text-text-primary focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all"
                 min={0}
               />
-              <span className="text-text-secondary">–</span>
+              <span className="text-text-muted font-medium">–</span>
               <input
                 type="number"
                 placeholder="Max"
                 value={maxPrice}
                 onChange={(e) => updateFilter('maxPrice', e.target.value)}
-                className="w-full border border-border rounded px-2 py-1.5 text-sm focus:border-primary focus:outline-none"
+                className="w-full border border-border rounded-lg bg-surface px-3 py-2 text-sm text-text-primary focus:border-primary focus:ring-2 focus:ring-primary/15 focus:outline-none transition-all"
                 min={0}
               />
             </div>
