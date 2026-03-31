@@ -359,6 +359,17 @@ async function seed() {
     console.log(`  ✅ Store: ${store.id}\n`);
 
     // ──────────────────────────────────────────────────────────────────
+    // 1b. Upsert default warehouse for inventory
+    // ──────────────────────────────────────────────────────────────────
+    const [warehouse] = await qr.query(
+      `INSERT INTO warehouses (code, name, line1, city, country, is_active)
+       VALUES ('WH-DEFAULT', 'Default Warehouse', '123 Market Street', 'Lahore', 'Pakistan', true)
+       ON CONFLICT (code) DO UPDATE SET is_active = true, updated_at = NOW()
+       RETURNING id`,
+    );
+    console.log(`  ✅ Warehouse: ${warehouse.id}\n`);
+
+    // ──────────────────────────────────────────────────────────────────
     // 2. Insert categories, products, and images
     // ──────────────────────────────────────────────────────────────────
     const catCount = CATEGORIES.length;
@@ -406,12 +417,21 @@ async function seed() {
         const productId = prodRow.id;
         totalProducts++;
 
-        // Default variant with sku + stock
+        // Default variant with sku
+        const [variant] = await qr.query(
+          `INSERT INTO product_variants (product_id, sku, price, is_active)
+           VALUES ($1, $2, $3, true)
+           ON CONFLICT (sku) DO UPDATE SET price = $3, is_active = true
+           RETURNING id`,
+          [productId, sku, prod.price],
+        );
+
+        // Inventory record for this variant
         await qr.query(
-          `INSERT INTO product_variants (product_id, sku, price, stock, is_active)
-           VALUES ($1, $2, $3, $4, true)
-           ON CONFLICT (sku) DO UPDATE SET price = $3, stock = $4, is_active = true`,
-          [productId, sku, prod.price, prod.stock],
+          `INSERT INTO inventory (warehouse_id, variant_id, qty_on_hand, qty_reserved)
+           VALUES ($1, $2, $3, 0)
+           ON CONFLICT (warehouse_id, variant_id) DO UPDATE SET qty_on_hand = $3, updated_at = NOW()`,
+          [warehouse.id, variant.id, prod.stock],
         );
 
         // Images (5 per product)
