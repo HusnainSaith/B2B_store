@@ -1,53 +1,61 @@
 import { Link } from 'react-router-dom'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Sparkles } from 'lucide-react'
 import { ProductCard } from '@/components/product/ProductCard'
 import type { Product } from '@/types'
-import { Skeleton } from '@/components/ui/skeleton'
 
 interface FeaturedSectionProps {
   title: string
   products: Product[]
   viewAllLink?: string
   loading?: boolean
+  icon?: React.ReactNode
+  subtitle?: string
 }
 
-export function FeaturedSection({ title, products, viewAllLink, loading }: FeaturedSectionProps) {
+export function FeaturedSection({ title, products, viewAllLink, loading, icon, subtitle }: FeaturedSectionProps) {
   if (!loading && products.length === 0) return null
 
   return (
-    <section className="py-6" aria-label={title}>
+    <section className="py-8 md:py-10" aria-label={title}>
       <div className="container-main">
-        <div className="bg-card rounded-xl border border-border p-4 md:p-6">
-          {/* Header */}
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-xl md:text-2xl font-bold text-text-primary">{title}</h2>
-            {viewAllLink && (
-              <Link to={viewAllLink} className="text-sm text-primary hover:text-primary-hover flex items-center gap-1">
-                See All <ChevronRight className="h-4 w-4" />
-              </Link>
+        {/* Header */}
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            {icon || (
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
+                <Sparkles className="h-5 w-5 text-white" />
+              </div>
             )}
+            <div>
+              <h2 className="text-xl md:text-2xl font-bold text-text-primary tracking-tight">{title}</h2>
+              {subtitle && <p className="text-sm text-text-secondary">{subtitle}</p>}
+            </div>
           </div>
-
-          {/* Grid */}
-          {loading ? (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {Array.from({ length: 5 }).map((_, i) => (
-                <div key={i} className="space-y-3">
-                  <Skeleton className="h-48 w-full" />
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                  <Skeleton className="h-8 w-full" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
+          {viewAllLink && (
+            <Link to={viewAllLink} className="text-sm font-medium text-primary hover:text-primary-hover flex items-center gap-1">
+              View All <ChevronRight className="h-4 w-4" />
+            </Link>
           )}
         </div>
+
+        {/* Grid */}
+        {loading ? (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="animate-pulse">
+                <div className="aspect-square rounded-xl bg-surface mb-3" />
+                <div className="h-4 bg-surface rounded w-3/4 mb-2" />
+                <div className="h-4 bg-surface rounded w-1/2" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+            {products.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )

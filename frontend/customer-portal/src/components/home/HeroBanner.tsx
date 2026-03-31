@@ -13,36 +13,36 @@ const BANNERS = [
     title: 'Mega Sale Season',
     subtitle: 'Up to 70% OFF on Electronics',
     cta: 'Shop Now',
-    link: '/categories/electronics',
-    bgGradient: 'from-[#4F46E5] via-[#6366F1] to-[#818CF8]',
-    textColor: 'text-white',
+    link: '/products',
+    image: 'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=1400&h=600&fit=crop&auto=format&q=80',
+    gradient: 'from-black/70 via-black/40 to-transparent',
   },
   {
     id: 2,
     title: 'New Fashion Arrivals',
     subtitle: 'Trendy styles at unbeatable prices',
-    cta: 'Explore',
-    link: '/categories/fashion',
-    bgGradient: 'from-[#0F172A] via-[#1E293B] to-[#334155]',
-    textColor: 'text-white',
+    cta: 'Explore Collection',
+    link: '/products',
+    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400&h=600&fit=crop&auto=format&q=80',
+    gradient: 'from-black/70 via-black/40 to-transparent',
   },
   {
     id: 3,
     title: 'Home & Living Sale',
     subtitle: 'Transform your space — Starting Rs. 499',
     cta: 'Discover',
-    link: '/categories/home-living',
-    bgGradient: 'from-[#059669] via-[#10B981] to-[#34D399]',
-    textColor: 'text-white',
+    link: '/products',
+    image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1400&h=600&fit=crop&auto=format&q=80',
+    gradient: 'from-black/70 via-black/40 to-transparent',
   },
   {
     id: 4,
-    title: 'Flash Sale Live Now! ⚡',
-    subtitle: 'Limited time deals — Don\'t miss out',
+    title: 'Flash Deals Live Now',
+    subtitle: 'Limited time offers — Don\'t miss out',
     cta: 'View Deals',
     link: '/flash-sales',
-    bgGradient: 'from-[#7C3AED] via-[#8B5CF6] to-[#A78BFA]',
-    textColor: 'text-white',
+    image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1400&h=600&fit=crop&auto=format&q=80',
+    gradient: 'from-black/70 via-black/40 to-transparent',
   },
 ]
 
@@ -68,17 +68,28 @@ export function HeroBanner() {
         <div className="flex">
           {BANNERS.map((banner) => (
             <div key={banner.id} className="flex-[0_0_100%] min-w-0">
-              <div className={cn('h-[300px] md:h-[400px] lg:h-[480px] bg-gradient-to-r flex items-center', banner.bgGradient)}>
-                <div className="container-main w-full">
-                  <div className="max-w-xl">
-                    <h2 className={cn('text-3xl md:text-5xl font-bold mb-3 leading-tight', banner.textColor)}>
+              <div className="relative h-[280px] sm:h-[380px] md:h-[440px] lg:h-[520px] overflow-hidden">
+                {/* Background Image */}
+                <img
+                  src={banner.image}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover"
+                  loading={banner.id === 1 ? 'eager' : 'lazy'}
+                />
+                {/* Gradient Overlay */}
+                <div className={cn('absolute inset-0 bg-gradient-to-r', banner.gradient)} />
+
+                {/* Content */}
+                <div className="container-main relative z-10 h-full flex items-center">
+                  <div className="max-w-lg">
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 leading-[1.1] tracking-tight">
                       {banner.title}
                     </h2>
-                    <p className={cn('text-lg md:text-xl mb-6 opacity-90', banner.textColor)}>
+                    <p className="text-base sm:text-lg md:text-xl text-white/80 mb-6 md:mb-8 max-w-md">
                       {banner.subtitle}
                     </p>
                     <Link to={banner.link}>
-                      <Button size="lg" variant="secondary" className="text-base font-bold px-8">
+                      <Button size="lg" className="text-sm md:text-base font-semibold px-8 h-12 rounded-xl bg-white text-gray-900 hover:bg-white/90 shadow-lg">
                         {banner.cta}
                       </Button>
                     </Link>
@@ -93,25 +104,28 @@ export function HeroBanner() {
       {/* Navigation Arrows */}
       <button
         onClick={scrollPrev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 h-16 w-10 bg-card/80 hover:bg-card rounded flex items-center justify-center shadow-md transition-colors cursor-pointer"
+        className="absolute left-3 md:left-6 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all cursor-pointer border border-white/10"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="h-6 w-6 text-text-primary" />
+        <ChevronLeft className="h-5 w-5 md:h-6 md:w-6 text-white" />
       </button>
       <button
         onClick={scrollNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 h-16 w-10 bg-card/80 hover:bg-card rounded flex items-center justify-center shadow-md transition-colors cursor-pointer"
+        className="absolute right-3 md:right-6 top-1/2 -translate-y-1/2 h-10 w-10 md:h-12 md:w-12 bg-white/10 backdrop-blur-md hover:bg-white/20 rounded-full flex items-center justify-center transition-all cursor-pointer border border-white/10"
         aria-label="Next slide"
       >
-        <ChevronRight className="h-6 w-6 text-text-primary" />
+        <ChevronRight className="h-5 w-5 md:h-6 md:w-6 text-white" />
       </button>
 
       {/* Dots */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2">
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-2">
         {BANNERS.map((_, index) => (
           <button
             key={index}
-            className={cn('carousel-dot', selectedIndex === index && 'active')}
+            className={cn(
+              'h-2 rounded-full transition-all duration-300 cursor-pointer',
+              selectedIndex === index ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/60',
+            )}
             onClick={() => emblaApi?.scrollTo(index)}
             aria-label={`Go to slide ${index + 1}`}
           />

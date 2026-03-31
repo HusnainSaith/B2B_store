@@ -40,7 +40,7 @@ export function CategoryNav() {
         {categories.map((cat) => (
           <Link
             key={cat.id}
-            to={`/categories/${cat.slug}`}
+            to={`/products?categoryId=${cat.id}`}
             className="px-3 h-full flex items-center text-text-secondary hover:text-text-primary rounded-md transition-colors whitespace-nowrap shrink-0"
             onMouseEnter={() => {
               setActiveMegaMenuCategory(cat.id)

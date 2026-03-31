@@ -48,12 +48,14 @@ function toPaginated<T>(data: unknown, params?: { page?: number; limit?: number 
     return { data, total: data.length, page: params?.page ?? 1, limit: params?.limit ?? data.length, totalPages: 1 }
   }
   const obj = data as Record<string, unknown>
-  if (obj && Array.isArray(obj.data)) {
+  // Backend returns { items, total, page, limit, totalPages } after interceptor unwrap
+  const items = (obj?.items ?? obj?.data) as T[] | undefined
+  if (obj && Array.isArray(items)) {
     return {
-      data: obj.data as T[],
-      total: (obj.total as number) ?? obj.data.length,
+      data: items,
+      total: (obj.total as number) ?? items.length,
       page: (obj.page as number) ?? params?.page ?? 1,
-      limit: (obj.limit as number) ?? params?.limit ?? obj.data.length,
+      limit: (obj.limit as number) ?? params?.limit ?? items.length,
       totalPages: (obj.totalPages as number) ?? 1,
     }
   }
@@ -63,6 +65,7 @@ function toPaginated<T>(data: unknown, params?: { page?: number; limit?: number 
 function toArray<T>(data: unknown): T[] {
   if (Array.isArray(data)) return data
   const obj = data as Record<string, unknown>
+  if (obj && Array.isArray(obj.items)) return obj.items as T[]
   if (obj && Array.isArray(obj.data)) return obj.data as T[]
   return []
 }

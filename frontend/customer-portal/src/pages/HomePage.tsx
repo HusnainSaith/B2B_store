@@ -4,29 +4,78 @@ import { HeroBanner } from '@/components/home/HeroBanner'
 import { CategoryStrip } from '@/components/home/CategoryStrip'
 import { FlashSaleSection } from '@/components/home/FlashSaleSection'
 import { FeaturedSection } from '@/components/home/FeaturedSection'
+import { TrendingCarousel } from '@/components/home/TrendingCarousel'
+import { CategoryShowcase } from '@/components/home/CategoryShowcase'
+import { VendorShowcase } from '@/components/home/VendorShowcase'
 import { PromoBannerRow } from '@/components/home/PromoBannerRow'
 import { BrandStrip } from '@/components/home/BrandStrip'
 import { AppDownloadBanner } from '@/components/home/AppDownloadBanner'
-import { productsApi } from '@/services/api'
-import { getMockProducts } from '@/hooks/useMockData'
-import type { Product } from '@/types'
+import { productsApi, categoriesApi, storesApi } from '@/services/api'
+import { getMockProducts, getMockCategories, getMockStores } from '@/hooks/useMockData'
+import type { Product, Category, Store } from '@/types'
+import { Package } from 'lucide-react'
 
 export default function HomePage() {
   const [featured, setFeatured] = useState<Product[]>([])
   const [newArrivals, setNewArrivals] = useState<Product[]>([])
+  const [trending, setTrending] = useState<Product[]>([])
+  const [categories, setCategories] = useState<Category[]>([])
+  const [vendors, setVendors] = useState<Store[]>([])
+  const [categoryProducts, setCategoryProducts] = useState<Record<string, Product[]>>({})
   const [loadingFeatured, setLoadingFeatured] = useState(true)
   const [loadingNew, setLoadingNew] = useState(true)
+  const [loadingTrending, setLoadingTrending] = useState(true)
+  const [loadingVendors, setLoadingVendors] = useState(true)
 
   useEffect(() => {
+    // Featured products
     productsApi.list({ limit: 10 })
       .then((res) => setFeatured(res.data))
       .catch(() => setFeatured(getMockProducts({ limit: 10 }).data))
       .finally(() => setLoadingFeatured(false))
 
+    // New arrivals (page 2 for different set)
     productsApi.list({ limit: 10, page: 2 })
       .then((res) => setNewArrivals(res.data))
       .catch(() => setNewArrivals(getMockProducts({ limit: 10, page: 2 }).data))
       .finally(() => setLoadingNew(false))
+
+    // Trending (page 3)
+    productsApi.list({ limit: 15, page: 3 })
+      .then((res) => setTrending(res.data))
+      .catch(() => setTrending(getMockProducts({ limit: 15 }).data))
+      .finally(() => setLoadingTrending(false))
+
+    // Categories
+    categoriesApi.list()
+      .then((cats) => {
+        const top = cats.filter((c) => c.isActive && !c.parentId).slice(0, 4)
+        setCategories(top)
+        // Fetch products per category
+        top.forEach((cat) => {
+          productsApi.list({ categoryId: cat.id, limit: 5 })
+            .then((res) => {
+              setCategoryProducts((prev) => ({ ...prev, [cat.id]: res.data }))
+            })
+            .catch(() => {
+              // fallback
+              setCategoryProducts((prev) => ({ ...prev, [cat.id]: getMockProducts({ categoryId: cat.id, limit: 5 }).data }))
+            })
+        })
+      })
+      .catch(() => {
+        const mock = getMockCategories().slice(0, 4)
+        setCategories(mock)
+        mock.forEach((cat) => {
+          setCategoryProducts((prev) => ({ ...prev, [cat.id]: getMockProducts({ categoryId: cat.id, limit: 5 }).data }))
+        })
+      })
+
+    // Vendors
+    storesApi.list()
+      .then((s) => setVendors(s.filter((v) => v.isActive).slice(0, 4)))
+      .catch(() => setVendors(getMockStores().slice(0, 4)))
+      .finally(() => setLoadingVendors(false))
   }, [])
 
   return (
@@ -35,13 +84,62 @@ export default function HomePage() {
         title="ShopVerse — Your One-Stop Shop"
         description="Discover amazing deals on electronics, fashion, home & living, and more. Shop with confidence at ShopVerse."
       />
+
+      {/* 1. Hero */}
       <HeroBanner />
+
+      {/* 2. Category Strip */}
       <CategoryStrip />
+
+      {/* 3. Flash Sale */}
       <FlashSaleSection />
-      <FeaturedSection title="Featured Products" products={featured} viewAllLink="/products" loading={loadingFeatured} />
+
+      {/* 4. Featured Products */}
+      <FeaturedSection
+        title="Featured Products"
+        subtitle="Handpicked for you"
+        products={featured}
+        viewAllLink="/products"
+        loading={loadingFeatured}
+      />
+
+      {/* 5. Promo Banners */}
       <PromoBannerRow />
-      <FeaturedSection title="New Arrivals" products={newArrivals} viewAllLink="/products?sort=newest" loading={loadingNew} />
+
+      {/* 6. Category Showcases — Bento layout for top categories */}
+      {categories.map((cat, i) => (
+        <CategoryShowcase
+          key={cat.id}
+          category={cat}
+          products={categoryProducts[cat.id] ?? []}
+          layout={i % 2 === 0 ? 'bento' : 'grid'}
+        />
+      ))}
+
+      {/* 7. Trending Carousel */}
+      <TrendingCarousel products={trending} loading={loadingTrending} />
+
+      {/* 8. Top Vendors */}
+      <VendorShowcase vendors={vendors} loading={loadingVendors} />
+
+      {/* 9. New Arrivals */}
+      <FeaturedSection
+        title="New Arrivals"
+        subtitle="Fresh drops you'll love"
+        products={newArrivals}
+        viewAllLink="/products?sort=newest"
+        loading={loadingNew}
+        icon={
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+            <Package className="h-5 w-5 text-white" />
+          </div>
+        }
+      />
+
+      {/* 10. Brands */}
       <BrandStrip />
+
+      {/* 11. App Download */}
       <AppDownloadBanner />
     </>
   )

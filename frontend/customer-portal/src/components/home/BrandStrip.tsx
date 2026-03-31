@@ -4,6 +4,7 @@ import { getMockBrands } from '@/hooks/useMockData'
 import type { Brand } from '@/types'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Link } from 'react-router-dom'
+import { Award } from 'lucide-react'
 
 export function BrandStrip() {
   const [brands, setBrands] = useState<Brand[]>([])
@@ -17,36 +18,44 @@ export function BrandStrip() {
   if (brands.length === 0) return null
 
   return (
-    <section className="py-6" aria-label="Shop by brand">
+    <section className="py-8 md:py-10" aria-label="Shop by brand">
       <div className="container-main">
-        <div className="bg-card rounded-xl border border-border p-6">
-          <h2 className="text-xl font-bold text-text-primary mb-4">Top Brands</h2>
-          <ScrollArea className="w-full">
-            <div className="flex gap-8 items-center pb-2">
-              {brands.map((brand) => (
-                <Link
-                  key={brand.id}
-                  to={`/brands/${brand.slug}`}
-                  className="shrink-0 flex flex-col items-center gap-2"
-                >
+        <div className="flex items-center gap-3 mb-6">
+          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
+            <Award className="h-5 w-5 text-white" />
+          </div>
+          <div>
+            <h2 className="text-xl md:text-2xl font-bold text-text-primary tracking-tight">Top Brands</h2>
+            <p className="text-sm text-text-secondary">Shop from brands you trust</p>
+          </div>
+        </div>
+        <ScrollArea className="w-full">
+          <div className="flex gap-4 items-center pb-2">
+            {brands.map((brand) => (
+              <Link
+                key={brand.id}
+                to={`/products?brandId=${brand.id}`}
+                className="shrink-0 group"
+              >
+                <div className="h-20 w-32 bg-card rounded-xl border border-border flex items-center justify-center px-4 hover:border-primary/30 hover:shadow-[var(--shadow-card-hover)] transition-all duration-300">
                   {brand.logoUrl ? (
                     <img
                       src={brand.logoUrl}
                       alt={brand.name}
-                      className="h-12 w-auto object-contain brand-logo"
+                      className="h-10 w-auto object-contain opacity-60 group-hover:opacity-100 transition-opacity"
                       loading="lazy"
                     />
                   ) : (
-                    <div className="h-12 w-20 bg-surface rounded flex items-center justify-center text-sm font-bold text-text-secondary brand-logo">
+                    <span className="text-sm font-bold text-text-secondary group-hover:text-text-primary transition-colors text-center">
                       {brand.name}
-                    </div>
+                    </span>
                   )}
-                </Link>
-              ))}
-            </div>
-            <ScrollBar orientation="horizontal" />
-          </ScrollArea>
-        </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+          <ScrollBar orientation="horizontal" />
+        </ScrollArea>
       </div>
     </section>
   )
