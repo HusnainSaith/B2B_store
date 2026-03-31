@@ -16,7 +16,7 @@ export function AppDownloadBanner() {
                 <Download className="h-4 w-4" /> Available on iOS & Android
               </div>
               <h2 className="text-2xl md:text-4xl font-bold mb-3 tracking-tight leading-tight">
-                Shop Smarter with<br />the ShopVerse App
+                Shop Smarter with<br />the Zaroox App
               </h2>
               <p className="text-white/80 mb-8 text-base md:text-lg">
                 Get exclusive app-only deals, faster checkout, and real-time order tracking.
@@ -36,7 +36,7 @@ export function AppDownloadBanner() {
                 <div className="w-48 h-80 md:w-56 md:h-96 bg-white/10 backdrop-blur-sm rounded-[2rem] border border-white/20 flex flex-col items-center justify-center p-6 shadow-2xl">
                   <Smartphone className="h-20 w-20 text-white/80 mb-4" />
                   <div className="text-center">
-                    <p className="text-white font-semibold text-sm">ShopVerse</p>
+                    <p className="text-white font-semibold text-sm">Zaroox</p>
                     <p className="text-white/60 text-xs mt-1">Scan to download</p>
                   </div>
                 </div>

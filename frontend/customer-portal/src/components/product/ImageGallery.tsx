@@ -24,7 +24,7 @@ export function ImageGallery({ images, productName }: ImageGalleryProps) {
   }
 
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-3">
       {/* Thumbnails */}
       <div className="flex flex-col gap-2 shrink-0">
         {sorted.map((img, index) => (
@@ -33,18 +33,18 @@ export function ImageGallery({ images, productName }: ImageGalleryProps) {
             onMouseEnter={() => setSelectedIndex(index)}
             onClick={() => setSelectedIndex(index)}
             className={cn(
-              'h-14 w-14 rounded border-2 overflow-hidden bg-card transition-colors cursor-pointer',
-              selectedIndex === index ? 'border-primary' : 'border-border hover:border-text-muted',
+              'h-16 w-16 rounded-xl border-2 overflow-hidden bg-surface transition-all duration-200 cursor-pointer hover:shadow-sm',
+              selectedIndex === index ? 'border-primary shadow-md shadow-primary/10' : 'border-transparent hover:border-border-hover',
             )}
           >
-            <img src={img.url} alt={img.altText ?? `${productName} ${index + 1}`} className="h-full w-full object-contain" />
+            <img src={img.url} alt={img.altText ?? `${productName} ${index + 1}`} className="h-full w-full object-cover" />
           </button>
         ))}
       </div>
 
       {/* Main Image */}
       <div
-        className="flex-1 relative bg-card border border-border rounded-xl overflow-hidden cursor-crosshair"
+        className="flex-1 relative bg-surface rounded-2xl overflow-hidden cursor-crosshair border border-border"
         onMouseEnter={() => setIsZoomed(true)}
         onMouseLeave={() => setIsZoomed(false)}
         onMouseMove={handleMouseMove}
@@ -54,7 +54,7 @@ export function ImageGallery({ images, productName }: ImageGalleryProps) {
             <img
               src={selectedImage.url}
               alt={selectedImage.altText ?? productName}
-              className="h-full w-full object-contain transition-transform duration-200"
+              className="h-full w-full object-cover transition-transform duration-200"
               style={isZoomed ? {
                 transform: 'scale(2)',
                 transformOrigin: `${mousePos.x}% ${mousePos.y}%`,
@@ -62,7 +62,7 @@ export function ImageGallery({ images, productName }: ImageGalleryProps) {
             />
           </div>
         ) : (
-          <div className="aspect-square flex items-center justify-center text-text-secondary">No image</div>
+          <div className="aspect-square flex items-center justify-center text-text-muted">No image</div>
         )}
       </div>
     </div>

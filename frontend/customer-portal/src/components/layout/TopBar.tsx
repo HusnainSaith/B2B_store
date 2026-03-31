@@ -6,7 +6,7 @@ export function TopBar() {
   const { theme, toggleTheme } = useThemeStore()
 
   return (
-    <div className="bg-surface border-b border-border text-xs text-text-secondary">
+    <div className="bg-surface/80 backdrop-blur-sm border-b border-border/50 text-xs text-text-secondary">
       <div className="container-main flex items-center justify-between h-8">
         <div className="flex items-center gap-4">
           <Link to="/" className="flex items-center gap-1 hover:text-primary transition-colors">

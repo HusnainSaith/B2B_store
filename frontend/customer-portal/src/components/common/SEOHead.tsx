@@ -12,7 +12,7 @@ interface SEOHeadProps {
 
 export function SEOHead({ title, description, image, url, type = 'website', jsonLd }: SEOHeadProps) {
   const fullTitle = title ? `${title} | ${APP_NAME}` : APP_NAME
-  const desc = description || 'Discover amazing deals on electronics, fashion, home & living, and more at ShopVerse.'
+  const desc = description || 'Discover amazing deals on electronics, fashion, home & living, and more at Zaroox.'
 
   return (
     <Helmet>

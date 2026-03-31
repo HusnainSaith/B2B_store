@@ -45,21 +45,21 @@ export default function LoginPage() {
   return (
     <>
       <SEOHead title="Sign In" />
-      <div className="text-center mb-6">
+      <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-text-primary tracking-tight">Welcome back</h1>
-        <p className="text-sm text-text-muted mt-1">Sign in to your account</p>
+        <p className="text-sm text-text-muted mt-2">Sign in to continue shopping</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
-          <Label htmlFor="email" className="mb-1.5 block text-text-primary">Email address</Label>
-          <Input id="email" type="email" placeholder="you@example.com" {...register('email')} autoFocus />
-          {errors.email && <p className="text-xs text-danger mt-1">{errors.email.message}</p>}
+          <Label htmlFor="email" className="mb-2 block text-text-primary text-sm font-medium">Email address</Label>
+          <Input id="email" type="email" placeholder="you@example.com" {...register('email')} autoFocus className="h-11 rounded-xl" />
+          {errors.email && <p className="text-xs text-danger mt-1.5">{errors.email.message}</p>}
         </div>
 
         <div>
-          <div className="flex items-center justify-between mb-1.5">
-            <Label htmlFor="password" className="text-text-primary">Password</Label>
+          <div className="flex items-center justify-between mb-2">
+            <Label htmlFor="password" className="text-text-primary text-sm font-medium">Password</Label>
             <Link to={ROUTES.FORGOT_PASSWORD} className="text-xs text-primary hover:text-primary-hover font-medium">
               Forgot password?
             </Link>
@@ -70,6 +70,7 @@ export default function LoginPage() {
               type={showPassword ? 'text' : 'password'}
               placeholder="••••••••"
               {...register('password')}
+              className="h-11 rounded-xl"
             />
             <button
               type="button"
@@ -80,17 +81,17 @@ export default function LoginPage() {
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
-          {errors.password && <p className="text-xs text-danger mt-1">{errors.password.message}</p>}
+          {errors.password && <p className="text-xs text-danger mt-1.5">{errors.password.message}</p>}
         </div>
 
-        <Button type="submit" className="w-full h-11 font-semibold text-base" disabled={loading}>
+        <Button type="submit" className="w-full h-12 font-bold text-sm rounded-xl uppercase tracking-wide shadow-lg shadow-primary/20" disabled={loading}>
           {loading ? 'Signing in…' : 'Sign in'}
         </Button>
       </form>
 
-      <p className="text-sm text-text-muted text-center mt-6">
-        Don't have an account?{' '}
-        <Link to={ROUTES.REGISTER} className="text-primary hover:text-primary-hover font-medium">
+      <p className="text-sm text-text-muted text-center mt-8">
+        Don’t have an account?{' '}
+        <Link to={ROUTES.REGISTER} className="text-primary hover:text-primary-hover font-semibold">
           Create account
         </Link>
       </p>

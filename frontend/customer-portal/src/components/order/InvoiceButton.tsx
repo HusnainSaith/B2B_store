@@ -22,7 +22,7 @@ export function InvoiceButton({ order }: InvoiceButtonProps) {
     `).join('')
 
     w.document.write(`<!DOCTYPE html><html><head><title>Invoice #${order.id.slice(-8).toUpperCase()}</title></head><body style="font-family:Arial,sans-serif;padding:40px;max-width:800px;margin:0 auto">
-      <h1 style="color:#6366F1;margin-bottom:4px">ShopVerse</h1>
+      <h1 style="color:#6366F1;margin-bottom:4px">Zaroox</h1>
       <h2>Invoice</h2>
       <p><strong>Order:</strong> #${order.id.slice(-8).toUpperCase()}</p>
       <p><strong>Date:</strong> ${new Date(order.createdAt).toLocaleDateString()}</p>

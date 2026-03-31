@@ -54,35 +54,39 @@ export default function CartPage() {
   const subtotal = items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0)
   const discount = coupon ? (coupon.discountType === 'percentage' ? Math.min(subtotal * coupon.discountValue / 100, coupon.maxDiscount ?? Infinity) : coupon.discountValue) : 0
 
-  if (loading) return <div className="flex justify-center py-16"><LoadingSpinner /></div>
+  if (loading) return <div className="flex justify-center py-20"><LoadingSpinner /></div>
 
   return (
     <>
       <SEOHead title="Shopping Cart" />
-      <div className="container-main py-4">
+      <div className="container-main py-6">
         <Breadcrumb items={[{ label: 'Shopping Cart' }]} />
 
         {items.length === 0 ? (
-          <EmptyCart />
+          <div className="mt-6">
+            <EmptyCart />
+          </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-6">
             {/* Items */}
             <div className="lg:col-span-2">
-              <div className="bg-card rounded-xl border border-border p-4">
-                <h1 className="text-xl font-bold text-text-primary mb-4">Shopping Cart ({items.length} items)</h1>
-                {items.map((item) => (
-                  <CartItemRow
-                    key={item.id}
-                    item={item}
-                    onUpdateQuantity={updateQuantity}
-                    onRemove={removeItem}
-                    loading={updating}
-                  />
-                ))}
+              <div className="bg-card rounded-2xl border border-border p-5 sm:p-6">
+                <h1 className="text-xl sm:text-2xl font-bold text-text-primary mb-5">Shopping Cart <span className="text-text-muted font-normal text-base">({items.length} {items.length === 1 ? 'item' : 'items'})</span></h1>
+                <div className="divide-y divide-border">
+                  {items.map((item) => (
+                    <CartItemRow
+                      key={item.id}
+                      item={item}
+                      onUpdateQuantity={updateQuantity}
+                      onRemove={removeItem}
+                      loading={updating}
+                    />
+                  ))}
+                </div>
               </div>
 
               {/* Coupon */}
-              <div className="bg-card rounded-xl border border-border p-4 mt-4">
+              <div className="bg-card rounded-2xl border border-border p-5 sm:p-6 mt-4">
                 <CouponInput
                   onApply={setCoupon}
                   appliedCode={coupon?.code}

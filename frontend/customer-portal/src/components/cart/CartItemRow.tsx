@@ -17,31 +17,31 @@ export function CartItemRow({ item, onUpdateQuantity, onRemove, loading }: CartI
   const attrs = item.variant?.attributes ?? []
 
   return (
-    <div className="flex gap-4 py-4 border-b border-border last:border-0">
+    <div className="flex gap-4 py-5 first:pt-0 last:pb-0">
       {/* Image */}
-      <Link to={product ? `/products/${product.slug}` : '#'} className="shrink-0 w-[120px] h-[120px] bg-background rounded overflow-hidden">
+      <Link to={product ? `/products/${product.slug}` : '#'} className="shrink-0 w-24 h-24 sm:w-28 sm:h-28 bg-surface rounded-xl overflow-hidden">
         {primaryImage ? (
-          <img src={primaryImage.url} alt={product?.name ?? 'Product'} className="h-full w-full object-contain" loading="lazy" />
+          <img src={primaryImage.url} alt={product?.name ?? 'Product'} className="h-full w-full object-cover" loading="lazy" />
         ) : (
-          <div className="h-full w-full flex items-center justify-center text-text-secondary text-xs">No image</div>
+          <div className="h-full w-full flex items-center justify-center text-text-muted text-xs">No image</div>
         )}
       </Link>
 
       {/* Details */}
       <div className="flex-1 min-w-0 flex flex-col">
-        <Link to={product ? `/products/${product.slug}` : '#'} className="text-sm font-medium text-text-primary hover:text-primary-hover line-clamp-2 mb-1">
+        <Link to={product ? `/products/${product.slug}` : '#'} className="text-sm font-semibold text-text-primary hover:text-primary line-clamp-2 mb-1 transition-colors">
           {product?.name ?? 'Product'}
         </Link>
 
         {/* Variant attributes */}
         {attrs.length > 0 && (
-          <p className="text-xs text-text-secondary mb-2">
+          <p className="text-xs text-text-muted mb-2">
             {attrs.map((a) => `${a.attributeKey?.name}: ${a.attributeValue?.displayValue ?? a.attributeValue?.value}`).join(' | ')}
           </p>
         )}
 
         {/* Price */}
-        <div className="text-base font-bold text-danger mb-2">
+        <div className="text-base font-bold text-text-primary mb-2">
           {formatPrice(item.unitPrice)}
         </div>
 
@@ -56,7 +56,7 @@ export function CartItemRow({ item, onUpdateQuantity, onRemove, loading }: CartI
           />
           <button
             onClick={() => onRemove(item.id)}
-            className="text-sm text-primary hover:text-danger hover:underline flex items-center gap-1 cursor-pointer"
+            className="text-xs text-text-muted hover:text-danger flex items-center gap-1 cursor-pointer transition-colors"
             disabled={loading}
           >
             <Trash2 className="h-3.5 w-3.5" /> Remove
@@ -65,7 +65,7 @@ export function CartItemRow({ item, onUpdateQuantity, onRemove, loading }: CartI
       </div>
 
       {/* Subtotal */}
-      <div className="shrink-0 text-right">
+      <div className="shrink-0 text-right hidden sm:block">
         <span className="text-base font-bold text-text-primary">{formatPrice(item.unitPrice * item.quantity)}</span>
       </div>
     </div>

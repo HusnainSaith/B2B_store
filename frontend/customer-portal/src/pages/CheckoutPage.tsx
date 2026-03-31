@@ -94,43 +94,46 @@ export default function CheckoutPage() {
     }
   }
 
-  if (loading) return <div className="flex justify-center py-16"><LoadingSpinner /></div>
+  if (loading) return <div className="flex justify-center py-20"><LoadingSpinner /></div>
 
   return (
     <>
       <SEOHead title="Checkout" />
-      <div className="max-w-3xl mx-auto py-6 px-4">
+      <div className="max-w-3xl mx-auto py-8 px-4">
+        <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight text-center mb-8">Checkout</h1>
         <StepIndicator steps={STEPS} currentStep={currentStep} />
 
-        {currentStep === 0 && (
-          <AddressStep onNext={(addr) => { setAddress(addr); setCurrentStep(1) }} />
-        )}
-        {currentStep === 1 && (
-          <ShippingStep
-            onNext={(method) => { setShippingMethod(method); setCurrentStep(2) }}
-            onBack={() => setCurrentStep(0)}
-          />
-        )}
-        {currentStep === 2 && (
-          <PaymentStep
-            onNext={(method) => { setPaymentMethod(method); setCurrentStep(3) }}
-            onBack={() => setCurrentStep(1)}
-          />
-        )}
-        {currentStep === 3 && address && shippingMethod && (
-          <ReviewStep
-            address={address}
-            shippingMethod={shippingMethod}
-            paymentMethod={paymentMethod}
-            items={items}
-            subtotal={subtotal}
-            discount={0}
-            shippingCost={shippingCost}
-            onConfirm={handlePlaceOrder}
-            onBack={() => setCurrentStep(2)}
-            loading={placing}
-          />
-        )}
+        <div className="bg-card rounded-2xl border border-border p-5 sm:p-8 mt-6">
+          {currentStep === 0 && (
+            <AddressStep onNext={(addr) => { setAddress(addr); setCurrentStep(1) }} />
+          )}
+          {currentStep === 1 && (
+            <ShippingStep
+              onNext={(method) => { setShippingMethod(method); setCurrentStep(2) }}
+              onBack={() => setCurrentStep(0)}
+            />
+          )}
+          {currentStep === 2 && (
+            <PaymentStep
+              onNext={(method) => { setPaymentMethod(method); setCurrentStep(3) }}
+              onBack={() => setCurrentStep(1)}
+            />
+          )}
+          {currentStep === 3 && address && shippingMethod && (
+            <ReviewStep
+              address={address}
+              shippingMethod={shippingMethod}
+              paymentMethod={paymentMethod}
+              items={items}
+              subtotal={subtotal}
+              discount={0}
+              shippingCost={shippingCost}
+              onConfirm={handlePlaceOrder}
+              onBack={() => setCurrentStep(2)}
+              loading={placing}
+            />
+          )}
+        </div>
       </div>
     </>
   )

@@ -7,10 +7,11 @@ export function AuthLayout() {
       <div className="w-full max-w-[440px]">
         <div className="bg-card rounded-2xl shadow-[var(--shadow-modal)] border border-border/60 p-8 md:p-10">
           {/* Logo */}
-          <div className="flex justify-center mb-8">
-            <div className="bg-gradient-to-br from-primary to-primary-hover text-white font-bold text-2xl w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/25">
-              S
+          <div className="flex flex-col items-center mb-8 gap-3">
+            <div className="bg-gradient-to-br from-primary to-secondary text-white font-bold text-2xl w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg shadow-primary/25">
+              Z
             </div>
+            <span className="text-lg font-bold text-text-primary tracking-tight">Zaroox</span>
           </div>
 
           <Outlet />

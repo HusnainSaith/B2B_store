@@ -44,39 +44,40 @@ export default function RegisterPage() {
   return (
     <>
       <SEOHead title="Create Account" />
-      <div className="text-center mb-6">
+      <div className="text-center mb-8">
         <h1 className="text-2xl font-bold text-text-primary tracking-tight">Create your account</h1>
-        <p className="text-sm text-text-muted mt-1">Get started with ShopVerse</p>
+        <p className="text-sm text-text-muted mt-2">Join Zaroox and start shopping</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <Label htmlFor="firstName" className="mb-1.5 block text-text-primary">First Name</Label>
-            <Input id="firstName" placeholder="John" {...register('firstName')} autoFocus />
-            {errors.firstName && <p className="text-xs text-danger mt-1">{errors.firstName.message}</p>}
+            <Label htmlFor="firstName" className="mb-2 block text-text-primary text-sm font-medium">First Name</Label>
+            <Input id="firstName" placeholder="John" {...register('firstName')} autoFocus className="h-11 rounded-xl" />
+            {errors.firstName && <p className="text-xs text-danger mt-1.5">{errors.firstName.message}</p>}
           </div>
           <div>
-            <Label htmlFor="lastName" className="mb-1.5 block text-text-primary">Last Name</Label>
-            <Input id="lastName" placeholder="Doe" {...register('lastName')} />
-            {errors.lastName && <p className="text-xs text-danger mt-1">{errors.lastName.message}</p>}
+            <Label htmlFor="lastName" className="mb-2 block text-text-primary text-sm font-medium">Last Name</Label>
+            <Input id="lastName" placeholder="Doe" {...register('lastName')} className="h-11 rounded-xl" />
+            {errors.lastName && <p className="text-xs text-danger mt-1.5">{errors.lastName.message}</p>}
           </div>
         </div>
 
         <div>
-          <Label htmlFor="email" className="mb-1.5 block text-text-primary">Email address</Label>
-          <Input id="email" type="email" placeholder="you@example.com" {...register('email')} />
-          {errors.email && <p className="text-xs text-danger mt-1">{errors.email.message}</p>}
+          <Label htmlFor="email" className="mb-2 block text-text-primary text-sm font-medium">Email address</Label>
+          <Input id="email" type="email" placeholder="you@example.com" {...register('email')} className="h-11 rounded-xl" />
+          {errors.email && <p className="text-xs text-danger mt-1.5">{errors.email.message}</p>}
         </div>
 
         <div>
-          <Label htmlFor="password" className="mb-1.5 block text-text-primary">Password</Label>
+          <Label htmlFor="password" className="mb-2 block text-text-primary text-sm font-medium">Password</Label>
           <div className="relative">
             <Input
               id="password"
               type={showPassword ? 'text' : 'password'}
               placeholder="Create a password"
               {...register('password')}
+              className="h-11 rounded-xl"
             />
             <button
               type="button"
@@ -87,23 +88,23 @@ export default function RegisterPage() {
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
-          {errors.password && <p className="text-xs text-danger mt-1">{errors.password.message}</p>}
+          {errors.password && <p className="text-xs text-danger mt-1.5">{errors.password.message}</p>}
         </div>
 
         <div>
-          <Label htmlFor="confirmPassword" className="mb-1.5 block text-text-primary">Confirm Password</Label>
-          <Input id="confirmPassword" type="password" placeholder="Re-enter your password" {...register('confirmPassword')} />
-          {errors.confirmPassword && <p className="text-xs text-danger mt-1">{errors.confirmPassword.message}</p>}
+          <Label htmlFor="confirmPassword" className="mb-2 block text-text-primary text-sm font-medium">Confirm Password</Label>
+          <Input id="confirmPassword" type="password" placeholder="Re-enter your password" {...register('confirmPassword')} className="h-11 rounded-xl" />
+          {errors.confirmPassword && <p className="text-xs text-danger mt-1.5">{errors.confirmPassword.message}</p>}
         </div>
 
-        <Button type="submit" className="w-full h-11 font-semibold text-base" disabled={loading}>
+        <Button type="submit" className="w-full h-12 font-bold text-sm rounded-xl uppercase tracking-wide shadow-lg shadow-primary/20" disabled={loading}>
           {loading ? 'Creating account…' : 'Create account'}
         </Button>
       </form>
 
-      <p className="text-sm text-text-muted text-center mt-6">
+      <p className="text-sm text-text-muted text-center mt-8">
         Already have an account?{' '}
-        <Link to={ROUTES.LOGIN} className="text-primary hover:text-primary-hover font-medium">
+        <Link to={ROUTES.LOGIN} className="text-primary hover:text-primary-hover font-semibold">
           Sign in
         </Link>
       </p>

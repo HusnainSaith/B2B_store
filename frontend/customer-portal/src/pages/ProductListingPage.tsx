@@ -59,30 +59,41 @@ export default function ProductListingPage() {
   return (
     <>
       <SEOHead title={search ? `Search: ${search}` : 'All Products'} />
-      <div className="container-main py-4">
+      <div className="container-main py-6">
         <Breadcrumb items={[{ label: 'Products' }]} />
 
-        <div className="flex gap-6 mt-4">
+        {/* Page Header */}
+        {search && (
+          <div className="mt-4 mb-2">
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight">
+              Search results for &ldquo;{search}&rdquo;
+            </h1>
+          </div>
+        )}
+
+        <div className="flex gap-8 mt-4">
           {/* Desktop Sidebar */}
-          <div className="hidden lg:block w-[250px] shrink-0">
-            <FilterSidebar />
+          <div className="hidden lg:block w-[260px] shrink-0">
+            <div className="sticky top-24">
+              <FilterSidebar />
+            </div>
           </div>
 
           {/* Main */}
           <div className="flex-1 min-w-0">
             {/* Toolbar */}
-            <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
-              <div className="flex items-center gap-2">
-                <p className="text-sm text-text-secondary">
-                  {loading ? 'Loading…' : `${total} results`}
-                  {search && <span> for "<strong>{search}</strong>"</span>}
+            <div className="flex items-center justify-between mb-5 gap-4 flex-wrap bg-card rounded-xl border border-border px-4 py-3">
+              <div className="flex items-center gap-3">
+                <p className="text-sm text-text-secondary font-medium">
+                  {loading ? 'Loading…' : <><span className="text-text-primary font-semibold">{total}</span> results</>}
+                  {search && !loading && <span className="text-text-muted"> for &ldquo;{search}&rdquo;</span>}
                 </p>
 
                 {/* Mobile filter toggle */}
                 <Sheet>
                   <SheetTrigger asChild>
-                    <Button variant="outline" size="sm" className="lg:hidden">
-                      <SlidersHorizontal className="h-4 w-4 mr-1" /> Filters
+                    <Button variant="outline" size="sm" className="lg:hidden rounded-lg">
+                      <SlidersHorizontal className="h-4 w-4 mr-1.5" /> Filters
                     </Button>
                   </SheetTrigger>
                   <SheetContent side="left" className="w-[300px] pt-10">
@@ -93,17 +104,17 @@ export default function ProductListingPage() {
 
               <div className="flex items-center gap-3">
                 <SortDropdown />
-                <div className="hidden md:flex items-center border border-border rounded overflow-hidden">
+                <div className="hidden md:flex items-center border border-border rounded-lg overflow-hidden">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-2 cursor-pointer ${viewMode === 'grid' ? 'bg-primary text-white' : 'text-text-secondary hover:bg-surface'}`}
+                    className={`p-2 cursor-pointer transition-all duration-200 ${viewMode === 'grid' ? 'bg-primary text-white' : 'text-text-secondary hover:bg-surface'}`}
                     aria-label="Grid view"
                   >
                     <LayoutGrid className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-2 cursor-pointer ${viewMode === 'list' ? 'bg-primary text-white' : 'text-text-secondary hover:bg-surface'}`}
+                    className={`p-2 cursor-pointer transition-all duration-200 ${viewMode === 'list' ? 'bg-primary text-white' : 'text-text-secondary hover:bg-surface'}`}
                     aria-label="List view"
                   >
                     <List className="h-4 w-4" />
@@ -116,8 +127,18 @@ export default function ProductListingPage() {
 
             {/* Results */}
             {loading ? (
-              <div className="flex justify-center py-16">
-                <LoadingSpinner />
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <div key={i} className="bg-card rounded-2xl border border-border overflow-hidden animate-pulse">
+                    <div className="aspect-square bg-surface" />
+                    <div className="p-3.5 space-y-3">
+                      <div className="h-3 bg-surface rounded-full w-1/3" />
+                      <div className="h-4 bg-surface rounded-full w-3/4" />
+                      <div className="h-4 bg-surface rounded-full w-1/2" />
+                      <div className="h-5 bg-surface rounded-full w-1/3" />
+                    </div>
+                  </div>
+                ))}
               </div>
             ) : products.length === 0 ? (
               <EmptyState
@@ -139,12 +160,13 @@ export default function ProductListingPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex items-center justify-center gap-2 mt-8">
+                  <div className="flex items-center justify-center gap-1.5 mt-10 mb-4">
                     <Button
                       variant="outline"
                       size="sm"
                       disabled={page <= 1}
                       onClick={() => goToPage(page - 1)}
+                      className="rounded-lg px-4"
                     >
                       Previous
                     </Button>
@@ -162,9 +184,10 @@ export default function ProductListingPage() {
                       return (
                         <Button
                           key={pageNum}
-                          variant={page === pageNum ? 'default' : 'outline'}
+                          variant={page === pageNum ? 'default' : 'ghost'}
                           size="sm"
                           onClick={() => goToPage(pageNum)}
+                          className={`rounded-lg min-w-[36px] ${page === pageNum ? 'shadow-md shadow-primary/20' : ''}`}
                         >
                           {pageNum}
                         </Button>
@@ -175,6 +198,7 @@ export default function ProductListingPage() {
                       size="sm"
                       disabled={page >= totalPages}
                       onClick={() => goToPage(page + 1)}
+                      className="rounded-lg px-4"
                     >
                       Next
                     </Button>

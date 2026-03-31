@@ -110,10 +110,26 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="container-main py-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Skeleton className="aspect-square rounded-xl" />
-          <div className="space-y-4"><Skeleton className="h-8 w-3/4" /><Skeleton className="h-4 w-1/4" /><Skeleton className="h-12 w-1/2" /><Skeleton className="h-10 w-full" /></div>
+      <div className="container-main py-8">
+        <div className="h-4 bg-surface rounded-full w-48 mb-6 animate-pulse" />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <div className="space-y-3">
+            <Skeleton className="aspect-square rounded-2xl" />
+            <div className="flex gap-2">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <Skeleton key={i} className="h-16 w-16 rounded-lg" />
+              ))}
+            </div>
+          </div>
+          <div className="space-y-5 pt-2">
+            <Skeleton className="h-8 w-3/4 rounded-lg" />
+            <Skeleton className="h-4 w-1/3 rounded-lg" />
+            <Skeleton className="h-5 w-1/4 rounded-lg" />
+            <Skeleton className="h-10 w-1/2 rounded-lg" />
+            <Skeleton className="h-px w-full" />
+            <Skeleton className="h-6 w-2/3 rounded-lg" />
+            <Skeleton className="h-12 w-full rounded-xl" />
+          </div>
         </div>
       </div>
     )
@@ -121,9 +137,17 @@ export default function ProductDetailPage() {
 
   if (!product) {
     return (
-      <div className="container-main py-16 text-center">
-        <h2 className="text-xl font-bold text-text-primary">Product not found</h2>
-        <p className="text-text-secondary mt-2">The product you're looking for doesn't exist or has been removed.</p>
+      <div className="container-main py-20 text-center">
+        <div className="max-w-sm mx-auto">
+          <div className="h-20 w-20 rounded-full bg-surface flex items-center justify-center mx-auto mb-4">
+            <ShoppingCart className="h-10 w-10 text-text-muted" />
+          </div>
+          <h2 className="text-xl font-bold text-text-primary">Product not found</h2>
+          <p className="text-text-secondary mt-2 text-sm">The product you&apos;re looking for doesn&apos;t exist or has been removed.</p>
+          <Link to="/products" className="inline-block mt-4 text-sm font-semibold text-primary hover:text-primary-hover">
+            ← Browse all products
+          </Link>
+        </div>
       </div>
     )
   }
@@ -135,43 +159,48 @@ export default function ProductDetailPage() {
     <>
       <SEOHead
         title={product.name}
-        description={product.shortDesc ?? `Buy ${product.name} at ShopVerse`}
+        description={product.shortDesc ?? `Buy ${product.name} at Zaroox`}
         image={images[0]?.url}
       />
 
-      <div className="container-main py-4">
+      <div className="container-main py-6">
         <Breadcrumb items={[
           { label: 'Products', to: '/products' },
-          ...(product.category ? [{ label: product.category.name, to: `/categories/${product.category.slug}` }] : []),
+          ...(product.category ? [{ label: product.category.name, to: `/products?categoryId=${product.category.id ?? ''}` }] : []),
           { label: product.name },
         ]} />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mt-6">
           {/* Images */}
-          <ImageGallery images={images} productName={product.name} />
+          <div className="lg:sticky lg:top-24 lg:self-start">
+            <ImageGallery images={images} productName={product.name} />
+          </div>
 
           {/* Details */}
-          <div>
-            <h1 className="text-2xl font-bold text-text-primary mb-2">{product.name}</h1>
-
-            {/* Store */}
+          <div className="space-y-5">
+            {/* Store badge */}
             {product.store && (
-              <Link to={`/stores/${product.store.slug}`} className="text-sm text-primary hover:text-primary-hover hover:underline flex items-center gap-1 mb-2">
-                <Store className="h-4 w-4" /> Visit {product.store.name}
+              <Link to={`/stores/${product.store.slug}`} className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary bg-primary-light px-3 py-1.5 rounded-full hover:bg-primary/15 transition-colors">
+                <Store className="h-3.5 w-3.5" /> {product.store.name}
               </Link>
             )}
 
+            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary tracking-tight leading-tight">{product.name}</h1>
+
             {/* Rating */}
             {ratingSummary && (
-              <div className="flex items-center gap-2 mb-3">
+              <div className="flex items-center gap-2">
                 <StarRating rating={ratingSummary.avg ?? ratingSummary.average ?? 0} size="md" />
-                <span className="text-sm text-primary">
-                  {ratingSummary.count ?? ratingSummary.total ?? 0} reviews
+                <span className="text-sm font-medium text-text-secondary">
+                  {(ratingSummary.avg ?? ratingSummary.average ?? 0).toFixed(1)}
+                </span>
+                <span className="text-sm text-text-muted">
+                  ({ratingSummary.count ?? ratingSummary.total ?? 0} reviews)
                 </span>
               </div>
             )}
 
-            <Separator className="my-3" />
+            <Separator />
 
             {/* Price */}
             <PriceDisplay
@@ -181,10 +210,10 @@ export default function ProductDetailPage() {
             />
 
             {product.shortDesc && (
-              <p className="text-sm text-text-primary mt-3">{product.shortDesc}</p>
+              <p className="text-sm text-text-secondary leading-relaxed">{product.shortDesc}</p>
             )}
 
-            <Separator className="my-4" />
+            <Separator />
 
             {/* Variants */}
             <VariantSelector
@@ -194,87 +223,104 @@ export default function ProductDetailPage() {
             />
 
             {/* Quantity + Add to Cart */}
-            <div className="flex items-center gap-4 mt-6">
+            <div className="flex items-center gap-3 pt-2">
               <QuantitySelector value={quantity} onChange={setQuantity} min={1} max={10} />
-              <Button size="lg" className="flex-1 font-bold" onClick={handleAddToCart} disabled={addingToCart || !selectedVariant}>
+              <Button
+                size="lg"
+                className="flex-1 font-bold h-12 rounded-xl text-sm uppercase tracking-wide shadow-lg shadow-primary/20 hover:shadow-primary/30 transition-all duration-300"
+                onClick={handleAddToCart}
+                disabled={addingToCart || !selectedVariant}
+              >
                 <ShoppingCart className="h-5 w-5 mr-2" />
                 {addingToCart ? 'Adding…' : 'Add to Cart'}
               </Button>
             </div>
 
             {/* Quick actions */}
-            <div className="flex items-center gap-6 mt-4">
-              <button className="text-sm text-primary hover:text-primary-hover flex items-center gap-1 cursor-pointer">
-                <Heart className="h-4 w-4" /> Add to Wishlist
+            <div className="flex items-center gap-6">
+              <button className="text-sm text-text-secondary hover:text-primary flex items-center gap-1.5 cursor-pointer transition-colors">
+                <Heart className="h-4 w-4" /> Wishlist
               </button>
               <button
                 onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success('Link copied!') }}
-                className="text-sm text-primary hover:text-primary-hover flex items-center gap-1 cursor-pointer"
+                className="text-sm text-text-secondary hover:text-primary flex items-center gap-1.5 cursor-pointer transition-colors"
               >
                 <Share2 className="h-4 w-4" /> Share
               </button>
             </div>
 
-            <Separator className="my-4" />
-
             {/* Trust badges */}
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <div className="flex flex-col items-center gap-1">
-                <Truck className="h-5 w-5 text-success" />
-                <span className="text-xs text-text-secondary">Free Delivery</span>
-              </div>
-              <div className="flex flex-col items-center gap-1">
-                <RefreshCw className="h-5 w-5 text-success" />
-                <span className="text-xs text-text-secondary">Easy Returns</span>
-              </div>
-              <div className="flex flex-col items-center gap-1">
-                <ShieldCheck className="h-5 w-5 text-success" />
-                <span className="text-xs text-text-secondary">Secure Payment</span>
+            <div className="bg-surface rounded-xl p-4 mt-2">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="flex flex-col items-center gap-1.5 text-center">
+                  <div className="h-10 w-10 rounded-full bg-success/10 flex items-center justify-center">
+                    <Truck className="h-5 w-5 text-success" />
+                  </div>
+                  <span className="text-xs font-medium text-text-secondary">Free Delivery</span>
+                </div>
+                <div className="flex flex-col items-center gap-1.5 text-center">
+                  <div className="h-10 w-10 rounded-full bg-success/10 flex items-center justify-center">
+                    <RefreshCw className="h-5 w-5 text-success" />
+                  </div>
+                  <span className="text-xs font-medium text-text-secondary">Easy Returns</span>
+                </div>
+                <div className="flex flex-col items-center gap-1.5 text-center">
+                  <div className="h-10 w-10 rounded-full bg-success/10 flex items-center justify-center">
+                    <ShieldCheck className="h-5 w-5 text-success" />
+                  </div>
+                  <span className="text-xs font-medium text-text-secondary">Secure Payment</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
         {/* Tabs: Description / Reviews */}
-        <Tabs defaultValue="description" className="mt-10">
-          <TabsList>
-            <TabsTrigger value="description">Description</TabsTrigger>
-            <TabsTrigger value="reviews">
+        <Tabs defaultValue="description" className="mt-14">
+          <TabsList className="bg-surface rounded-xl p-1">
+            <TabsTrigger value="description" className="rounded-lg px-6 py-2.5 text-sm font-semibold">Description</TabsTrigger>
+            <TabsTrigger value="reviews" className="rounded-lg px-6 py-2.5 text-sm font-semibold">
               Reviews ({ratingSummary?.count ?? ratingSummary?.total ?? 0})
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="description">
-            <div className="bg-card rounded-xl border border-border p-6">
+          <TabsContent value="description" className="mt-6">
+            <div className="bg-card rounded-2xl border border-border p-6 sm:p-8">
               {product.fullDesc ? (
-                <div className="prose max-w-none text-sm text-text-primary" dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.fullDesc) }} />
+                <div className="prose prose-sm max-w-none text-text-primary leading-relaxed" dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.fullDesc) }} />
               ) : (
-                <p className="text-sm text-text-secondary">{product.shortDesc ?? 'No description available.'}</p>
+                <p className="text-sm text-text-secondary leading-relaxed">{product.shortDesc ?? 'No description available.'}</p>
               )}
             </div>
           </TabsContent>
 
-          <TabsContent value="reviews">
-            <div className="bg-card rounded-xl border border-border p-6 space-y-6">
+          <TabsContent value="reviews" className="mt-6">
+            <div className="bg-card rounded-2xl border border-border p-6 sm:p-8 space-y-6">
               {ratingSummary && <ReviewSummary summary={ratingSummary} />}
               <Separator />
               {reviews.length > 0 ? (
-                reviews.map((r) => <ReviewCard key={r.id} review={r} />)
-              ) : (
-                <p className="text-sm text-text-secondary text-center py-4">No reviews yet. Be the first to review!</p>
-              )}
-              <Separator />
-              {isAuthenticated && (
-                <div>
-                  <h3 className="text-lg font-bold text-text-primary mb-4">Write a Review</h3>
-                  <ReviewForm
-                    productId={product.id}
-                    onSuccess={() => {
-                      reviewsApi.list({ productId: product.id, limit: 10 }).then((r) => setReviews(r.data)).catch(() => {})
-                      reviewsApi.getSummary(product.id).then(setRatingSummary).catch(() => {})
-                    }}
-                  />
+                <div className="space-y-4">
+                  {reviews.map((r) => <ReviewCard key={r.id} review={r} />)}
                 </div>
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-sm text-text-muted">No reviews yet. Be the first to review!</p>
+                </div>
+              )}
+              {isAuthenticated && (
+                <>
+                  <Separator />
+                  <div>
+                    <h3 className="text-lg font-bold text-text-primary mb-4">Write a Review</h3>
+                    <ReviewForm
+                      productId={product.id}
+                      onSuccess={() => {
+                        reviewsApi.list({ productId: product.id, limit: 10 }).then((r) => setReviews(r.data)).catch(() => {})
+                        reviewsApi.getSummary(product.id).then(setRatingSummary).catch(() => {})
+                      }}
+                    />
+                  </div>
+                </>
               )}
             </div>
           </TabsContent>
@@ -282,8 +328,8 @@ export default function ProductDetailPage() {
 
         {/* Related Products */}
         {relatedProducts.length > 0 && (
-          <div className="mt-10">
-            <ProductCarousel products={relatedProducts} title="Related Products" />
+          <div className="mt-14 mb-4">
+            <ProductCarousel products={relatedProducts} title="You May Also Like" />
           </div>
         )}
       </div>

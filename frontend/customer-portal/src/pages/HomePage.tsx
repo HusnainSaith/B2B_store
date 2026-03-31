@@ -81,8 +81,8 @@ export default function HomePage() {
   return (
     <>
       <SEOHead
-        title="ShopVerse — Your One-Stop Shop"
-        description="Discover amazing deals on electronics, fashion, home & living, and more. Shop with confidence at ShopVerse."
+        title="Zaroox — Your One-Stop Shop"
+        description="Discover amazing deals on electronics, fashion, home & living, and more. Shop with confidence at Zaroox."
       />
 
       {/* 1. Hero */}
