@@ -54,26 +54,26 @@ export default function SettingsPage() {
     <>
       <SEOHead title="Settings" />
       <div className="max-w-xl">
-        <h1 className="text-xl font-bold text-[#0F172A] mb-6">Settings</h1>
+        <h1 className="text-xl font-bold text-text-primary mb-6">Settings</h1>
 
         {/* Change Password */}
         <section className="mb-8">
-          <h2 className="text-base font-bold text-[#0F172A] mb-4">Change Password</h2>
+          <h2 className="text-base font-bold text-text-primary mb-4">Change Password</h2>
           <form onSubmit={handleSubmit(onChangePassword)} className="space-y-4">
             <div>
               <Label className="mb-1 block">Current Password</Label>
               <Input type="password" {...register('currentPassword')} />
-              {errors.currentPassword && <p className="text-xs text-[#EF4444] mt-1">{errors.currentPassword.message}</p>}
+              {errors.currentPassword && <p className="text-xs text-danger mt-1">{errors.currentPassword.message}</p>}
             </div>
             <div>
               <Label className="mb-1 block">New Password</Label>
               <Input type="password" {...register('newPassword')} />
-              {errors.newPassword && <p className="text-xs text-[#EF4444] mt-1">{errors.newPassword.message}</p>}
+              {errors.newPassword && <p className="text-xs text-danger mt-1">{errors.newPassword.message}</p>}
             </div>
             <div>
               <Label className="mb-1 block">Confirm New Password</Label>
               <Input type="password" {...register('confirmPassword')} />
-              {errors.confirmPassword && <p className="text-xs text-[#EF4444] mt-1">{errors.confirmPassword.message}</p>}
+              {errors.confirmPassword && <p className="text-xs text-danger mt-1">{errors.confirmPassword.message}</p>}
             </div>
             <Button type="submit" disabled={loading}>
               {loading ? 'Changing…' : 'Change Password'}
@@ -85,11 +85,11 @@ export default function SettingsPage() {
 
         {/* Danger Zone */}
         <section>
-          <h2 className="text-base font-bold text-[#EF4444] mb-2">Danger Zone</h2>
-          <p className="text-sm text-[#64748B] mb-4">Permanently delete your account and all associated data. This action cannot be undone.</p>
+          <h2 className="text-base font-bold text-danger mb-2">Danger Zone</h2>
+          <p className="text-sm text-text-secondary mb-4">Permanently delete your account and all associated data. This action cannot be undone.</p>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline" className="text-[#EF4444] border-[#EF4444] hover:bg-red-50">Delete My Account</Button>
+              <Button variant="outline" className="text-danger border-danger hover:bg-red-50">Delete My Account</Button>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
@@ -100,7 +100,7 @@ export default function SettingsPage() {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleDeleteAccount} className="bg-[#EF4444] hover:bg-red-700">Delete Account</AlertDialogAction>
+                <AlertDialogAction onClick={handleDeleteAccount} className="bg-danger hover:bg-red-700">Delete Account</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>

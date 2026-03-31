@@ -8,6 +8,7 @@ import { PromoBannerRow } from '@/components/home/PromoBannerRow'
 import { BrandStrip } from '@/components/home/BrandStrip'
 import { AppDownloadBanner } from '@/components/home/AppDownloadBanner'
 import { productsApi } from '@/services/api'
+import { getMockProducts } from '@/hooks/useMockData'
 import type { Product } from '@/types'
 
 export default function HomePage() {
@@ -19,12 +20,12 @@ export default function HomePage() {
   useEffect(() => {
     productsApi.list({ limit: 10 })
       .then((res) => setFeatured(res.data))
-      .catch(() => {})
+      .catch(() => setFeatured(getMockProducts({ limit: 10 }).data))
       .finally(() => setLoadingFeatured(false))
 
-    productsApi.list({ limit: 10, page: 1 })
+    productsApi.list({ limit: 10, page: 2 })
       .then((res) => setNewArrivals(res.data))
-      .catch(() => {})
+      .catch(() => setNewArrivals(getMockProducts({ limit: 10, page: 2 }).data))
       .finally(() => setLoadingNew(false))
   }, [])
 

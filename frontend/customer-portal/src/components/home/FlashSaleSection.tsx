@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Flame, ChevronRight } from 'lucide-react'
 import { flashSalesApi } from '@/services/api'
+import { getMockActiveFlashSale, getMockFlashSaleItems } from '@/hooks/useMockData'
 import type { FlashSale, FlashSaleItem } from '@/types'
 import { CountdownTimer } from '@/components/common/CountdownTimer'
 import { ProductCard } from '@/components/product/ProductCard'
@@ -16,9 +17,17 @@ export function FlashSaleSection() {
       const active = sales.find((s) => s.isActive && new Date(s.endsAt) > new Date())
       if (active) {
         setFlashSale(active)
-        flashSalesApi.getItems(active.id).then(setItems).catch(() => {})
+        flashSalesApi.getItems(active.id).then(setItems).catch(() => {
+          setItems(getMockFlashSaleItems(active.id))
+        })
       }
-    }).catch(() => {})
+    }).catch(() => {
+      const mock = getMockActiveFlashSale()
+      if (mock) {
+        setFlashSale(mock)
+        setItems(mock.items ?? [])
+      }
+    })
   }, [])
 
   if (!flashSale || items.length === 0) return null
@@ -27,7 +36,7 @@ export function FlashSaleSection() {
     <section className="py-6" aria-label="Flash sale">
       <div className="container-main">
         {/* Header */}
-        <div className="bg-[#EF4444] rounded-t-[8px] px-4 md:px-6 py-3 flex items-center justify-between">
+        <div className="bg-danger rounded-t-[8px] px-4 md:px-6 py-3 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Flame className="h-6 w-6 text-white flash-sale-badge" />
             <h2 className="text-white font-bold text-lg md:text-xl">{flashSale.name || 'Flash Sale'}</h2>
@@ -42,7 +51,7 @@ export function FlashSaleSection() {
         </div>
 
         {/* Products */}
-        <div className="bg-white rounded-b-[8px] border border-t-0 border-[#E2E8F0] p-4">
+        <div className="bg-card rounded-b-[8px] border border-t-0 border-border p-4">
           <ScrollArea className="w-full">
             <div className="flex gap-4 pb-2">
               {items.map((item) => (

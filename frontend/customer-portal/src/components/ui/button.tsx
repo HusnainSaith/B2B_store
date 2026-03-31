@@ -9,12 +9,12 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-[#6366F1] text-white rounded-lg hover:bg-[#4F46E5] focus-visible:ring-[#6366F1] shadow-sm hover:shadow-md hover:shadow-[#6366F1]/20',
-        secondary: 'bg-[#8B5CF6] text-white rounded-lg hover:bg-[#7C3AED] focus-visible:ring-[#8B5CF6] shadow-sm',
-        outline: 'border border-[#CBD5E1] bg-white text-[#0F172A] rounded-lg hover:bg-[#F8FAFC] focus-visible:ring-[#6366F1]',
-        danger: 'bg-[#EF4444] text-white rounded-lg hover:bg-[#DC2626] focus-visible:ring-[#EF4444]',
-        ghost: 'text-[#0F172A] hover:bg-gray-100 rounded-lg',
-        link: 'text-[#6366F1] underline-offset-4 hover:underline hover:text-[#4F46E5] p-0 h-auto',
+        default: 'bg-primary text-white rounded-lg hover:bg-primary-hover focus-visible:ring-primary shadow-sm hover:shadow-md hover:shadow-primary/20',
+        secondary: 'bg-secondary text-white rounded-lg hover:bg-secondary-hover focus-visible:ring-secondary shadow-sm',
+        outline: 'border border-border-hover bg-card text-text-primary rounded-lg hover:bg-surface focus-visible:ring-primary',
+        danger: 'bg-danger text-white rounded-lg hover:bg-[#DC2626] focus-visible:ring-danger',
+        ghost: 'text-text-primary hover:bg-surface rounded-lg',
+        link: 'text-primary underline-offset-4 hover:underline hover:text-primary-hover p-0 h-auto',
       },
       size: {
         default: 'h-10 px-5 py-2',

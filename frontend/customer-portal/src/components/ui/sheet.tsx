@@ -22,7 +22,7 @@ const SheetOverlay = React.forwardRef<
 SheetOverlay.displayName = SheetPrimitive.Overlay.displayName
 
 const sheetVariants = cva(
-  'fixed z-50 bg-white shadow-lg transition-transform duration-300',
+  'fixed z-50 bg-card shadow-lg transition-transform duration-300',
   {
     variants: {
       side: {
@@ -62,7 +62,7 @@ function SheetHeader({ className, ...props }: React.HTMLAttributes<HTMLDivElemen
 }
 
 function SheetTitle({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
-  return <h3 className={cn('text-lg font-semibold text-[#0F172A]', className)} {...props} />
+  return <h3 className={cn('text-lg font-semibold text-text-primary', className)} {...props} />
 }
 
 export { Sheet, SheetPortal, SheetOverlay, SheetTrigger, SheetClose, SheetContent, SheetHeader, SheetTitle }

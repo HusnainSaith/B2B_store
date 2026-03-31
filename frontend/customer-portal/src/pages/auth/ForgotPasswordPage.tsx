@@ -37,8 +37,8 @@ export default function ForgotPasswordPage() {
       <>
         <SEOHead title="Check Your Email" />
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-[#0F172A] tracking-tight mb-2">Check your email</h1>
-          <p className="text-sm text-[#94A3B8] mb-6">
+          <h1 className="text-2xl font-bold text-text-primary tracking-tight mb-2">Check your email</h1>
+          <p className="text-sm text-text-muted mb-6">
             We've sent a password reset link to your email address. Please check your inbox.
           </p>
           <Link to={ROUTES.LOGIN}>
@@ -54,15 +54,15 @@ export default function ForgotPasswordPage() {
       <SEOHead title="Forgot Password" />
       <div>
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-bold text-[#0F172A] tracking-tight">Forgot password?</h1>
-          <p className="text-sm text-[#94A3B8] mt-1">Enter your email and we'll send you a reset link</p>
+          <h1 className="text-2xl font-bold text-text-primary tracking-tight">Forgot password?</h1>
+          <p className="text-sm text-text-muted mt-1">Enter your email and we'll send you a reset link</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
             <Label htmlFor="email" className="mb-1 block">Email</Label>
             <Input id="email" type="email" placeholder="you@example.com" {...register('email')} autoFocus />
-            {errors.email && <p className="text-xs text-[#EF4444] mt-1">{errors.email.message}</p>}
+            {errors.email && <p className="text-xs text-danger mt-1">{errors.email.message}</p>}
           </div>
 
           <Button type="submit" className="w-full h-11 font-semibold text-base" disabled={loading}>
@@ -70,8 +70,8 @@ export default function ForgotPasswordPage() {
           </Button>
         </form>
 
-        <p className="text-sm text-[#94A3B8] text-center mt-6">
-          <Link to={ROUTES.LOGIN} className="text-[#6366F1] hover:text-[#4F46E5] font-medium">
+        <p className="text-sm text-text-muted text-center mt-6">
+          <Link to={ROUTES.LOGIN} className="text-primary hover:text-primary-hover font-medium">
             Back to sign in
           </Link>
         </p>

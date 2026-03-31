@@ -93,17 +93,17 @@ export function HeroBanner() {
       {/* Navigation Arrows */}
       <button
         onClick={scrollPrev}
-        className="absolute left-4 top-1/2 -translate-y-1/2 h-16 w-10 bg-white/80 hover:bg-white rounded flex items-center justify-center shadow-md transition-colors cursor-pointer"
+        className="absolute left-4 top-1/2 -translate-y-1/2 h-16 w-10 bg-card/80 hover:bg-card rounded flex items-center justify-center shadow-md transition-colors cursor-pointer"
         aria-label="Previous slide"
       >
-        <ChevronLeft className="h-6 w-6 text-[#0F172A]" />
+        <ChevronLeft className="h-6 w-6 text-text-primary" />
       </button>
       <button
         onClick={scrollNext}
-        className="absolute right-4 top-1/2 -translate-y-1/2 h-16 w-10 bg-white/80 hover:bg-white rounded flex items-center justify-center shadow-md transition-colors cursor-pointer"
+        className="absolute right-4 top-1/2 -translate-y-1/2 h-16 w-10 bg-card/80 hover:bg-card rounded flex items-center justify-center shadow-md transition-colors cursor-pointer"
         aria-label="Next slide"
       >
-        <ChevronRight className="h-6 w-6 text-[#0F172A]" />
+        <ChevronRight className="h-6 w-6 text-text-primary" />
       </button>
 
       {/* Dots */}

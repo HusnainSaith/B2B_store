@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { brandsApi } from '@/services/api'
+import { getMockBrands } from '@/hooks/useMockData'
 import type { Brand } from '@/types'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
 import { Link } from 'react-router-dom'
@@ -8,7 +9,9 @@ export function BrandStrip() {
   const [brands, setBrands] = useState<Brand[]>([])
 
   useEffect(() => {
-    brandsApi.list().then((b) => setBrands(b.filter((br) => br.isActive).slice(0, 16))).catch(() => {})
+    brandsApi.list().then((b) => setBrands(b.filter((br) => br.isActive).slice(0, 16))).catch(() => {
+      setBrands(getMockBrands().slice(0, 16))
+    })
   }, [])
 
   if (brands.length === 0) return null
@@ -16,8 +19,8 @@ export function BrandStrip() {
   return (
     <section className="py-6" aria-label="Shop by brand">
       <div className="container-main">
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-6">
-          <h2 className="text-xl font-bold text-[#0F172A] mb-4">Top Brands</h2>
+        <div className="bg-card rounded-xl border border-border p-6">
+          <h2 className="text-xl font-bold text-text-primary mb-4">Top Brands</h2>
           <ScrollArea className="w-full">
             <div className="flex gap-8 items-center pb-2">
               {brands.map((brand) => (
@@ -34,7 +37,7 @@ export function BrandStrip() {
                       loading="lazy"
                     />
                   ) : (
-                    <div className="h-12 w-20 bg-[#F1F5F9] rounded flex items-center justify-center text-sm font-bold text-[#64748B] brand-logo">
+                    <div className="h-12 w-20 bg-surface rounded flex items-center justify-center text-sm font-bold text-text-secondary brand-logo">
                       {brand.name}
                     </div>
                   )}

@@ -23,43 +23,43 @@ export default function OrderConfirmationPage() {
     <>
       <SEOHead title="Order Confirmed" />
       <div className="max-w-2xl mx-auto py-16 px-4 text-center">
-        <div className="bg-[#10B981] h-20 w-20 rounded-full flex items-center justify-center mx-auto mb-6">
+        <div className="bg-success h-20 w-20 rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle className="h-12 w-12 text-white" />
         </div>
-        <h1 className="text-3xl font-bold text-[#0F172A] mb-2">Order Confirmed!</h1>
-        <p className="text-[#64748B] mb-6">
+        <h1 className="text-3xl font-bold text-text-primary mb-2">Order Confirmed!</h1>
+        <p className="text-text-secondary mb-6">
           Thank you for your purchase. Your order has been placed and is being processed.
         </p>
 
         {order && (
-          <div className="bg-white rounded-xl border border-[#E2E8F0] p-6 text-left mb-6">
+          <div className="bg-card rounded-xl border border-border p-6 text-left mb-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
               <div>
-                <span className="text-[#64748B] text-xs uppercase">Order Number</span>
-                <p className="font-bold text-[#0F172A]">#{order.id.slice(-8).toUpperCase()}</p>
+                <span className="text-text-secondary text-xs uppercase">Order Number</span>
+                <p className="font-bold text-text-primary">#{order.id.slice(-8).toUpperCase()}</p>
               </div>
               <div>
-                <span className="text-[#64748B] text-xs uppercase">Date</span>
-                <p className="font-medium text-[#0F172A]">{formatDate(order.createdAt)}</p>
+                <span className="text-text-secondary text-xs uppercase">Date</span>
+                <p className="font-medium text-text-primary">{formatDate(order.createdAt)}</p>
               </div>
               <div>
-                <span className="text-[#64748B] text-xs uppercase">Total</span>
-                <p className="font-bold text-[#EF4444]">{formatPrice(order.totalAmount)}</p>
+                <span className="text-text-secondary text-xs uppercase">Total</span>
+                <p className="font-bold text-danger">{formatPrice(order.totalAmount)}</p>
               </div>
               <div>
-                <span className="text-[#64748B] text-xs uppercase">Status</span>
-                <p className="font-medium text-[#10B981] capitalize">{order.status}</p>
+                <span className="text-text-secondary text-xs uppercase">Status</span>
+                <p className="font-medium text-success capitalize">{order.status}</p>
               </div>
             </div>
 
             {order.items && order.items.length > 0 && (
-              <div className="mt-4 pt-4 border-t border-[#E2E8F0]">
+              <div className="mt-4 pt-4 border-t border-border">
                 {order.items.map((item) => (
                   <div key={item.id} className="flex items-center gap-3 py-2">
-                    <Package className="h-5 w-5 text-[#64748B]" />
-                    <span className="text-sm text-[#0F172A] flex-1">{item.nameSnapshot}</span>
-                    <span className="text-sm text-[#64748B]">×{item.quantity}</span>
-                    <span className="text-sm font-bold text-[#0F172A]">{formatPrice(item.totalAmount)}</span>
+                    <Package className="h-5 w-5 text-text-secondary" />
+                    <span className="text-sm text-text-primary flex-1">{item.nameSnapshot}</span>
+                    <span className="text-sm text-text-secondary">×{item.quantity}</span>
+                    <span className="text-sm font-bold text-text-primary">{formatPrice(item.totalAmount)}</span>
                   </div>
                 ))}
               </div>

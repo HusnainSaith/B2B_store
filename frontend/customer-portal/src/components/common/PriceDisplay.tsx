@@ -26,15 +26,15 @@ export function PriceDisplay({ currentPrice, originalPrice, size = 'md', classNa
 
   return (
     <div className={cn('flex flex-wrap items-baseline gap-1.5', className)}>
-      <span className={cn('font-bold text-[#EF4444]', priceSize)}>
+      <span className={cn('font-bold text-danger', priceSize)}>
         {formatPrice(currentPrice)}
       </span>
       {hasDiscount && originalPrice && (
         <>
-          <span className={cn('text-[#64748B] line-through', originalSize)}>
+          <span className={cn('text-text-secondary line-through', originalSize)}>
             {formatPrice(originalPrice)}
           </span>
-          <span className={cn('text-[#10B981] font-medium', originalSize)}>
+          <span className={cn('text-success font-medium', originalSize)}>
             -{discount}%
           </span>
         </>

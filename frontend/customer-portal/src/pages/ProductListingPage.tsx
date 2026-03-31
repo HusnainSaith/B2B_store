@@ -10,6 +10,7 @@ import { LoadingSpinner } from '@/components/common/LoadingSpinner'
 import { EmptyState } from '@/components/common/EmptyState'
 import { Button } from '@/components/ui/button'
 import { productsApi } from '@/services/api'
+import { getMockProducts } from '@/hooks/useMockData'
 import type { Product, PaginatedResponse } from '@/types'
 import { DEFAULT_PAGE_SIZE } from '@/constants/config'
 import { LayoutGrid, List, SlidersHorizontal } from 'lucide-react'
@@ -38,7 +39,10 @@ export default function ProductListingPage() {
         setProducts(res.data)
         setTotal(res.total)
       })
-      .catch(() => {})
+      .catch(() => {
+        const mock = getMockProducts({ page, limit: DEFAULT_PAGE_SIZE, search, categoryId })
+        if (!cancelled) { setProducts(mock.data); setTotal(mock.total) }
+      })
       .finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
   }, [page, search, categoryId, brandId, sort])
@@ -69,7 +73,7 @@ export default function ProductListingPage() {
             {/* Toolbar */}
             <div className="flex items-center justify-between mb-4 gap-4 flex-wrap">
               <div className="flex items-center gap-2">
-                <p className="text-sm text-[#64748B]">
+                <p className="text-sm text-text-secondary">
                   {loading ? 'Loading…' : `${total} results`}
                   {search && <span> for "<strong>{search}</strong>"</span>}
                 </p>
@@ -89,17 +93,17 @@ export default function ProductListingPage() {
 
               <div className="flex items-center gap-3">
                 <SortDropdown />
-                <div className="hidden md:flex items-center border border-[#E2E8F0] rounded overflow-hidden">
+                <div className="hidden md:flex items-center border border-border rounded overflow-hidden">
                   <button
                     onClick={() => setViewMode('grid')}
-                    className={`p-2 cursor-pointer ${viewMode === 'grid' ? 'bg-[#6366F1] text-white' : 'text-[#64748B] hover:bg-[#F1F5F9]'}`}
+                    className={`p-2 cursor-pointer ${viewMode === 'grid' ? 'bg-primary text-white' : 'text-text-secondary hover:bg-surface'}`}
                     aria-label="Grid view"
                   >
                     <LayoutGrid className="h-4 w-4" />
                   </button>
                   <button
                     onClick={() => setViewMode('list')}
-                    className={`p-2 cursor-pointer ${viewMode === 'list' ? 'bg-[#6366F1] text-white' : 'text-[#64748B] hover:bg-[#F1F5F9]'}`}
+                    className={`p-2 cursor-pointer ${viewMode === 'list' ? 'bg-primary text-white' : 'text-text-secondary hover:bg-surface'}`}
                     aria-label="List view"
                   >
                     <List className="h-4 w-4" />

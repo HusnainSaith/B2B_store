@@ -38,7 +38,7 @@ export function MegaMenu({ categories, activeCategoryId, onClose }: MegaMenuProp
   return (
     <div
       ref={menuRef}
-      className="mega-menu absolute left-0 right-0 top-full bg-white text-[#0F172A] border-t border-[#E2E8F0] z-50"
+      className="mega-menu absolute left-0 right-0 top-full bg-card text-text-primary border-t border-border z-50"
       onMouseLeave={onClose}
     >
       <div className="container-main py-6">
@@ -48,7 +48,7 @@ export function MegaMenu({ categories, activeCategoryId, onClose }: MegaMenuProp
               <h3 className="text-lg font-semibold">{activeCategory.name}</h3>
               <Link
                 to={`/categories/${activeCategory.slug}`}
-                className="text-sm text-[#6366F1] hover:text-[#4F46E5] flex items-center gap-1"
+                className="text-sm text-primary hover:text-primary-hover flex items-center gap-1"
                 onClick={onClose}
               >
                 View All <ChevronRight className="h-4 w-4" />
@@ -60,13 +60,13 @@ export function MegaMenu({ categories, activeCategoryId, onClose }: MegaMenuProp
                   <Link
                     key={sub.id}
                     to={`/categories/${sub.slug}`}
-                    className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-[#F8FAFC] transition-colors"
+                    className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-surface transition-colors"
                     onClick={onClose}
                   >
                     {sub.imageUrl ? (
                       <img src={sub.imageUrl} alt={sub.name} className="h-12 w-12 object-contain" loading="lazy" />
                     ) : (
-                      <div className="h-12 w-12 bg-[#F1F5F9] rounded-full flex items-center justify-center text-[#64748B] text-xs font-semibold">
+                      <div className="h-12 w-12 bg-surface rounded-full flex items-center justify-center text-text-secondary text-xs font-semibold">
                         {sub.name.charAt(0)}
                       </div>
                     )}
@@ -75,7 +75,7 @@ export function MegaMenu({ categories, activeCategoryId, onClose }: MegaMenuProp
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-[#64748B]">No subcategories available</p>
+              <p className="text-sm text-text-secondary">No subcategories available</p>
             )}
           </div>
         ) : (
@@ -84,13 +84,13 @@ export function MegaMenu({ categories, activeCategoryId, onClose }: MegaMenuProp
               <Link
                 key={cat.id}
                 to={`/categories/${cat.slug}`}
-                className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-[#F8FAFC] transition-colors"
+                className="flex flex-col items-center gap-2 p-3 rounded-lg hover:bg-surface transition-colors"
                 onClick={onClose}
               >
                 {cat.imageUrl ? (
                   <img src={cat.imageUrl} alt={cat.name} className="h-12 w-12 object-contain" loading="lazy" />
                 ) : (
-                  <div className="h-12 w-12 bg-[#F1F5F9] rounded-full flex items-center justify-center text-[#64748B] text-xs font-semibold">
+                  <div className="h-12 w-12 bg-surface rounded-full flex items-center justify-center text-text-secondary text-xs font-semibold">
                     {cat.name.charAt(0)}
                   </div>
                 )}

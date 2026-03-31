@@ -37,14 +37,14 @@ export function MobileMenu() {
     <Sheet open={isMobileMenuOpen} onOpenChange={setMobileMenuOpen}>
       <SheetContent side="left" className="w-[300px] p-0">
         {/* User Header */}
-        <div className="bg-[#1E293B] text-white p-4 pt-12">
+        <div className="bg-surface text-text-primary p-4 pt-12 dark:bg-surface">
           <div className="flex items-center gap-3">
-            <div className="h-10 w-10 bg-[#6366F1] rounded-full flex items-center justify-center font-bold">
+            <div className="h-10 w-10 bg-primary rounded-full flex items-center justify-center font-bold text-white">
               {isAuthenticated ? (user?.firstName?.charAt(0) ?? 'U') : <User className="h-5 w-5" />}
             </div>
             <div>
               {isAuthenticated ? (
-                <p className="font-semibold">Hello, {user?.firstName}</p>
+                <p className="font-semibold">{/* name */}Hello, {user?.firstName}</p>
               ) : (
                 <Link to={ROUTES.LOGIN} className="font-semibold hover:underline" onClick={() => setMobileMenuOpen(false)}>
                   Sign In / Register
@@ -58,7 +58,7 @@ export function MobileMenu() {
           {/* Main Links */}
           <div className="p-2">
             <NavItem to="/" icon={<Home className="h-5 w-5" />} label="Home" onClose={() => setMobileMenuOpen(false)} />
-            <NavItem to="/flash-sales" icon={<Flame className="h-5 w-5 text-[#6366F1]" />} label="Flash Sales" onClose={() => setMobileMenuOpen(false)} />
+            <NavItem to="/flash-sales" icon={<Flame className="h-5 w-5 text-primary" />} label="Flash Sales" onClose={() => setMobileMenuOpen(false)} />
             <NavItem to="/products" icon={<Tag className="h-5 w-5" />} label="All Products" onClose={() => setMobileMenuOpen(false)} />
           </div>
 
@@ -66,16 +66,16 @@ export function MobileMenu() {
 
           {/* Categories */}
           <div className="p-2">
-            <p className="px-3 py-2 text-xs font-bold text-[#64748B] uppercase">Shop by Category</p>
+            <p className="px-3 py-2 text-xs font-bold text-text-muted uppercase">Shop by Category</p>
             {categories.map((cat) => (
               <Link
                 key={cat.id}
                 to={`/categories/${cat.slug}`}
-                className="flex items-center justify-between px-3 py-2.5 text-sm text-[#0F172A] hover:bg-[#F1F5F9] rounded-lg"
+                className="flex items-center justify-between px-3 py-2.5 text-sm text-text-primary hover:bg-surface rounded-lg"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 <span>{cat.name}</span>
-                <ChevronRight className="h-4 w-4 text-[#94A3B8]" />
+                <ChevronRight className="h-4 w-4 text-text-muted" />
               </Link>
             ))}
           </div>
@@ -85,7 +85,7 @@ export function MobileMenu() {
           {/* Account */}
           {isAuthenticated && (
             <div className="p-2">
-              <p className="px-3 py-2 text-xs font-bold text-[#64748B] uppercase">Your Account</p>
+              <p className="px-3 py-2 text-xs font-bold text-text-muted uppercase">Your Account</p>
               <NavItem to={ROUTES.ACCOUNT_ORDERS} icon={<ShoppingBag className="h-5 w-5" />} label="My Orders" onClose={() => setMobileMenuOpen(false)} />
               <NavItem to={ROUTES.ACCOUNT_WISHLIST} icon={<Heart className="h-5 w-5" />} label="Wishlist" onClose={() => setMobileMenuOpen(false)} />
               <NavItem to={ROUTES.ACCOUNT_NOTIFICATIONS} icon={<Bell className="h-5 w-5" />} label="Notifications" onClose={() => setMobileMenuOpen(false)} />
@@ -100,7 +100,7 @@ export function MobileMenu() {
             <div className="p-2">
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-3 w-full px-3 py-2.5 text-sm text-[#EF4444] hover:bg-[#FEF2F2] rounded-lg cursor-pointer"
+                className="flex items-center gap-3 w-full px-3 py-2.5 text-sm text-danger hover:bg-danger-light rounded-lg cursor-pointer"
               >
                 <LogOut className="h-5 w-5" />
                 <span>Sign Out</span>
@@ -117,7 +117,7 @@ function NavItem({ to, icon, label, onClose }: { to: string; icon: React.ReactNo
   return (
     <Link
       to={to}
-      className="flex items-center gap-3 px-3 py-2.5 text-sm text-[#0F172A] hover:bg-[#F1F5F9] rounded-lg"
+      className="flex items-center gap-3 px-3 py-2.5 text-sm text-text-primary hover:bg-surface rounded-lg"
       onClick={onClose}
     >
       {icon}

@@ -27,14 +27,14 @@ export function AccountLayout() {
       <TopBar />
       <Header />
       <MobileMenu />
-      <main className="flex-1 bg-[#F8FAFC] py-8">
+      <main className="flex-1 bg-background py-8">
         <div className="container-main">
           <div className="flex gap-8">
             {/* Sidebar */}
             <aside className="hidden md:block w-[240px] shrink-0">
-              <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden sticky top-[76px] shadow-[var(--shadow-card)]">
-                <div className="p-4 border-b border-[#E2E8F0]">
-                  <h2 className="font-semibold text-[#0F172A]">My Account</h2>
+              <div className="bg-card rounded-xl border border-border overflow-hidden sticky top-[76px] shadow-[var(--shadow-card)]">
+                <div className="p-4 border-b border-border">
+                  <h2 className="font-semibold text-text-primary">My Account</h2>
                 </div>
                 <nav className="py-1">
                   {accountLinks.map((link) => {
@@ -46,8 +46,8 @@ export function AccountLayout() {
                         className={cn(
                           'flex items-center gap-3 px-4 py-2.5 text-sm transition-colors',
                           isActive
-                            ? 'bg-[#EEF2FF] text-[#6366F1] font-medium border-l-3 border-[#6366F1]'
-                            : 'text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#0F172A]',
+                            ? 'bg-primary-light text-primary font-medium border-l-3 border-primary'
+                            : 'text-text-secondary hover:bg-surface hover:text-text-primary',
                         )}
                       >
                         <link.icon className="h-4 w-4" />

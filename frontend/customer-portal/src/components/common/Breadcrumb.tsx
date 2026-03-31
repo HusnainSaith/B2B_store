@@ -14,20 +14,20 @@ interface BreadcrumbProps {
 
 export function Breadcrumb({ items, className }: BreadcrumbProps) {
   return (
-    <nav aria-label="Breadcrumb" className={cn('flex items-center text-sm text-[#64748B] flex-wrap', className)}>
-      <Link to="/" className="flex items-center gap-1 text-[#6366F1] hover:text-[#4F46E5] transition-colors">
+    <nav aria-label="Breadcrumb" className={cn('flex items-center text-sm text-text-secondary flex-wrap', className)}>
+      <Link to="/" className="flex items-center gap-1 text-primary hover:text-primary-hover transition-colors">
         <Home className="h-3.5 w-3.5" />
         <span>Home</span>
       </Link>
       {items.map((item, index) => (
         <span key={index} className="flex items-center">
-          <ChevronRight className="h-3.5 w-3.5 mx-1.5 text-[#94A3B8]" />
+          <ChevronRight className="h-3.5 w-3.5 mx-1.5 text-text-muted" />
           {item.to ? (
-            <Link to={item.to} className="text-[#6366F1] hover:text-[#4F46E5] transition-colors">
+            <Link to={item.to} className="text-primary hover:text-primary-hover transition-colors">
               {item.label}
             </Link>
           ) : (
-            <span className="text-[#0F172A]">{item.label}</span>
+            <span className="text-text-primary">{item.label}</span>
           )}
         </span>
       ))}

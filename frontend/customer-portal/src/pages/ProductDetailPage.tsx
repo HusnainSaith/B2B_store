@@ -16,6 +16,7 @@ import { Separator } from '@/components/ui/separator'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Skeleton } from '@/components/ui/skeleton'
 import { productsApi, reviewsApi, cartApi } from '@/services/api'
+import { getMockProductBySlug, getMockProducts, getMockReviewsByProduct, getMockRatingSummary } from '@/hooks/useMockData'
 import { sanitizeHtml } from '@/lib/sanitize'
 import { useAuthStore } from '@/store/auth.store'
 import { useCartStore } from '@/store/cart.store'
@@ -54,18 +55,39 @@ export default function ProductDetailPage() {
       if (v.length > 0) setSelectedVariant(v.find((x) => x.isActive) ?? v[0])
 
       // Load reviews + summary
-      reviewsApi.list({ productId: p.id, limit: 10 }).then((r) => setReviews(r.data)).catch(() => {})
-      reviewsApi.getSummary(p.id).then(setRatingSummary).catch(() => {})
+      reviewsApi.list({ productId: p.id, limit: 10 }).then((r) => setReviews(r.data)).catch(() => {
+        setReviews(getMockReviewsByProduct(p.id))
+      })
+      reviewsApi.getSummary(p.id).then(setRatingSummary).catch(() => {
+        setRatingSummary(getMockRatingSummary(p.id))
+      })
 
       // Related products from same category
       if (p.categoryId) {
         productsApi.list({ categoryId: p.categoryId, limit: 6 }).then((r) => {
           setRelatedProducts(r.data.filter((x) => x.id !== p.id).slice(0, 5))
-        }).catch(() => {})
+        }).catch(() => {
+          setRelatedProducts(getMockProducts({ categoryId: p.categoryId, limit: 6 }).data.filter((x) => x.id !== p.id).slice(0, 5))
+        })
       }
 
       setLoading(false)
-    }).catch(() => setLoading(false))
+    }).catch(() => {
+      // Fallback to mock data
+      const mock = getMockProductBySlug(slug)
+      if (mock) {
+        setProduct(mock)
+        setVariants(mock.variants ?? [])
+        setImages(mock.images ?? [])
+        if (mock.variants?.length) setSelectedVariant(mock.variants.find((x) => x.isActive) ?? mock.variants[0])
+        setReviews(getMockReviewsByProduct(mock.id))
+        setRatingSummary(getMockRatingSummary(mock.id))
+        if (mock.categoryId) {
+          setRelatedProducts(getMockProducts({ categoryId: mock.categoryId, limit: 6 }).data.filter((x) => x.id !== mock.id).slice(0, 5))
+        }
+      }
+      setLoading(false)
+    })
   }, [slug])
 
   const handleAddToCart = async () => {
@@ -100,8 +122,8 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <div className="container-main py-16 text-center">
-        <h2 className="text-xl font-bold text-[#0F172A]">Product not found</h2>
-        <p className="text-[#64748B] mt-2">The product you're looking for doesn't exist or has been removed.</p>
+        <h2 className="text-xl font-bold text-text-primary">Product not found</h2>
+        <p className="text-text-secondary mt-2">The product you're looking for doesn't exist or has been removed.</p>
       </div>
     )
   }
@@ -130,11 +152,11 @@ export default function ProductDetailPage() {
 
           {/* Details */}
           <div>
-            <h1 className="text-2xl font-bold text-[#0F172A] mb-2">{product.name}</h1>
+            <h1 className="text-2xl font-bold text-text-primary mb-2">{product.name}</h1>
 
             {/* Store */}
             {product.store && (
-              <Link to={`/stores/${product.store.slug}`} className="text-sm text-[#6366F1] hover:text-[#4F46E5] hover:underline flex items-center gap-1 mb-2">
+              <Link to={`/stores/${product.store.slug}`} className="text-sm text-primary hover:text-primary-hover hover:underline flex items-center gap-1 mb-2">
                 <Store className="h-4 w-4" /> Visit {product.store.name}
               </Link>
             )}
@@ -143,7 +165,7 @@ export default function ProductDetailPage() {
             {ratingSummary && (
               <div className="flex items-center gap-2 mb-3">
                 <StarRating rating={ratingSummary.avg ?? ratingSummary.average ?? 0} size="md" />
-                <span className="text-sm text-[#6366F1]">
+                <span className="text-sm text-primary">
                   {ratingSummary.count ?? ratingSummary.total ?? 0} reviews
                 </span>
               </div>
@@ -159,7 +181,7 @@ export default function ProductDetailPage() {
             />
 
             {product.shortDesc && (
-              <p className="text-sm text-[#0F172A] mt-3">{product.shortDesc}</p>
+              <p className="text-sm text-text-primary mt-3">{product.shortDesc}</p>
             )}
 
             <Separator className="my-4" />
@@ -182,12 +204,12 @@ export default function ProductDetailPage() {
 
             {/* Quick actions */}
             <div className="flex items-center gap-6 mt-4">
-              <button className="text-sm text-[#6366F1] hover:text-[#4F46E5] flex items-center gap-1 cursor-pointer">
+              <button className="text-sm text-primary hover:text-primary-hover flex items-center gap-1 cursor-pointer">
                 <Heart className="h-4 w-4" /> Add to Wishlist
               </button>
               <button
                 onClick={() => { navigator.clipboard.writeText(window.location.href); toast.success('Link copied!') }}
-                className="text-sm text-[#6366F1] hover:text-[#4F46E5] flex items-center gap-1 cursor-pointer"
+                className="text-sm text-primary hover:text-primary-hover flex items-center gap-1 cursor-pointer"
               >
                 <Share2 className="h-4 w-4" /> Share
               </button>
@@ -198,16 +220,16 @@ export default function ProductDetailPage() {
             {/* Trust badges */}
             <div className="grid grid-cols-3 gap-3 text-center">
               <div className="flex flex-col items-center gap-1">
-                <Truck className="h-5 w-5 text-[#10B981]" />
-                <span className="text-xs text-[#64748B]">Free Delivery</span>
+                <Truck className="h-5 w-5 text-success" />
+                <span className="text-xs text-text-secondary">Free Delivery</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <RefreshCw className="h-5 w-5 text-[#10B981]" />
-                <span className="text-xs text-[#64748B]">Easy Returns</span>
+                <RefreshCw className="h-5 w-5 text-success" />
+                <span className="text-xs text-text-secondary">Easy Returns</span>
               </div>
               <div className="flex flex-col items-center gap-1">
-                <ShieldCheck className="h-5 w-5 text-[#10B981]" />
-                <span className="text-xs text-[#64748B]">Secure Payment</span>
+                <ShieldCheck className="h-5 w-5 text-success" />
+                <span className="text-xs text-text-secondary">Secure Payment</span>
               </div>
             </div>
           </div>
@@ -223,28 +245,28 @@ export default function ProductDetailPage() {
           </TabsList>
 
           <TabsContent value="description">
-            <div className="bg-white rounded-xl border border-[#E2E8F0] p-6">
+            <div className="bg-card rounded-xl border border-border p-6">
               {product.fullDesc ? (
-                <div className="prose max-w-none text-sm text-[#0F172A]" dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.fullDesc) }} />
+                <div className="prose max-w-none text-sm text-text-primary" dangerouslySetInnerHTML={{ __html: sanitizeHtml(product.fullDesc) }} />
               ) : (
-                <p className="text-sm text-[#64748B]">{product.shortDesc ?? 'No description available.'}</p>
+                <p className="text-sm text-text-secondary">{product.shortDesc ?? 'No description available.'}</p>
               )}
             </div>
           </TabsContent>
 
           <TabsContent value="reviews">
-            <div className="bg-white rounded-xl border border-[#E2E8F0] p-6 space-y-6">
+            <div className="bg-card rounded-xl border border-border p-6 space-y-6">
               {ratingSummary && <ReviewSummary summary={ratingSummary} />}
               <Separator />
               {reviews.length > 0 ? (
                 reviews.map((r) => <ReviewCard key={r.id} review={r} />)
               ) : (
-                <p className="text-sm text-[#64748B] text-center py-4">No reviews yet. Be the first to review!</p>
+                <p className="text-sm text-text-secondary text-center py-4">No reviews yet. Be the first to review!</p>
               )}
               <Separator />
               {isAuthenticated && (
                 <div>
-                  <h3 className="text-lg font-bold text-[#0F172A] mb-4">Write a Review</h3>
+                  <h3 className="text-lg font-bold text-text-primary mb-4">Write a Review</h3>
                   <ReviewForm
                     productId={product.id}
                     onSuccess={() => {

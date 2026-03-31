@@ -2,46 +2,51 @@
 
 /* ─── Enterprise Design System — Linear / Stripe / Vercel Inspired ─── */
 @theme {
-  --color-primary: #6366F1;
-  --color-primary-hover: #4F46E5;
-  --color-primary-light: #EEF2FF;
-  --color-secondary: #8B5CF6;
-  --color-secondary-hover: #7C3AED;
-  --color-navy: #0F172A;
-  --color-navy-light: #1E293B;
-  --color-navy-lighter: #334155;
-  --color-accent: #A78BFA;
+  --color-primary: var(--theme-primary);
+  --color-primary-hover: var(--theme-primary-hover);
+  --color-primary-light: var(--theme-primary-light);
+  --color-secondary: var(--theme-secondary);
+  --color-secondary-hover: var(--theme-secondary-hover);
+  --color-accent: var(--theme-accent);
   --color-success: #10B981;
-  --color-success-light: #ECFDF5;
+  --color-success-light: var(--theme-success-light);
   --color-danger: #EF4444;
-  --color-danger-light: #FEF2F2;
-  --color-background: #F8FAFC;
-  --color-card: #FFFFFF;
-  --color-text-primary: #0F172A;
-  --color-text-secondary: #64748B;
-  --color-text-muted: #94A3B8;
-  --color-border: #E2E8F0;
-  --color-border-focus: #6366F1;
-  --color-link: #6366F1;
-  --color-link-hover: #4F46E5;
+  --color-danger-light: var(--theme-danger-light);
+  --color-warning: #F59E0B;
+  --color-background: var(--theme-bg);
+  --color-card: var(--theme-card);
+  --color-card-hover: var(--theme-card-hover);
+  --color-text-primary: var(--theme-text);
+  --color-text-secondary: var(--theme-text-secondary);
+  --color-text-muted: var(--theme-text-muted);
+  --color-border: var(--theme-border);
+  --color-border-hover: var(--theme-border-hover);
+  --color-border-focus: var(--theme-primary);
+  --color-link: var(--theme-primary);
+  --color-link-hover: var(--theme-primary-hover);
   --color-badge-red: #EF4444;
   --color-badge-green: #10B981;
   --color-badge-orange: #F59E0B;
   --color-star: #F59E0B;
-  --color-price: #0F172A;
+  --color-price: var(--theme-text);
   --color-savings: #10B981;
-  --color-footer-divider: #334155;
-  --color-surface: #F1F5F9;
-  --color-warning: #F59E0B;
+  --color-surface: var(--theme-surface);
+  --color-surface-hover: var(--theme-surface-hover);
+  --color-input: var(--theme-input);
+  --color-input-border: var(--theme-input-border);
+  --color-overlay: var(--theme-overlay);
+  --color-footer-bg: var(--theme-footer-bg);
+  --color-footer-text: var(--theme-footer-text);
+  --color-footer-divider: var(--theme-footer-divider);
 
   --font-family-primary: 'Inter', system-ui, -apple-system, sans-serif;
   --font-family-mono: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
 
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-header: 0 1px 0 rgba(0, 0, 0, 0.06);
-  --shadow-dropdown: 0 4px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-  --shadow-modal: 0 24px 48px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.06);
+  --shadow-card: var(--theme-shadow-card);
+  --shadow-card-hover: var(--theme-shadow-card-hover);
+  --shadow-header: var(--theme-shadow-header);
+  --shadow-dropdown: var(--theme-shadow-dropdown);
+  --shadow-modal: var(--theme-shadow-modal);
 
   --radius-sm: 6px;
   --radius-md: 8px;
@@ -59,6 +64,94 @@
   --animate-countdown: countdown-pulse 1s ease-in-out infinite;
   --animate-shimmer: shimmer 2s ease-in-out infinite;
   --animate-bounce-subtle: bounce-subtle 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ─── Light Theme Tokens (default) ─── */
+:root {
+  --theme-primary: #6366F1;
+  --theme-primary-hover: #4F46E5;
+  --theme-primary-light: #EEF2FF;
+  --theme-secondary: #8B5CF6;
+  --theme-secondary-hover: #7C3AED;
+  --theme-accent: #A78BFA;
+  --theme-success-light: #ECFDF5;
+  --theme-danger-light: #FEF2F2;
+
+  --theme-bg: #F8FAFC;
+  --theme-card: #FFFFFF;
+  --theme-card-hover: #FFFFFF;
+  --theme-surface: #F1F5F9;
+  --theme-surface-hover: #E2E8F0;
+  --theme-input: #F1F5F9;
+  --theme-input-border: transparent;
+  --theme-overlay: rgba(15, 23, 42, 0.5);
+
+  --theme-text: #0F172A;
+  --theme-text-secondary: #64748B;
+  --theme-text-muted: #94A3B8;
+
+  --theme-border: #E2E8F0;
+  --theme-border-hover: #CBD5E1;
+
+  --theme-footer-bg: #0F172A;
+  --theme-footer-text: #CBD5E1;
+  --theme-footer-divider: #334155;
+
+  --theme-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
+  --theme-shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --theme-shadow-header: 0 1px 0 rgba(0, 0, 0, 0.06);
+  --theme-shadow-dropdown: 0 4px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+  --theme-shadow-modal: 0 24px 48px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.06);
+
+  --theme-scrollbar: #CBD5E1;
+  --theme-scrollbar-hover: #94A3B8;
+  --theme-skeleton-from: #F1F5F9;
+  --theme-skeleton-via: #E2E8F0;
+  --theme-star-empty: #E2E8F0;
+}
+
+/* ─── Dark Theme Tokens ─── */
+.dark {
+  --theme-primary: #818CF8;
+  --theme-primary-hover: #6366F1;
+  --theme-primary-light: rgba(99, 102, 241, 0.15);
+  --theme-secondary: #A78BFA;
+  --theme-secondary-hover: #8B5CF6;
+  --theme-accent: #C4B5FD;
+  --theme-success-light: rgba(16, 185, 129, 0.15);
+  --theme-danger-light: rgba(239, 68, 68, 0.15);
+
+  --theme-bg: #0B0F1A;
+  --theme-card: #111827;
+  --theme-card-hover: #1A2035;
+  --theme-surface: #1E293B;
+  --theme-surface-hover: #334155;
+  --theme-input: #1E293B;
+  --theme-input-border: #334155;
+  --theme-overlay: rgba(0, 0, 0, 0.7);
+
+  --theme-text: #F1F5F9;
+  --theme-text-secondary: #94A3B8;
+  --theme-text-muted: #64748B;
+
+  --theme-border: #1E293B;
+  --theme-border-hover: #334155;
+
+  --theme-footer-bg: #070B14;
+  --theme-footer-text: #94A3B8;
+  --theme-footer-divider: #1E293B;
+
+  --theme-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --theme-shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
+  --theme-shadow-header: 0 1px 0 rgba(0, 0, 0, 0.3);
+  --theme-shadow-dropdown: 0 4px 24px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --theme-shadow-modal: 0 24px 48px rgba(0, 0, 0, 0.6), 0 8px 16px rgba(0, 0, 0, 0.4);
+
+  --theme-scrollbar: #334155;
+  --theme-scrollbar-hover: #475569;
+  --theme-skeleton-from: #1E293B;
+  --theme-skeleton-via: #334155;
+  --theme-star-empty: #334155;
 }
 
 @keyframes fade-in {
@@ -128,12 +221,14 @@ html {
   -moz-osx-font-smoothing: grayscale;
   scroll-behavior: smooth;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  transition: color 0.3s ease, background-color 0.3s ease;
 }
 
 body {
   background-color: var(--color-background);
   min-height: 100vh;
   letter-spacing: -0.011em;
+  transition: background-color 0.3s ease;
 }
 
 /* ─── Skip to Content (Accessibility) ─── */
@@ -165,12 +260,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #CBD5E1;
+  background: var(--theme-scrollbar);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #94A3B8;
+  background: var(--theme-scrollbar-hover);
 }
 
 /* ─── Product Card Styles ─── */
@@ -185,7 +280,7 @@ body {
 
 .product-card:hover {
   box-shadow: var(--shadow-card-hover);
-  border-color: #CBD5E1;
+  border-color: var(--theme-border-hover);
   transform: translateY(-2px);
 }
 
@@ -207,7 +302,7 @@ body {
 }
 
 .star-empty {
-  color: #E2E8F0;
+  color: var(--theme-star-empty);
 }
 
 /* ─── Sale Badge Pulse ─── */
@@ -231,9 +326,9 @@ body {
 .skeleton {
   background: linear-gradient(
     90deg,
-    #F1F5F9 25%,
-    #E2E8F0 50%,
-    #F1F5F9 75%
+    var(--theme-skeleton-from) 25%,
+    var(--theme-skeleton-via) 50%,
+    var(--theme-skeleton-from) 75%
   );
   background-size: 200% 100%;
   animation: shimmer 2s ease-in-out infinite;
@@ -266,6 +361,35 @@ body {
   background: white;
   width: 20px;
   border-radius: 4px;
+}
+
+/* ─── Smooth Theme Transitions on Surfaces ─── */
+.bg-card,
+.bg-background,
+.bg-surface,
+.bg-footer-bg,
+[class*="bg-card"],
+[class*="bg-background"],
+[class*="bg-surface"] {
+  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* ─── Focus Ring Utility ─── */
+:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ─── Button Press Effect ─── */
+button:active:not(:disabled),
+[role="button"]:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+/* ─── Image Placeholder ─── */
+img {
+  background-color: var(--theme-surface);
 }
 
 /* ─── Checkout Step Indicator ─── */
@@ -315,10 +439,10 @@ body {
 
 /* ─── Glassmorphism Utility ─── */
 .glass {
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--theme-overlay);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid var(--theme-border);
 }
 
 /* ─── Focus Ring ─── */

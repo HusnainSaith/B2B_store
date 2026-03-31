@@ -46,21 +46,21 @@ export default function LoginPage() {
     <>
       <SEOHead title="Sign In" />
       <div className="text-center mb-6">
-        <h1 className="text-2xl font-bold text-[#0F172A] tracking-tight">Welcome back</h1>
-        <p className="text-sm text-[#94A3B8] mt-1">Sign in to your account</p>
+        <h1 className="text-2xl font-bold text-text-primary tracking-tight">Welcome back</h1>
+        <p className="text-sm text-text-muted mt-1">Sign in to your account</p>
       </div>
 
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div>
-          <Label htmlFor="email" className="mb-1.5 block text-[#0F172A]">Email address</Label>
+          <Label htmlFor="email" className="mb-1.5 block text-text-primary">Email address</Label>
           <Input id="email" type="email" placeholder="you@example.com" {...register('email')} autoFocus />
-          {errors.email && <p className="text-xs text-[#EF4444] mt-1">{errors.email.message}</p>}
+          {errors.email && <p className="text-xs text-danger mt-1">{errors.email.message}</p>}
         </div>
 
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <Label htmlFor="password" className="text-[#0F172A]">Password</Label>
-            <Link to={ROUTES.FORGOT_PASSWORD} className="text-xs text-[#6366F1] hover:text-[#4F46E5] font-medium">
+            <Label htmlFor="password" className="text-text-primary">Password</Label>
+            <Link to={ROUTES.FORGOT_PASSWORD} className="text-xs text-primary hover:text-primary-hover font-medium">
               Forgot password?
             </Link>
           </div>
@@ -74,13 +74,13 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#94A3B8] hover:text-[#64748B] cursor-pointer transition-colors"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-secondary cursor-pointer transition-colors"
               tabIndex={-1}
             >
               {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
             </button>
           </div>
-          {errors.password && <p className="text-xs text-[#EF4444] mt-1">{errors.password.message}</p>}
+          {errors.password && <p className="text-xs text-danger mt-1">{errors.password.message}</p>}
         </div>
 
         <Button type="submit" className="w-full h-11 font-semibold text-base" disabled={loading}>
@@ -88,9 +88,9 @@ export default function LoginPage() {
         </Button>
       </form>
 
-      <p className="text-sm text-[#94A3B8] text-center mt-6">
+      <p className="text-sm text-text-muted text-center mt-6">
         Don't have an account?{' '}
-        <Link to={ROUTES.REGISTER} className="text-[#6366F1] hover:text-[#4F46E5] font-medium">
+        <Link to={ROUTES.REGISTER} className="text-primary hover:text-primary-hover font-medium">
           Create account
         </Link>
       </p>

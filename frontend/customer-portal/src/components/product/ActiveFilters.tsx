@@ -41,12 +41,12 @@ export function ActiveFilters() {
       {activeFilters.map((f, i) => (
         <span
           key={`${f.key}-${f.value}-${i}`}
-          className="inline-flex items-center gap-1 bg-[#EEF2FF] border border-[#6366F1]/30 text-[#6366F1] text-xs font-medium rounded-full px-3 py-1"
+          className="inline-flex items-center gap-1 bg-primary-light border border-primary/30 text-primary text-xs font-medium rounded-full px-3 py-1"
         >
           {f.label}: {f.value.length > 20 ? `${f.value.slice(0, 20)}…` : f.value}
           <button
             onClick={() => removeFilter(f.key)}
-            className="hover:bg-[#6366F1]/10 rounded-full p-0.5 cursor-pointer"
+            className="hover:bg-primary/10 rounded-full p-0.5 cursor-pointer"
             aria-label={`Remove ${f.label} filter`}
           >
             <X className="h-3 w-3" />

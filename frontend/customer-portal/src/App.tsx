@@ -7,6 +7,7 @@ import { ROUTES } from '@/constants/routes'
 import { useAuthStore } from '@/store/auth.store'
 import { ErrorBoundary } from '@/components/common/ErrorBoundary'
 import { PageLoader } from '@/components/common/LoadingSpinner'
+import { ThemeProvider } from '@/providers/ThemeProvider'
 
 // Layouts
 import { MainLayout } from '@/components/layout/MainLayout'
@@ -69,10 +70,11 @@ function GuestRoute({ children }: { children: React.ReactNode }) {
 export default function App() {
   return (
     <ErrorBoundary>
-      <HelmetProvider>
-        <QueryClientProvider client={queryClient}>
-          <BrowserRouter>
-            <Suspense fallback={<PageLoader />}>
+      <ThemeProvider>
+        <HelmetProvider>
+          <QueryClientProvider client={queryClient}>
+            <BrowserRouter>
+              <Suspense fallback={<PageLoader />}>
               <Routes>
                 {/* Main layout */}
                 <Route element={<MainLayout />}>
@@ -125,6 +127,7 @@ export default function App() {
           <Toaster position="top-right" richColors closeButton />
         </QueryClientProvider>
       </HelmetProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   )
 }

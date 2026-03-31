@@ -21,14 +21,14 @@ export function PaymentStep({ onNext, onBack, selectedMethod }: PaymentStepProps
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-bold text-[#0F172A] mb-2">Payment Method</h2>
+      <h2 className="text-lg font-bold text-text-primary mb-2">Payment Method</h2>
 
       {PAYMENT_METHODS.map((method) => (
         <label
           key={method.value}
           className={cn(
             'flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-colors',
-            selected === method.value ? 'border-[#6366F1] bg-[#EEF2FF]' : 'border-[#E2E8F0] hover:border-[#94A3B8]',
+            selected === method.value ? 'border-primary bg-primary-light' : 'border-border hover:border-text-muted',
           )}
         >
           <input
@@ -36,11 +36,11 @@ export function PaymentStep({ onNext, onBack, selectedMethod }: PaymentStepProps
             name="payment"
             checked={selected === method.value}
             onChange={() => setSelected(method.value)}
-            className="accent-[#6366F1]"
+            className="accent-primary"
           />
-          <span className="text-[#64748B] shrink-0">{METHOD_ICONS[method.value] ?? <CreditCard className="h-5 w-5" />}</span>
+          <span className="text-text-secondary shrink-0">{METHOD_ICONS[method.value] ?? <CreditCard className="h-5 w-5" />}</span>
           <div className="flex-1">
-            <p className="text-sm font-medium text-[#0F172A]">{method.label}</p>
+            <p className="text-sm font-medium text-text-primary">{method.label}</p>
           </div>
         </label>
       ))}

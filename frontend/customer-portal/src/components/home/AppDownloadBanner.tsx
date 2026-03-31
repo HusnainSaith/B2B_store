@@ -16,14 +16,14 @@ export function AppDownloadBanner() {
               <Button variant="secondary" size="lg" className="font-bold">
                 App Store
               </Button>
-              <Button variant="outline" size="lg" className="font-bold border-white text-white hover:bg-white/10 hover:text-white">
+              <Button variant="outline" size="lg" className="font-bold border-white text-white hover:bg-card/10 hover:text-white">
                 Google Play
               </Button>
             </div>
           </div>
 
           <div className="shrink-0">
-            <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-6 flex items-center justify-center">
+            <div className="bg-card/20 backdrop-blur-sm rounded-2xl p-6 flex items-center justify-center">
               <Smartphone className="h-24 w-24 text-white" />
             </div>
           </div>

@@ -7,11 +7,11 @@ export function Footer() {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: 'smooth' })
 
   return (
-    <footer className="bg-[#0F172A] text-[#94A3B8]">
+    <footer className="bg-footer-bg text-footer-text">
       {/* Back to Top */}
       <button
         onClick={scrollToTop}
-        className="w-full bg-[#1E293B] hover:bg-[#334155] py-3 text-sm text-[#CBD5E1] flex items-center justify-center gap-1 transition-colors cursor-pointer"
+        className="w-full bg-surface-hover hover:bg-border-hover py-3 text-sm text-text-secondary flex items-center justify-center gap-1 transition-colors cursor-pointer dark:bg-[#111827] dark:hover:bg-[#1A2035] dark:text-text-muted"
       >
         <ChevronUp className="h-4 w-4" />
         Back to Top
@@ -58,13 +58,13 @@ export function Footer() {
         </div>
       </div>
 
-      <Separator className="bg-[#334155]" />
+      <Separator className="bg-footer-divider" />
 
       {/* Bottom Footer */}
       <div className="container-main py-6">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="bg-[#6366F1] text-white font-bold text-base w-7 h-7 rounded-lg flex items-center justify-center">S</div>
+            <div className="bg-primary text-white font-bold text-base w-7 h-7 rounded-lg flex items-center justify-center">S</div>
             <span className="text-white font-semibold">ShopVerse</span>
           </div>
 
@@ -84,7 +84,7 @@ export function Footer() {
             </a>
           </div>
 
-          <p className="text-xs text-[#64748B]">© {new Date().getFullYear()} ShopVerse. All rights reserved.</p>
+          <p className="text-xs text-text-muted">© {new Date().getFullYear()} ShopVerse. All rights reserved.</p>
         </div>
       </div>
     </footer>

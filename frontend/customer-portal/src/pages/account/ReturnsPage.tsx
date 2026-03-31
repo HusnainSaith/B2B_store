@@ -43,22 +43,22 @@ export default function ReturnsPage() {
     <>
       <SEOHead title="Returns & Refunds" />
       <div>
-        <h1 className="text-xl font-bold text-[#0F172A] mb-6">Returns & Refunds</h1>
+        <h1 className="text-xl font-bold text-text-primary mb-6">Returns & Refunds</h1>
 
         {returns.length === 0 && !showForm ? (
           <EmptyState icon={<RotateCcw className="h-16 w-16" />} title="No return requests" description="You haven't made any return requests." />
         ) : (
           <div className="space-y-4">
             {returns.map((ret) => (
-              <div key={ret.id} className="bg-white rounded-xl border border-[#E2E8F0] p-4">
+              <div key={ret.id} className="bg-card rounded-xl border border-border p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-sm font-bold text-[#0F172A]">Return #{ret.id.slice(-8).toUpperCase()}</p>
-                  <span className="text-xs capitalize px-3 py-1 rounded-full bg-[#F1F5F9] font-medium">{ret.status}</span>
+                  <p className="text-sm font-bold text-text-primary">Return #{ret.id.slice(-8).toUpperCase()}</p>
+                  <span className="text-xs capitalize px-3 py-1 rounded-full bg-surface font-medium">{ret.status}</span>
                 </div>
-                <p className="text-sm text-[#64748B]">Reason: {ret.reason}</p>
-                <p className="text-xs text-[#64748B] mt-1">Submitted: {formatDate(ret.createdAt)}</p>
+                <p className="text-sm text-text-secondary">Reason: {ret.reason}</p>
+                <p className="text-xs text-text-secondary mt-1">Submitted: {formatDate(ret.createdAt)}</p>
                 {ret.refundAmount != null && ret.refundAmount > 0 && (
-                  <p className="text-sm text-[#10B981] font-medium mt-1">Refund: {formatPrice(ret.refundAmount)}</p>
+                  <p className="text-sm text-success font-medium mt-1">Refund: {formatPrice(ret.refundAmount)}</p>
                 )}
               </div>
             ))}
