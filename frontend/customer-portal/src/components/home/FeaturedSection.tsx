@@ -16,10 +16,10 @@ export function FeaturedSection({ title, products, viewAllLink, loading, icon, s
   if (!loading && products.length === 0) return null
 
   return (
-    <section className="py-10 md:py-14" aria-label={title}>
+    <section className="py-12 md:py-16" aria-label={title}>
       <div className="container-main">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">
             {icon || (
               <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">

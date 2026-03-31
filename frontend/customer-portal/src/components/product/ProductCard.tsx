@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { Heart, ShoppingCart, Eye, Star } from 'lucide-react'
+import { Heart, ShoppingCart, Star } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { formatPrice, calculateDiscount } from '@/lib/format'
 import { Badge } from '@/components/ui/badge'
@@ -60,8 +60,11 @@ export function ProductCard({
               )}
             </>
           ) : (
-            <div className="h-full w-full flex items-center justify-center text-text-muted bg-surface">
-              <Eye className="h-10 w-10" />
+            <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-surface to-surface-hover">
+              <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-3">
+                <span className="text-2xl font-bold text-primary/60">{product.name?.charAt(0) || 'Z'}</span>
+              </div>
+              <p className="text-xs text-text-muted px-4 text-center line-clamp-1">{product.name}</p>
             </div>
           )}
         </Link>

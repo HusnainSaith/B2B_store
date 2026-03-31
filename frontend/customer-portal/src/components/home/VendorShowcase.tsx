@@ -11,10 +11,10 @@ export function VendorShowcase({ vendors, loading }: VendorShowcaseProps) {
   if (!loading && vendors.length === 0) return null
 
   return (
-    <section className="py-10 md:py-14" aria-label="Top rated vendors">
+    <section className="py-12 md:py-16" aria-label="Top rated vendors">
       <div className="container-main">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-10">
           <div>
             <h2 className="text-xl md:text-2xl font-bold text-text-primary tracking-tight">Top Rated Vendors</h2>
             <p className="text-sm text-text-secondary mt-1">Trusted sellers with outstanding service</p>

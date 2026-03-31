@@ -61,24 +61,24 @@ export function Header() {
   return (
     <header className="bg-card/80 backdrop-blur-xl border-b border-border sticky top-0 z-40 shadow-header">
       {/* Desktop Header */}
-      <div className="container-main hidden md:flex items-center h-[72px] gap-8">
+      <div className="container-main hidden md:flex items-center h-[76px] gap-10">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2.5 shrink-0 mr-2 group">
-          <div className="bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg w-9 h-9 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:shadow-primary/30 transition-shadow duration-300">Z</div>
-          <span className="text-lg font-bold text-text-primary tracking-tight">Zaroox</span>
+        <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
+          <div className="bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:shadow-primary/30 transition-shadow duration-300">Z</div>
+          <span className="text-xl font-bold text-text-primary tracking-tight">Zaroox</span>
         </Link>
 
         {/* Search Bar */}
-        <div ref={searchRef} className="flex-1 relative max-w-2xl">
+        <div ref={searchRef} className="flex-1 relative max-w-2xl mx-auto">
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-text-muted" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearchInput(e.target.value)}
               onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
               placeholder="Search products, brands, categories..."
-              className="w-full h-11 pl-11 pr-4 rounded-full bg-surface border border-transparent text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 focus:bg-card transition-all duration-300"
+              className="w-full h-12 pl-12 pr-5 rounded-full bg-surface border border-transparent text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 focus:bg-card transition-all duration-300"
               aria-label="Search"
             />
           </form>
@@ -105,11 +105,11 @@ export function Header() {
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-2 shrink-0">
           {/* Account */}
           <Link
             to={isAuthenticated ? ROUTES.ACCOUNT : ROUTES.LOGIN}
-            className="flex items-center gap-2 px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface rounded-xl transition-all duration-200 shrink-0"
+            className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-surface rounded-xl transition-all duration-200 shrink-0"
           >
             <div className="h-8 w-8 rounded-full bg-surface flex items-center justify-center">
               <User className="h-4 w-4" />
@@ -122,7 +122,7 @@ export function Header() {
           {/* Orders */}
           <Link
             to={ROUTES.ACCOUNT_ORDERS}
-            className="px-3 py-2 text-sm text-text-secondary hover:text-text-primary hover:bg-surface rounded-xl font-medium transition-all duration-200 shrink-0 hidden lg:flex"
+            className="px-4 py-2.5 text-sm text-text-secondary hover:text-text-primary hover:bg-surface rounded-xl font-medium transition-all duration-200 shrink-0 hidden lg:flex"
           >
             Orders
           </Link>
@@ -130,7 +130,7 @@ export function Header() {
           {/* Cart */}
           <Link
             to={ROUTES.CART}
-            className="flex items-center gap-2 px-3 py-2 text-text-secondary hover:text-text-primary hover:bg-surface rounded-xl transition-all duration-200 relative shrink-0"
+            className="flex items-center gap-2.5 px-4 py-2.5 text-text-secondary hover:text-text-primary hover:bg-surface rounded-xl transition-all duration-200 relative shrink-0"
             aria-label={`Cart with ${itemCount} items`}
           >
             <div className="relative">

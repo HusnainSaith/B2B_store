@@ -26,7 +26,7 @@ const BANNERS = [
 
 export function PromoBannerRow() {
   return (
-    <section className="py-8 md:py-12" aria-label="Promotional banners">
+    <section className="py-12 md:py-16" aria-label="Promotional banners">
       <div className="container-main">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-6">
           {BANNERS.map((banner) => (

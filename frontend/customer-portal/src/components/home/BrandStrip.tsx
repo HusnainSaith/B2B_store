@@ -18,9 +18,9 @@ export function BrandStrip() {
   if (brands.length === 0) return null
 
   return (
-    <section className="py-10 md:py-14" aria-label="Shop by brand">
+    <section className="py-12 md:py-16" aria-label="Shop by brand">
       <div className="container-main">
-        <div className="flex items-center gap-3 mb-8">
+        <div className="flex items-center gap-3 mb-10">
           <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center">
             <Award className="h-5 w-5 text-white" />
           </div>

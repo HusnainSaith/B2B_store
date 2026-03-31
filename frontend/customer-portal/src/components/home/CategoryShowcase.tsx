@@ -18,10 +18,10 @@ export function CategoryShowcase({ category, products, layout = 'bento' }: Categ
   const heroImage = hero?.images?.find((i) => i.isPrimary)?.url || hero?.images?.[0]?.url
 
   return (
-    <section className="py-8 md:py-12" aria-label={category.name}>
+    <section className="py-12 md:py-16" aria-label={category.name}>
       <div className="container-main">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex items-center justify-between mb-10">
           <div className="flex items-center gap-3">
             {category.imageUrl && (
               <div className="h-10 w-10 rounded-xl overflow-hidden bg-surface flex items-center justify-center">

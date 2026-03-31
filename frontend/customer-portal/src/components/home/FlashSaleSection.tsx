@@ -33,7 +33,7 @@ export function FlashSaleSection() {
   if (!flashSale || items.length === 0) return null
 
   return (
-    <section className="py-8 md:py-10" aria-label="Flash sale">
+    <section className="py-10 md:py-12" aria-label="Flash sale">
       <div className="container-main">
         {/* Header */}
         <div className="bg-danger rounded-t-[8px] px-4 md:px-6 py-3 flex items-center justify-between">
