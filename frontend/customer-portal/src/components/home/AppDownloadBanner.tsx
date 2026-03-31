@@ -3,14 +3,14 @@ import { Smartphone, Download } from 'lucide-react'
 
 export function AppDownloadBanner() {
   return (
-    <section className="py-8 md:py-12" aria-label="Download our app">
+    <section className="py-12 md:py-16" aria-label="Download our app">
       <div className="container-main">
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-secondary to-accent">
           {/* Decorative circles */}
           <div className="absolute top-0 right-0 w-72 h-72 rounded-full bg-white/5 -translate-y-1/3 translate-x-1/4" />
           <div className="absolute bottom-0 left-0 w-48 h-48 rounded-full bg-white/5 translate-y-1/3 -translate-x-1/4" />
 
-          <div className="relative z-10 p-8 md:p-14 flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="relative z-10 p-10 md:p-16 flex flex-col md:flex-row items-center justify-between gap-10">
             <div className="text-white max-w-lg">
               <div className="inline-flex items-center gap-2 bg-white/10 rounded-full px-4 py-1.5 text-sm font-medium mb-4">
                 <Download className="h-4 w-4" /> Available on iOS & Android

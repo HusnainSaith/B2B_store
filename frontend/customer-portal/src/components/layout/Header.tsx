@@ -61,7 +61,7 @@ export function Header() {
   return (
     <header className="bg-card/80 backdrop-blur-xl border-b border-border sticky top-0 z-40 shadow-header">
       {/* Desktop Header */}
-      <div className="container-main hidden md:flex items-center h-16 gap-6">
+      <div className="container-main hidden md:flex items-center h-[72px] gap-8">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0 mr-2 group">
           <div className="bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg w-9 h-9 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:shadow-primary/30 transition-shadow duration-300">Z</div>
@@ -148,7 +148,7 @@ export function Header() {
 
       {/* Mobile Header */}
       <div className="md:hidden">
-        <div className="container-main flex items-center justify-between h-14">
+        <div className="container-main flex items-center justify-between h-16">
           <button
             onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}
             className="p-2 text-text-secondary hover:text-text-primary rounded-lg hover:bg-surface transition-colors cursor-pointer"

@@ -42,7 +42,7 @@ export function TrendingCarousel({ products, loading }: TrendingCarouselProps) {
     <section className="py-10 md:py-14" aria-label="Trending now">
       <div className="container-main">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-orange-500 to-pink-500 flex items-center justify-center">
               <TrendingUp className="h-5 w-5 text-white" />

@@ -16,10 +16,10 @@ export function FeaturedSection({ title, products, viewAllLink, loading, icon, s
   if (!loading && products.length === 0) return null
 
   return (
-    <section className="py-8 md:py-10" aria-label={title}>
+    <section className="py-10 md:py-14" aria-label={title}>
       <div className="container-main">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             {icon || (
               <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
@@ -40,7 +40,7 @@ export function FeaturedSection({ title, products, viewAllLink, loading, icon, s
 
         {/* Grid */}
         {loading ? (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 md:gap-6">
             {Array.from({ length: 5 }).map((_, i) => (
               <div key={i} className="animate-pulse">
                 <div className="aspect-square rounded-xl bg-surface mb-3" />
@@ -50,7 +50,7 @@ export function FeaturedSection({ title, products, viewAllLink, loading, icon, s
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 md:gap-6">
             {products.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

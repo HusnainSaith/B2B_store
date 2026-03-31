@@ -14,7 +14,7 @@ export function VendorShowcase({ vendors, loading }: VendorShowcaseProps) {
     <section className="py-10 md:py-14" aria-label="Top rated vendors">
       <div className="container-main">
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-xl md:text-2xl font-bold text-text-primary tracking-tight">Top Rated Vendors</h2>
             <p className="text-sm text-text-secondary mt-1">Trusted sellers with outstanding service</p>
@@ -26,7 +26,7 @@ export function VendorShowcase({ vendors, loading }: VendorShowcaseProps) {
 
         {/* Vendor Cards */}
         {loading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="animate-pulse bg-card rounded-2xl border border-border p-6">
                 <div className="h-14 w-14 rounded-full bg-surface mb-4" />
@@ -37,7 +37,7 @@ export function VendorShowcase({ vendors, loading }: VendorShowcaseProps) {
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 md:gap-6">
             {vendors.map((vendor) => (
               <Link
                 key={vendor.id}

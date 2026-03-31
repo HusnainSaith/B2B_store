@@ -18,7 +18,9 @@ export function MainLayout() {
       <main id="main-content" className="flex-1">
         <Outlet />
       </main>
-      <Footer />
+      <div className="mt-8 md:mt-12">
+        <Footer />
+      </div>
     </div>
   )
 }

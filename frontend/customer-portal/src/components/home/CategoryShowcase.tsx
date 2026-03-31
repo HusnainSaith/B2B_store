@@ -18,10 +18,10 @@ export function CategoryShowcase({ category, products, layout = 'bento' }: Categ
   const heroImage = hero?.images?.find((i) => i.isPrimary)?.url || hero?.images?.[0]?.url
 
   return (
-    <section className="py-6 md:py-8" aria-label={category.name}>
+    <section className="py-8 md:py-12" aria-label={category.name}>
       <div className="container-main">
         {/* Section Header */}
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             {category.imageUrl && (
               <div className="h-10 w-10 rounded-xl overflow-hidden bg-surface flex items-center justify-center">
@@ -45,7 +45,7 @@ export function CategoryShowcase({ category, products, layout = 'bento' }: Categ
 
         {layout === 'bento' ? (
           /* Bento Layout: Hero card left, 4 smaller cards right */
-          <div className="grid grid-cols-2 lg:grid-cols-12 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-12 gap-5 md:gap-6">
             {/* Hero Card */}
             <Link
               to={`/products/${hero.slug}`}
@@ -63,17 +63,17 @@ export function CategoryShowcase({ category, products, layout = 'bento' }: Categ
                   <div className="h-full w-full bg-gradient-to-br from-primary/10 to-secondary/10" />
                 )}
               </div>
-              <div className="p-4 flex flex-col flex-1">
-                <h3 className="font-semibold text-text-primary group-hover:text-primary transition-colors line-clamp-2 mb-2">
+              <div className="p-5 flex flex-col flex-1">
+                <h3 className="font-semibold text-text-primary group-hover:text-primary transition-colors line-clamp-2 mb-2.5">
                   {hero.name}
                 </h3>
-                <p className="text-sm text-text-secondary line-clamp-2 mb-3">{hero.shortDesc}</p>
+                <p className="text-sm text-text-secondary line-clamp-2 mb-4">{hero.shortDesc}</p>
                 <p className="text-lg font-bold text-text-primary mt-auto">{formatPrice(hero.basePrice)}</p>
               </div>
             </Link>
 
             {/* Small Cards Grid */}
-            <div className="col-span-2 lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="col-span-2 lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6">
               {rest.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}
@@ -81,7 +81,7 @@ export function CategoryShowcase({ category, products, layout = 'bento' }: Categ
           </div>
         ) : (
           /* Standard Grid */
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 md:gap-6">
             {[hero, ...rest].map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

@@ -19,10 +19,10 @@ export function CategoryStrip() {
   if (categories.length === 0) return null
 
   return (
-    <section className="py-6 md:py-8" aria-label="Shop by category">
+    <section className="py-8 md:py-10" aria-label="Shop by category">
       <div className="container-main">
         <ScrollArea className="w-full">
-          <div className="flex gap-3 md:gap-4 pb-2">
+          <div className="flex gap-4 md:gap-5 pb-2">
             {categories.map((cat) => (
               <Link
                 key={cat.id}

@@ -18,11 +18,11 @@ export function Footer() {
       </button>
 
       {/* Main Footer Links */}
-      <div className="container-main py-14">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div className="container-main py-16">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-12">
           <div>
-            <h4 className="text-white font-semibold text-sm mb-5 tracking-wide">Get to Know Us</h4>
-            <ul className="space-y-3 text-sm">
+            <h4 className="text-white font-semibold text-sm mb-6 tracking-wide">Get to Know Us</h4>
+            <ul className="space-y-3.5 text-sm">
               <li><Link to="/" className="hover:text-white transition-colors duration-200">About Zaroox</Link></li>
               <li><Link to="/" className="hover:text-white transition-colors duration-200">Careers</Link></li>
               <li><Link to="/" className="hover:text-white transition-colors duration-200">Blog</Link></li>
@@ -30,16 +30,16 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold text-sm mb-5 tracking-wide">Make Money with Us</h4>
-            <ul className="space-y-3 text-sm">
+            <h4 className="text-white font-semibold text-sm mb-6 tracking-wide">Make Money with Us</h4>
+            <ul className="space-y-3.5 text-sm">
               <li><Link to="/" className="hover:text-white transition-colors duration-200">Sell on Zaroox</Link></li>
               <li><Link to="/" className="hover:text-white transition-colors duration-200">Affiliate Program</Link></li>
               <li><Link to="/" className="hover:text-white transition-colors duration-200">Advertise Your Products</Link></li>
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold text-sm mb-5 tracking-wide">Payment</h4>
-            <ul className="space-y-3 text-sm">
+            <h4 className="text-white font-semibold text-sm mb-6 tracking-wide">Payment</h4>
+            <ul className="space-y-3.5 text-sm">
               <li><span>Credit/Debit Cards</span></li>
               <li><span>Cash on Delivery</span></li>
               <li><span>Bank Transfer</span></li>
@@ -47,8 +47,8 @@ export function Footer() {
             </ul>
           </div>
           <div>
-            <h4 className="text-white font-semibold text-sm mb-5 tracking-wide">Let Us Help You</h4>
-            <ul className="space-y-3 text-sm">
+            <h4 className="text-white font-semibold text-sm mb-6 tracking-wide">Let Us Help You</h4>
+            <ul className="space-y-3.5 text-sm">
               <li><Link to={ROUTES.ACCOUNT} className="hover:text-white transition-colors duration-200">Your Account</Link></li>
               <li><Link to={ROUTES.ACCOUNT_ORDERS} className="hover:text-white transition-colors duration-200">Your Orders</Link></li>
               <li><Link to={ROUTES.ACCOUNT_RETURNS} className="hover:text-white transition-colors duration-200">Returns & Refunds</Link></li>
@@ -61,7 +61,7 @@ export function Footer() {
       <Separator className="bg-footer-divider" />
 
       {/* Bottom Footer */}
-      <div className="container-main py-8">
+      <div className="container-main py-10">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex items-center gap-2.5">
             <div className="bg-gradient-to-br from-primary to-secondary text-white font-bold text-base w-8 h-8 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">Z</div>

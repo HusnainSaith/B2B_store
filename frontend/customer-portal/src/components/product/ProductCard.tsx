@@ -104,19 +104,19 @@ export function ProductCard({
       </div>
 
       {/* Content */}
-      <div className={cn('flex flex-col flex-1 p-3.5', compact && 'p-2.5')}>
+      <div className={cn('flex flex-col flex-1 p-4', compact && 'p-3')}>
         {/* Store */}
         {product.store && !compact && (
           <Link
             to={`/stores/${product.store.slug}`}
-            className="text-[11px] text-text-muted hover:text-primary transition-colors mb-1.5 line-clamp-1 uppercase tracking-wider font-medium"
+            className="text-[11px] text-text-muted hover:text-primary transition-colors mb-2 line-clamp-1 uppercase tracking-wider font-medium"
           >
             {product.store.name}
           </Link>
         )}
 
         {/* Title */}
-        <Link to={productLink} className="block mb-2">
+        <Link to={productLink} className="block mb-2.5">
           <h3 className={cn(
             'text-sm text-text-primary hover:text-primary line-clamp-2 font-medium leading-snug transition-colors',
             compact && 'text-xs',
@@ -127,7 +127,7 @@ export function ProductCard({
 
         {/* Rating */}
         {!compact && (
-          <div className="flex items-center gap-1 mb-2">
+          <div className="flex items-center gap-1.5 mb-2.5">
             <Star className="h-3.5 w-3.5 fill-star text-star" />
             <span className="text-xs font-medium text-text-secondary">4.5</span>
             <span className="text-xs text-text-muted">(128)</span>
@@ -135,7 +135,7 @@ export function ProductCard({
         )}
 
         {/* Price */}
-        <div className="mt-auto pt-1">
+        <div className="mt-auto pt-1.5">
           <div className="flex items-baseline gap-2 flex-wrap">
             <span className={cn('font-bold text-text-primary', compact ? 'text-sm' : 'text-base')}>
               {formatPrice(displayPrice)}

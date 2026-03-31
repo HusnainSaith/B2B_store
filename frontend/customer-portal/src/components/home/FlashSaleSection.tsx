@@ -33,7 +33,7 @@ export function FlashSaleSection() {
   if (!flashSale || items.length === 0) return null
 
   return (
-    <section className="py-6" aria-label="Flash sale">
+    <section className="py-8 md:py-10" aria-label="Flash sale">
       <div className="container-main">
         {/* Header */}
         <div className="bg-danger rounded-t-[8px] px-4 md:px-6 py-3 flex items-center justify-between">
@@ -51,9 +51,9 @@ export function FlashSaleSection() {
         </div>
 
         {/* Products */}
-        <div className="bg-card rounded-b-[8px] border border-t-0 border-border p-4">
+        <div className="bg-card rounded-b-[8px] border border-t-0 border-border p-5">
           <ScrollArea className="w-full">
-            <div className="flex gap-4 pb-2">
+            <div className="flex gap-5 pb-2">
               {items.map((item) => (
                 <div key={item.id} className="min-w-[200px] max-w-[220px]">
                   <ProductCard
