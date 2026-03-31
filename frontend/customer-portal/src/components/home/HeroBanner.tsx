@@ -12,37 +12,41 @@ const BANNERS = [
     id: 1,
     title: 'Mega Sale Season',
     subtitle: 'Up to 70% OFF on Electronics',
+    badge: 'Limited Time',
     cta: 'Shop Now',
     link: '/products',
     image: 'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=1400&h=600&fit=crop&auto=format&q=80',
-    gradient: 'from-black/70 via-black/40 to-transparent',
+    gradient: 'from-black/80 via-black/50 to-transparent',
   },
   {
     id: 2,
     title: 'New Fashion Arrivals',
     subtitle: 'Trendy styles at unbeatable prices',
+    badge: 'New Collection',
     cta: 'Explore Collection',
     link: '/products',
     image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1400&h=600&fit=crop&auto=format&q=80',
-    gradient: 'from-black/70 via-black/40 to-transparent',
+    gradient: 'from-black/80 via-black/50 to-transparent',
   },
   {
     id: 3,
     title: 'Home & Living Sale',
     subtitle: 'Transform your space — Starting Rs. 499',
+    badge: 'Best Deals',
     cta: 'Discover',
     link: '/products',
     image: 'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=1400&h=600&fit=crop&auto=format&q=80',
-    gradient: 'from-black/70 via-black/40 to-transparent',
+    gradient: 'from-black/80 via-black/50 to-transparent',
   },
   {
     id: 4,
     title: 'Flash Deals Live Now',
     subtitle: 'Limited time offers — Don\'t miss out',
+    badge: 'Flash Sale',
     cta: 'View Deals',
     link: '/flash-sales',
     image: 'https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=1400&h=600&fit=crop&auto=format&q=80',
-    gradient: 'from-black/70 via-black/40 to-transparent',
+    gradient: 'from-black/80 via-black/50 to-transparent',
   },
 ]
 
@@ -81,15 +85,18 @@ export function HeroBanner() {
 
                 {/* Content */}
                 <div className="container-main relative z-10 h-full flex items-center">
-                  <div className="max-w-lg">
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 leading-[1.1] tracking-tight">
+                  <div className="max-w-xl">
+                    <span className="inline-block bg-white/15 backdrop-blur-sm text-white text-xs font-semibold px-4 py-1.5 rounded-full mb-5 border border-white/10 tracking-wide uppercase">
+                      {banner.badge}
+                    </span>
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 leading-[1.08] tracking-tight">
                       {banner.title}
                     </h2>
-                    <p className="text-base sm:text-lg md:text-xl text-white/80 mb-6 md:mb-8 max-w-md">
+                    <p className="text-base sm:text-lg md:text-xl text-white/75 mb-8 md:mb-10 max-w-md leading-relaxed">
                       {banner.subtitle}
                     </p>
                     <Link to={banner.link}>
-                      <Button size="lg" className="text-sm md:text-base font-semibold px-8 h-12 rounded-xl bg-white text-gray-900 hover:bg-white/90 shadow-lg">
+                      <Button size="lg" className="text-sm md:text-base font-semibold px-10 h-13 rounded-full bg-white text-gray-900 hover:bg-white/90 shadow-xl hover:shadow-2xl transition-all duration-300">
                         {banner.cta}
                       </Button>
                     </Link>

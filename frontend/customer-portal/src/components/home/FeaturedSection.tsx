@@ -32,8 +32,8 @@ export function FeaturedSection({ title, products, viewAllLink, loading, icon, s
             </div>
           </div>
           {viewAllLink && (
-            <Link to={viewAllLink} className="text-sm font-medium text-primary hover:text-primary-hover flex items-center gap-1">
-              View All <ChevronRight className="h-4 w-4" />
+            <Link to={viewAllLink} className="group text-sm font-semibold text-primary hover:text-primary-hover flex items-center gap-1 transition-colors">
+              View All <ChevronRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           )}
         </div>

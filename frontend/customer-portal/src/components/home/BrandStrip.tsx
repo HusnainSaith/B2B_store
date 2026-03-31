@@ -37,16 +37,16 @@ export function BrandStrip() {
                 to={`/products?brandId=${brand.id}`}
                 className="shrink-0 group"
               >
-                <div className="h-20 w-32 bg-card rounded-xl border border-border flex items-center justify-center px-4 hover:border-primary/30 hover:shadow-[var(--shadow-card-hover)] transition-all duration-300">
+                <div className="h-24 w-36 bg-card rounded-2xl border border-border flex items-center justify-center px-5 hover:border-primary/30 hover:shadow-[var(--shadow-card-hover)] group-hover:scale-[1.03] transition-all duration-300">
                   {brand.logoUrl ? (
                     <img
                       src={brand.logoUrl}
                       alt={brand.name}
-                      className="h-10 w-auto object-contain opacity-60 group-hover:opacity-100 transition-opacity"
+                      className="h-11 w-auto object-contain opacity-50 group-hover:opacity-100 transition-opacity duration-300"
                       loading="lazy"
                     />
                   ) : (
-                    <span className="text-sm font-bold text-text-secondary group-hover:text-text-primary transition-colors text-center">
+                    <span className="text-sm font-bold text-text-muted group-hover:text-primary transition-colors text-center">
                       {brand.name}
                     </span>
                   )}

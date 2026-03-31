@@ -29,22 +29,17 @@ export function CategoryStrip() {
                 to={`/products?categoryId=${cat.id}`}
                 className="group shrink-0"
               >
-                <div className="flex items-center gap-3 bg-card border border-border rounded-2xl px-4 py-3 hover:border-primary/30 hover:shadow-[var(--shadow-card-hover)] transition-all duration-300 min-w-[160px]">
-                  <div className="h-12 w-12 rounded-xl bg-surface overflow-hidden flex items-center justify-center shrink-0">
+                <div className="flex flex-col items-center gap-2.5 bg-card border border-border rounded-2xl px-5 py-4 hover:border-primary/30 hover:shadow-[var(--shadow-card-hover)] transition-all duration-300 min-w-[120px]">
+                  <div className="h-14 w-14 rounded-2xl bg-gradient-to-br from-surface to-surface-hover overflow-hidden flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
                     {cat.imageUrl ? (
-                      <img src={cat.imageUrl} alt={cat.name} className="h-9 w-9 object-contain" loading="lazy" />
+                      <img src={cat.imageUrl} alt={cat.name} className="h-10 w-10 object-contain" loading="lazy" />
                     ) : (
-                      <span className="text-primary font-bold text-lg">{cat.name.charAt(0)}</span>
+                      <span className="text-primary font-bold text-xl">{cat.name.charAt(0)}</span>
                     )}
                   </div>
-                  <div className="min-w-0">
-                    <span className="text-sm font-medium text-text-primary group-hover:text-primary transition-colors line-clamp-1 block">
-                      {cat.name}
-                    </span>
-                    {cat.description && (
-                      <span className="text-xs text-text-muted line-clamp-1 hidden sm:block">{cat.description}</span>
-                    )}
-                  </div>
+                  <span className="text-xs font-semibold text-text-primary group-hover:text-primary transition-colors line-clamp-1 text-center">
+                    {cat.name}
+                  </span>
                 </div>
               </Link>
             ))}

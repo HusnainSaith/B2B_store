@@ -19,8 +19,8 @@ export function VendorShowcase({ vendors, loading }: VendorShowcaseProps) {
             <h2 className="text-xl md:text-2xl font-bold text-text-primary tracking-tight">Top Rated Vendors</h2>
             <p className="text-sm text-text-secondary mt-1">Trusted sellers with outstanding service</p>
           </div>
-          <Link to="/products" className="text-sm font-medium text-primary hover:text-primary-hover flex items-center gap-1">
-            View All <ChevronRight className="h-4 w-4" />
+          <Link to="/products" className="group text-sm font-semibold text-primary hover:text-primary-hover flex items-center gap-1 transition-colors">
+            View All <ChevronRight className="h-4 w-4 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>
 
