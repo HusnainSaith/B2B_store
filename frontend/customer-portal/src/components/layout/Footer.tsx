@@ -11,8 +11,8 @@ export function Footer() {
     <footer className="bg-footer-bg text-footer-text">
       {/* Trust Bar */}
       <div className="border-b border-footer-divider">
-        <div className="container-main py-10">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="container-main py-12 md:py-14">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-10 md:gap-12">
             {[
               { icon: Truck, title: 'Free Delivery', desc: 'On orders over Rs. 2,000' },
               { icon: RotateCcw, title: 'Easy Returns', desc: '7-day return policy' },
@@ -43,8 +43,8 @@ export function Footer() {
       </button>
 
       {/* Main Footer Content */}
-      <div className="container-main py-16 md:py-20">
-        <div className="grid grid-cols-2 md:grid-cols-12 gap-10 md:gap-8">
+      <div className="container-main py-20 md:py-24">
+        <div className="grid grid-cols-2 md:grid-cols-12 gap-12 md:gap-10">
           {/* Brand & Newsletter — spans 4 cols */}
           <div className="col-span-2 md:col-span-4">
             <Link to="/" className="flex items-center gap-3 mb-6 group">
@@ -167,7 +167,7 @@ export function Footer() {
 
       {/* Bottom Bar */}
       <div className="border-t border-footer-divider">
-        <div className="container-main py-8">
+        <div className="container-main py-10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             {/* Social Icons */}
             <div className="flex items-center gap-3">

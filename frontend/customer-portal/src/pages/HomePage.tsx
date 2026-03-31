@@ -88,59 +88,71 @@ export default function HomePage() {
       {/* 1. Hero */}
       <HeroBanner />
 
-      {/* 2. Category Strip */}
-      <CategoryStrip />
+      {/* Sections with separators */}
+      <div className="divide-y divide-border/40">
+        {/* 2. Category Strip */}
+        <CategoryStrip />
 
-      {/* 3. Flash Sale */}
-      <FlashSaleSection />
+        {/* 3. Flash Sale */}
+        <FlashSaleSection />
 
-      {/* 4. Featured Products */}
-      <FeaturedSection
-        title="Featured Products"
-        subtitle="Handpicked for you"
-        products={featured}
-        viewAllLink="/products"
-        loading={loadingFeatured}
-      />
+        {/* 4. Featured Products */}
+        <div className="bg-surface/30">
+          <FeaturedSection
+            title="Featured Products"
+            subtitle="Handpicked for you"
+            products={featured}
+            viewAllLink="/products"
+            loading={loadingFeatured}
+          />
+        </div>
 
-      {/* 5. Promo Banners */}
-      <PromoBannerRow />
+        {/* 5. Promo Banners */}
+        <PromoBannerRow />
 
-      {/* 6. Category Showcases — Bento layout for top categories */}
-      {categories.map((cat, i) => (
-        <CategoryShowcase
-          key={cat.id}
-          category={cat}
-          products={categoryProducts[cat.id] ?? []}
-          layout={i % 2 === 0 ? 'bento' : 'grid'}
-        />
-      ))}
-
-      {/* 7. Trending Carousel */}
-      <TrendingCarousel products={trending} loading={loadingTrending} />
-
-      {/* 8. Top Vendors */}
-      <VendorShowcase vendors={vendors} loading={loadingVendors} />
-
-      {/* 9. New Arrivals */}
-      <FeaturedSection
-        title="New Arrivals"
-        subtitle="Fresh drops you'll love"
-        products={newArrivals}
-        viewAllLink="/products?sort=newest"
-        loading={loadingNew}
-        icon={
-          <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
-            <Package className="h-5 w-5 text-white" />
+        {/* 6. Category Showcases — Bento layout for top categories */}
+        {categories.map((cat, i) => (
+          <div key={cat.id} className={i % 2 !== 0 ? 'bg-surface/30' : ''}>
+            <CategoryShowcase
+              category={cat}
+              products={categoryProducts[cat.id] ?? []}
+              layout={i % 2 === 0 ? 'bento' : 'grid'}
+            />
           </div>
-        }
-      />
+        ))}
 
-      {/* 10. Brands */}
-      <BrandStrip />
+        {/* 7. Trending Carousel */}
+        <TrendingCarousel products={trending} loading={loadingTrending} />
+
+        {/* 8. Top Vendors */}
+        <div className="bg-surface/30">
+          <VendorShowcase vendors={vendors} loading={loadingVendors} />
+        </div>
+
+        {/* 9. New Arrivals */}
+        <FeaturedSection
+          title="New Arrivals"
+          subtitle="Fresh drops you'll love"
+          products={newArrivals}
+          viewAllLink="/products?sort=newest"
+          loading={loadingNew}
+          icon={
+            <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center">
+              <Package className="h-5 w-5 text-white" />
+            </div>
+          }
+        />
+
+        {/* 10. Brands */}
+        <div className="bg-surface/30">
+          <BrandStrip />
+        </div>
+      </div>
 
       {/* 11. App Download */}
-      <AppDownloadBanner />
+      <div className="mt-6">
+        <AppDownloadBanner />
+      </div>
     </>
   )
 }

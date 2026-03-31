@@ -71,14 +71,14 @@ export function Header() {
         {/* Search Bar */}
         <div ref={searchRef} className="flex-1 relative max-w-2xl mx-auto">
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-text-muted" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-text-muted pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearchInput(e.target.value)}
               onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
               placeholder="Search products, brands, categories..."
-              className="w-full h-12 pl-12 pr-5 rounded-full bg-surface border border-transparent text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 focus:bg-card transition-all duration-300"
+              className="w-full h-12 pl-11 pr-5 rounded-full bg-surface border border-border/50 text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 focus:bg-card transition-all duration-300"
               aria-label="Search"
             />
           </form>
@@ -180,13 +180,13 @@ export function Header() {
         {/* Mobile Search */}
         <div className="px-4 pb-3">
           <form onSubmit={handleSearch} className="relative">
-            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted" />
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-text-muted pointer-events-none" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products..."
-              className="w-full h-10 pl-10 pr-4 rounded-full bg-surface text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-card transition-all duration-300"
+              className="w-full h-10 pl-10 pr-4 rounded-full bg-surface border border-border/50 text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary/20 focus:bg-card transition-all duration-300"
               aria-label="Search"
             />
           </form>
