@@ -56,7 +56,9 @@ export class ProductsService {
       .createQueryBuilder('p')
       .leftJoinAndSelect('p.store', 'store')
       .leftJoinAndSelect('p.category', 'category')
-      .leftJoinAndSelect('p.brand', 'brand');
+      .leftJoinAndSelect('p.brand', 'brand')
+      .leftJoinAndSelect('p.images', 'images')
+      .leftJoinAndSelect('p.variants', 'variants');
     if (options?.storeId)
       qb.andWhere('p.storeId = :storeId', { storeId: options.storeId });
     if (options?.categoryId)
@@ -71,7 +73,8 @@ export class ProductsService {
     const lm = options?.limit || 20;
     qb.skip((pg - 1) * lm)
       .take(lm)
-      .orderBy('p.name', 'ASC');
+      .orderBy('p.name', 'ASC')
+      .addOrderBy('images.sortOrder', 'ASC');
     const [data, total] = await qb.getManyAndCount();
     return { data, total };
   }
@@ -79,7 +82,7 @@ export class ProductsService {
   async findOne(id: string): Promise<Product> {
     const p = await this.productRepo.findOne({
       where: { id },
-      relations: ['store', 'category', 'brand'],
+      relations: ['store', 'category', 'brand', 'images', 'variants'],
     });
     if (!p) throw new NotFoundException('Product not found');
     return p;
@@ -88,7 +91,7 @@ export class ProductsService {
   async findBySlug(slug: string): Promise<Product> {
     const p = await this.productRepo.findOne({
       where: { slug },
-      relations: ['store', 'category', 'brand'],
+      relations: ['store', 'category', 'brand', 'images', 'variants'],
     });
     if (!p) throw new NotFoundException('Product not found');
     return p;
