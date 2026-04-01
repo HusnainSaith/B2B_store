@@ -217,30 +217,24 @@
   50% { box-shadow: 0 0 12px 2px rgba(99, 102, 241, 0.15); }
 }
 
-/* ─── Base Styles ─── */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
+/* ─── Base Styles (inside @layer base so Tailwind utilities win) ─── */
+@layer base {
+  html {
+    font-family: var(--font-family-primary);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    transition: color 0.3s ease, background-color 0.3s ease;
+  }
 
-html {
-  font-family: var(--font-family-primary);
-  color: var(--color-text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
-  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
-  transition: color 0.3s ease, background-color 0.3s ease;
-}
-
-body {
-  background-color: var(--color-background);
-  min-height: 100vh;
-  letter-spacing: -0.011em;
-  transition: background-color 0.3s ease;
+  body {
+    background-color: var(--color-background);
+    min-height: 100vh;
+    letter-spacing: -0.011em;
+    transition: background-color 0.3s ease;
+  }
 }
 
 /* ─── Skip to Content (Accessibility) ─── */
@@ -376,27 +370,27 @@ body {
 }
 
 /* ─── Smooth Theme Transitions on Surfaces ─── */
-.bg-card,
-.bg-background,
-.bg-surface,
-.bg-footer-bg,
-[class*="bg-card"],
-[class*="bg-background"],
-[class*="bg-surface"] {
-  transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-}
+@layer base {
+  .bg-card,
+  .bg-background,
+  .bg-surface,
+  .bg-footer-bg,
+  [class*="bg-card"],
+  [class*="bg-background"],
+  [class*="bg-surface"] {
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+  }
 
-/* ─── Focus Ring Utility ─── */
-:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-  border-radius: 4px;
-}
+  :focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 
-/* ─── Button Press Effect ─── */
-button:active:not(:disabled),
-[role="button"]:active:not(:disabled) {
-  transform: scale(0.97);
+  button:active:not(:disabled),
+  [role="button"]:active:not(:disabled) {
+    transform: scale(0.97);
+  }
 }
 
 /* ─── Card Hover Lift ─── */
@@ -415,18 +409,22 @@ button:active:not(:disabled),
 }
 
 /* ─── Footer Link Styles ─── */
-footer a {
-  text-underline-offset: 3px;
-  text-decoration-thickness: 1px;
-}
+@layer base {
+  footer a {
+    text-underline-offset: 3px;
+    text-decoration-thickness: 1px;
+  }
 
-footer a:hover {
-  text-decoration: underline;
+  footer a:hover {
+    text-decoration: underline;
+  }
 }
 
 /* ─── Image Placeholder ─── */
-img {
-  background-color: var(--theme-surface);
+@layer base {
+  img {
+    background-color: var(--theme-surface);
+  }
 }
 
 /* ─── Checkout Step Indicator ─── */
