@@ -424,15 +424,6 @@ footer a:hover {
   text-decoration: underline;
 }
 
-/* ─── Footer Trust Bar Icon Float ─── */
-footer .trust-icon {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-footer .trust-icon:hover {
-  transform: translateY(-2px);
-}
-
 /* ─── Image Placeholder ─── */
 img {
   background-color: var(--theme-surface);
