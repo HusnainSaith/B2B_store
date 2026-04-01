@@ -3,6 +3,7 @@ import {
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
+  OneToMany,
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
@@ -10,6 +11,8 @@ import {
 import { Store } from '../../sellers/entities/store.entity';
 import { Category } from '../../categories/entities/category.entity';
 import { Brand } from '../../categories/entities/brand.entity';
+import { ProductImage } from './product-image.entity';
+import { ProductVariant } from './product-variant.entity';
 
 @Entity('products')
 export class Product {
@@ -75,4 +78,10 @@ export class Product {
 
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamptz' })
   updatedAt: Date;
+
+  @OneToMany(() => ProductImage, (img) => img.product)
+  images: ProductImage[];
+
+  @OneToMany(() => ProductVariant, (v) => v.product)
+  variants: ProductVariant[];
 }
