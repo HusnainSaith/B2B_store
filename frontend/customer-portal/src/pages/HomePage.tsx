@@ -28,23 +28,24 @@ export default function HomePage() {
   const [loadingVendors, setLoadingVendors] = useState(true)
 
   useEffect(() => {
-    // Featured products
-    productsApi.list({ limit: 10 })
-      .then((res) => setFeatured(res.data))
-      .catch(() => setFeatured(getMockProducts({ limit: 10 }).data))
-      .finally(() => setLoadingFeatured(false))
-
-    // New arrivals (page 2 for different set)
-    productsApi.list({ limit: 10, page: 2 })
-      .then((res) => setNewArrivals(res.data))
-      .catch(() => setNewArrivals(getMockProducts({ limit: 10, page: 2 }).data))
-      .finally(() => setLoadingNew(false))
-
-    // Trending (page 3)
-    productsApi.list({ limit: 15, page: 3 })
-      .then((res) => setTrending(res.data))
-      .catch(() => setTrending(getMockProducts({ limit: 15 }).data))
-      .finally(() => setLoadingTrending(false))
+    // Fetch all products once — split across sections to avoid empty pages
+    productsApi.list({ limit: 50 })
+      .then((res) => {
+        const all = res.data
+        setFeatured(all.slice(0, 10))
+        setNewArrivals([...all].reverse().slice(0, 10))
+        setTrending(all.slice(0, 15))
+      })
+      .catch(() => {
+        setFeatured(getMockProducts({ limit: 10 }).data)
+        setNewArrivals(getMockProducts({ limit: 10, page: 2 }).data)
+        setTrending(getMockProducts({ limit: 15 }).data)
+      })
+      .finally(() => {
+        setLoadingFeatured(false)
+        setLoadingNew(false)
+        setLoadingTrending(false)
+      })
 
     // Categories
     categoriesApi.list()

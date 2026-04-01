@@ -52,30 +52,44 @@ export class ProductsService {
     categoryId?: string;
     search?: string;
   }): Promise<{ data: Product[]; total: number }> {
-    const qb = this.productRepo
+    // Two-query strategy to avoid TypeORM pagination bug with one-to-many joins.
+    // Step 1: Get paginated product IDs (no one-to-many joins that multiply rows).
+    const idQb = this.productRepo.createQueryBuilder('p').select('p.id');
+    if (options?.storeId)
+      idQb.andWhere('p.storeId = :storeId', { storeId: options.storeId });
+    if (options?.categoryId)
+      idQb.andWhere('p.categoryId = :categoryId', {
+        categoryId: options.categoryId,
+      });
+    if (options?.search)
+      idQb.andWhere('p.name ILIKE :s OR p.slug ILIKE :s', {
+        s: `%${options.search}%`,
+      });
+    const pg = options?.page || 1;
+    const lm = options?.limit || 20;
+    idQb.orderBy('p.name', 'ASC').skip((pg - 1) * lm).take(lm);
+
+    const [idRows, total] = await Promise.all([
+      idQb.getRawMany(),
+      idQb.getCount(),
+    ]);
+
+    if (idRows.length === 0) return { data: [], total };
+
+    // Step 2: Load full entities with all relations for the fetched IDs.
+    const ids = idRows.map((r) => r.p_id);
+    const data = await this.productRepo
       .createQueryBuilder('p')
       .leftJoinAndSelect('p.store', 'store')
       .leftJoinAndSelect('p.category', 'category')
       .leftJoinAndSelect('p.brand', 'brand')
       .leftJoinAndSelect('p.images', 'images')
-      .leftJoinAndSelect('p.variants', 'variants');
-    if (options?.storeId)
-      qb.andWhere('p.storeId = :storeId', { storeId: options.storeId });
-    if (options?.categoryId)
-      qb.andWhere('p.categoryId = :categoryId', {
-        categoryId: options.categoryId,
-      });
-    if (options?.search)
-      qb.andWhere('p.name ILIKE :s OR p.slug ILIKE :s', {
-        s: `%${options.search}%`,
-      });
-    const pg = options?.page || 1;
-    const lm = options?.limit || 20;
-    qb.skip((pg - 1) * lm)
-      .take(lm)
+      .leftJoinAndSelect('p.variants', 'variants')
+      .where('p.id IN (:...ids)', { ids })
       .orderBy('p.name', 'ASC')
-      .addOrderBy('images.sortOrder', 'ASC');
-    const [data, total] = await qb.getManyAndCount();
+      .addOrderBy('images.sortOrder', 'ASC')
+      .getMany();
+
     return { data, total };
   }
 
