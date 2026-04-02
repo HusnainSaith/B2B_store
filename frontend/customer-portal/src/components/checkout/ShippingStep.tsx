@@ -70,7 +70,7 @@ export function ShippingStep({ onNext, onBack, selectedMethodId }: ShippingStepP
               )}
             </div>
             <div className="text-sm font-bold text-text-primary shrink-0">
-              {method.baseRate === 0 ? <span className="text-success">FREE</span> : formatPrice(method.baseRate)}
+              {Number(method.baseRate) === 0 ? <span className="text-success">FREE</span> : formatPrice(method.baseRate)}
             </div>
           </label>
         ))

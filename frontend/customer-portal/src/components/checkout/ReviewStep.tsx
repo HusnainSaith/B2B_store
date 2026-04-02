@@ -29,7 +29,7 @@ export function ReviewStep({
   onBack,
   loading,
 }: ReviewStepProps) {
-  const total = subtotal - discount + shippingCost
+  const total = Number(subtotal) - Number(discount) + Number(shippingCost)
 
   return (
     <div className="space-y-6">
