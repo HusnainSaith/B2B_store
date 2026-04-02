@@ -35,6 +35,7 @@ jobs:
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
           VITE_APP_NAME: ShopVerse
+          VITE_SELLER_PORTAL_URL: ${{ secrets.VITE_SELLER_PORTAL_URL }}
 
       - name: Build Admin Portal
         working-directory: frontend/admin-portal

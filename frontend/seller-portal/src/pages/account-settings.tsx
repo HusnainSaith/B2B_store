@@ -112,7 +112,7 @@ export default function AccountSettingsPage() {
           <p className="mb-4 text-sm text-muted-foreground">
             Sign out of your account. You will need to log in again to access the seller portal.
           </p>
-          <Button variant=\"destructive\" onClick={handleLogout}>Sign Out</Button>
+          <Button variant="destructive" onClick={handleLogout}>Sign Out</Button>
         </CardContent>
       </Card>
     </div>
