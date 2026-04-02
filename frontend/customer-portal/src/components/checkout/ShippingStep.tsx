@@ -4,10 +4,10 @@ import type { ShippingMethod } from '@/types'
 import { formatPrice } from '@/lib/format'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Truck } from 'lucide-react'
+import { Truck, Banknote, CheckCircle } from 'lucide-react'
 
 interface ShippingStepProps {
-  onNext: (method: ShippingMethod) => void
+  onNext: (method: ShippingMethod, codSelected?: boolean) => void
   onBack: () => void
   selectedMethodId?: string
 }
@@ -15,6 +15,7 @@ interface ShippingStepProps {
 export function ShippingStep({ onNext, onBack, selectedMethodId }: ShippingStepProps) {
   const [methods, setMethods] = useState<ShippingMethod[]>([])
   const [selected, setSelected] = useState<string | undefined>(selectedMethodId)
+  const [codSelected, setCodSelected] = useState(false)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -31,7 +32,7 @@ export function ShippingStep({ onNext, onBack, selectedMethodId }: ShippingStepP
 
   const handleContinue = () => {
     const method = methods.find((m) => m.id === selected)
-    if (method) onNext(method)
+    if (method) onNext(method, codSelected)
   }
 
   if (loading) return <div className="animate-pulse space-y-3"><div className="h-20 bg-surface rounded" /><div className="h-20 bg-surface rounded" /></div>
@@ -69,11 +70,35 @@ export function ShippingStep({ onNext, onBack, selectedMethodId }: ShippingStepP
               )}
             </div>
             <div className="text-sm font-bold text-text-primary shrink-0">
-              {method.baseRate === 0 ? <span className="text-success">FREE</span> : formatPrice(method.baseRate)}
+              {Number(method.baseRate) === 0 ? <span className="text-success">FREE</span> : formatPrice(method.baseRate)}
             </div>
           </label>
         ))
       )}
+
+      {/* Cash on Delivery Option */}
+      <div className="mt-6 pt-4 border-t border-border">
+        <h3 className="text-sm font-bold text-text-primary mb-3">Payment Option</h3>
+        <label
+          className={cn(
+            'flex items-center gap-3 p-4 rounded-xl border cursor-pointer transition-colors',
+            codSelected ? 'border-success bg-success/10' : 'border-border hover:border-text-muted',
+          )}
+        >
+          <input
+            type="checkbox"
+            checked={codSelected}
+            onChange={() => setCodSelected(!codSelected)}
+            className="accent-success h-4 w-4"
+          />
+          <Banknote className="h-5 w-5 text-success shrink-0" />
+          <div className="flex-1">
+            <p className="text-sm font-medium text-text-primary">Cash on Delivery</p>
+            <p className="text-xs text-text-secondary">Pay with cash when your order is delivered</p>
+          </div>
+          {codSelected && <CheckCircle className="h-5 w-5 text-success shrink-0" />}
+        </label>
+      </div>
 
       <div className="flex gap-3">
         <Button variant="outline" onClick={onBack} className="flex-1">Back</Button>

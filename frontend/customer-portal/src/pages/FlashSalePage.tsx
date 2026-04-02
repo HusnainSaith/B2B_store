@@ -7,8 +7,13 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { flashSalesApi } from '@/services/api'
 import type { FlashSale, FlashSaleItem } from '@/types'
 import { Flame } from 'lucide-react'
+import { useWishlist } from '@/hooks/useWishlist'
+import { useAuthStore } from '@/store/auth.store'
+import { toast } from 'sonner'
 
 export default function FlashSalePage() {
+  const { isAuthenticated } = useAuthStore()
+  const { isWishlisted, toggleWishlist } = useWishlist()
   const [sales, setSales] = useState<FlashSale[]>([])
   const [allItems, setAllItems] = useState<Record<string, FlashSaleItem[]>>({})
   const [loading, setLoading] = useState(true)
@@ -65,6 +70,11 @@ export default function FlashSalePage() {
                         key={item.id}
                         product={item.variant?.product}
                         flashPrice={Number(item.salePrice)}
+                        isWishlisted={isAuthenticated && !!item.variant?.id && isWishlisted(item.variant.id)}
+                        onToggleWishlist={async () => {
+                          if (!isAuthenticated) { toast.error('Please login to use wishlist'); return }
+                          if (item.variant?.id) try { await toggleWishlist(item.variant.id) } catch { toast.error('Failed to update wishlist') }
+                        }}
                       />
                     ))}
                   </div>

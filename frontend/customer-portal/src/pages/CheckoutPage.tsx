@@ -44,8 +44,8 @@ export default function CheckoutPage() {
       .finally(() => setLoading(false))
   }, [navigate])
 
-  const subtotal = items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0)
-  const shippingCost = shippingMethod?.baseRate ?? 0
+  const subtotal = items.reduce((sum, i) => sum + Number(i.unitPrice) * i.quantity, 0)
+  const shippingCost = Number(shippingMethod?.baseRate ?? 0)
 
   const handlePlaceOrder = async () => {
     if (!address || !shippingMethod) return
@@ -109,7 +109,15 @@ export default function CheckoutPage() {
           )}
           {currentStep === 1 && (
             <ShippingStep
-              onNext={(method) => { setShippingMethod(method); setCurrentStep(2) }}
+              onNext={(method, codSelected) => {
+                setShippingMethod(method)
+                if (codSelected) {
+                  setPaymentMethod('cod')
+                  setCurrentStep(3) // Skip payment step, go directly to review
+                } else {
+                  setCurrentStep(2)
+                }
+              }}
               onBack={() => setCurrentStep(0)}
             />
           )}

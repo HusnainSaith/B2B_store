@@ -14,6 +14,7 @@ import type { UserAddress } from '@/types'
 import { MapPin, Plus, Pencil, Trash2 } from 'lucide-react'
 import { toast } from 'sonner'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { COUNTRIES } from '@/constants/countries'
 
 export default function AddressesPage() {
   const { user } = useAuthStore()
@@ -121,7 +122,7 @@ export default function AddressesPage() {
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div><Label className="mb-1 block text-xs">Postal Code</Label><Input {...register('postalCode')} /></div>
-                <div><Label className="mb-1 block text-xs">Country</Label><Input {...register('country')} />{errors.country && <p className="text-xs text-danger">{errors.country.message}</p>}</div>
+                <div><Label className="mb-1 block text-xs">Country</Label><select {...register('country')} className="w-full h-10 px-3 rounded-md border border-border bg-background text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary"><option value="">Select country</option>{COUNTRIES.map((c) => (<option key={c.code} value={c.code}>{c.name}</option>))}</select>{errors.country && <p className="text-xs text-danger">{errors.country.message}</p>}</div>
               </div>
               <div className="flex gap-2 pt-2"><Button type="submit">Save</Button><Button type="button" variant="ghost" onClick={() => setShowDialog(false)}>Cancel</Button></div>
             </form>

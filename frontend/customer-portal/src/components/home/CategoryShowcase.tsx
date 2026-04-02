@@ -3,6 +3,9 @@ import { ChevronRight } from 'lucide-react'
 import { ProductCard } from '@/components/product/ProductCard'
 import { formatPrice } from '@/lib/format'
 import type { Product, Category } from '@/types'
+import { useWishlist } from '@/hooks/useWishlist'
+import { useAuthStore } from '@/store/auth.store'
+import { toast } from 'sonner'
 
 interface CategoryShowcaseProps {
   category: Category
@@ -11,6 +14,16 @@ interface CategoryShowcaseProps {
 }
 
 export function CategoryShowcase({ category, products, layout = 'bento' }: CategoryShowcaseProps) {
+  const { isAuthenticated } = useAuthStore()
+  const { isWishlisted, toggleWishlist } = useWishlist()
+
+  const handleToggleWishlist = async (product: Product) => {
+    if (!isAuthenticated) { toast.error('Please login to use wishlist'); return }
+    const variantId = product.variants?.[0]?.id
+    if (!variantId) return
+    try { await toggleWishlist(variantId) } catch { toast.error('Failed to update wishlist') }
+  }
+
   if (products.length === 0) return null
 
   const hero = products[0]
@@ -75,7 +88,12 @@ export function CategoryShowcase({ category, products, layout = 'bento' }: Categ
             {/* Small Cards Grid */}
             <div className="col-span-2 lg:col-span-8 grid grid-cols-2 md:grid-cols-4 gap-5 md:gap-6">
               {rest.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  isWishlisted={isAuthenticated && !!product.variants?.[0]?.id && isWishlisted(product.variants[0].id)}
+                  onToggleWishlist={() => handleToggleWishlist(product)}
+                />
               ))}
             </div>
           </div>
@@ -83,7 +101,12 @@ export function CategoryShowcase({ category, products, layout = 'bento' }: Categ
           /* Standard Grid */
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 md:gap-6">
             {[hero, ...rest].map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                isWishlisted={isAuthenticated && !!product.variants?.[0]?.id && isWishlisted(product.variants[0].id)}
+                onToggleWishlist={() => handleToggleWishlist(product)}
+              />
             ))}
           </div>
         )}

@@ -5,6 +5,9 @@ import { ChevronLeft, ChevronRight, TrendingUp } from 'lucide-react'
 import { ProductCard } from '@/components/product/ProductCard'
 import type { Product } from '@/types'
 import { cn } from '@/lib/utils'
+import { useWishlist } from '@/hooks/useWishlist'
+import { useAuthStore } from '@/store/auth.store'
+import { toast } from 'sonner'
 
 interface TrendingCarouselProps {
   products: Product[]
@@ -12,6 +15,8 @@ interface TrendingCarouselProps {
 }
 
 export function TrendingCarousel({ products, loading }: TrendingCarouselProps) {
+  const { isAuthenticated } = useAuthStore()
+  const { isWishlisted, toggleWishlist } = useWishlist()
   const [emblaRef, emblaApi] = useEmblaCarousel(
     { loop: true, align: 'start', slidesToScroll: 1, containScroll: 'trimSnaps' },
     [Autoplay({ delay: 4000, stopOnInteraction: true })],
@@ -94,7 +99,14 @@ export function TrendingCarousel({ products, loading }: TrendingCarouselProps) {
             <div className="flex">
               {products.map((product) => (
                 <div key={product.id} className="flex-[0_0_50%] md:flex-[0_0_33.333%] lg:flex-[0_0_20%] min-w-0 px-2">
-                  <ProductCard product={product} />
+                  <ProductCard
+                    product={product}
+                    isWishlisted={isAuthenticated && !!product.variants?.[0]?.id && isWishlisted(product.variants[0].id)}
+                    onToggleWishlist={async () => {
+                      if (!isAuthenticated) { toast.error('Please login to use wishlist'); return }
+                      const vid = product.variants?.[0]?.id; if (vid) try { await toggleWishlist(vid) } catch { toast.error('Failed to update wishlist') }
+                    }}
+                  />
                 </div>
               ))}
             </div>

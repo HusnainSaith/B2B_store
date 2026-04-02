@@ -2,6 +2,9 @@ import { Link } from 'react-router-dom'
 import { ChevronRight, Sparkles } from 'lucide-react'
 import { ProductCard } from '@/components/product/ProductCard'
 import type { Product } from '@/types'
+import { useWishlist } from '@/hooks/useWishlist'
+import { useAuthStore } from '@/store/auth.store'
+import { toast } from 'sonner'
 
 interface FeaturedSectionProps {
   title: string
@@ -13,6 +16,16 @@ interface FeaturedSectionProps {
 }
 
 export function FeaturedSection({ title, products, viewAllLink, loading, icon, subtitle }: FeaturedSectionProps) {
+  const { isAuthenticated } = useAuthStore()
+  const { isWishlisted, toggleWishlist } = useWishlist()
+
+  const handleToggleWishlist = async (product: Product) => {
+    if (!isAuthenticated) { toast.error('Please login to use wishlist'); return }
+    const variantId = product.variants?.[0]?.id
+    if (!variantId) return
+    try { await toggleWishlist(variantId) } catch { toast.error('Failed to update wishlist') }
+  }
+
   if (!loading && products.length === 0) return null
 
   return (
@@ -52,7 +65,12 @@ export function FeaturedSection({ title, products, viewAllLink, loading, icon, s
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 md:gap-6">
             {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
+              <ProductCard
+                key={product.id}
+                product={product}
+                isWishlisted={isAuthenticated && !!product.variants?.[0]?.id && isWishlisted(product.variants[0].id)}
+                onToggleWishlist={() => handleToggleWishlist(product)}
+              />
             ))}
           </div>
         )}
