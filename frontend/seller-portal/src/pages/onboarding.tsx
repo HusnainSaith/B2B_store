@@ -49,7 +49,7 @@ export default function OnboardingPage() {
   const user = useAuthStore((s) => s.user)
   const [step, setStep] = useState(0)
   const [loading, setLoading] = useState(false)
-  const [seller, setSeller] = useState<Seller | null>(null)
+  const [, setSeller] = useState<Seller | null>(null)
   const [store, setStore] = useState<StoreType | null>(null)
 
   const sellerForm = useForm<SellerFormData>({ resolver: zodResolver(sellerSchema) })
@@ -83,11 +83,10 @@ export default function OnboardingPage() {
   const handleSellerSubmit = async (data: SellerFormData) => {
     setLoading(true)
     try {
-      const created = await sellerApi.create({
-        ...data,
+      const created = await sellerApi.register({
         displayName: sanitizeText(data.displayName),
         legalName: data.legalName ? sanitizeText(data.legalName) : undefined,
-        userId: user?.id ?? '',
+        taxId: data.taxId || undefined,
       })
       setSeller(created)
       toast.success('Business profile created!')

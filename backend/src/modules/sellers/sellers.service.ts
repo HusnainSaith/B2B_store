@@ -75,7 +75,11 @@ export class SellersService {
     'id',
     'userId',
     'displayName',
+    'legalName',
+    'taxId',
+    'commissionRate',
     'status',
+    'createdAt',
     'user',
   ];
 

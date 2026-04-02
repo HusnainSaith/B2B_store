@@ -54,15 +54,11 @@ export default function RegisterPage() {
       setAuth(loginRes.user, loginRes.accessToken, loginRes.refreshToken)
 
       // Step 3: Create seller profile (pending status)
-      try {
-        await sellerApi.register({
-          displayName: data.displayName,
-          legalName: data.legalName || undefined,
-          taxId: data.taxId || undefined,
-        })
-      } catch {
-        // Seller profile may already exist — that's ok
-      }
+      await sellerApi.register({
+        displayName: data.displayName,
+        legalName: data.legalName || undefined,
+        taxId: data.taxId || undefined,
+      })
 
       setSuccess(true)
       toast.success('Registration successful!')

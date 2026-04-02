@@ -50,12 +50,13 @@ function toPaginated<T>(data: unknown, params?: { page?: number; limit?: number 
     return { data, total: data.length, page: params?.page ?? 1, limit: params?.limit ?? data.length, totalPages: 1 }
   }
   const obj = data as Record<string, unknown>
-  if (obj && Array.isArray(obj.data)) {
+  const arr = Array.isArray(obj?.data) ? obj.data : Array.isArray(obj?.items) ? obj.items : null
+  if (obj && arr) {
     return {
-      data: obj.data as T[],
-      total: (obj.total as number) ?? obj.data.length,
+      data: arr as T[],
+      total: (obj.total as number) ?? arr.length,
       page: (obj.page as number) ?? params?.page ?? 1,
-      limit: (obj.limit as number) ?? params?.limit ?? obj.data.length,
+      limit: (obj.limit as number) ?? params?.limit ?? arr.length,
       totalPages: (obj.totalPages as number) ?? 1,
     }
   }
@@ -172,7 +173,7 @@ export const brandsApi = {
 
 // ─── Sellers ───────────────────
 export const sellersApi = {
-  list: () => api.get<Seller[]>('/sellers').then((r) => r.data),
+  list: () => api.get<Seller[]>('/sellers?limit=500').then((r) => r.data),
   get: (id: string) => api.get<Seller>(`/sellers/${id}`).then((r) => r.data),
   create: (data: Partial<Seller>) =>
     api.post<Seller>('/sellers', data).then((r) => r.data),

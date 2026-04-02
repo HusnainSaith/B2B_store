@@ -74,7 +74,8 @@ function ApprovalGuard({ children }: { children: React.ReactNode }) {
     queryKey: ['seller-approval-check', user?.id],
     queryFn: () => sellerApi.getMyProfile(user?.id ?? ''),
     enabled: !!user?.id,
-    staleTime: 60_000,
+    staleTime: 0,
+    refetchOnWindowFocus: true,
   })
 
   if (isLoading) return <Loading />
@@ -83,7 +84,11 @@ function ApprovalGuard({ children }: { children: React.ReactNode }) {
   const role = user?.role ?? user?.roles?.[0]?.role?.name ?? user?.userRoles?.[0]?.role?.name
   if (role === 'admin' || role === 'super_admin') return <>{children}</>
 
-  if (!seller || seller.status === 'pending') {
+  // No seller profile at all — redirect to onboarding to create one
+  if (!seller) {
+    return <Navigate to="/onboarding" replace />
+  }
+  if (seller.status === 'pending') {
     return <Navigate to="/pending-approval" replace />
   }
   if (seller.status !== 'active') {
