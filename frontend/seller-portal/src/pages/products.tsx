@@ -263,17 +263,17 @@ export default function ProductsPage() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="space-y-2"><Label>Category</Label>
                     <Controller name="categoryId" control={control} render={({ field }) => (
-                      <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v || undefined)}>
+                      <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v === '__none__' ? undefined : v)}>
                         <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
-                        <SelectContent>{(Array.isArray(categoriesForDropdown) ? categoriesForDropdown : []).map((c: Category) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
+                        <SelectContent><SelectItem value="__none__">None</SelectItem>{(Array.isArray(categoriesForDropdown) ? categoriesForDropdown : []).map((c: Category) => <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>)}</SelectContent>
                       </Select>
                     )} />
                   </div>
                   <div className="space-y-2"><Label>Brand</Label>
                     <Controller name="brandId" control={control} render={({ field }) => (
-                      <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v || undefined)}>
+                      <Select value={field.value ?? ''} onValueChange={(v) => field.onChange(v === '__none__' ? undefined : v)}>
                         <SelectTrigger><SelectValue placeholder="None" /></SelectTrigger>
-                        <SelectContent>{(Array.isArray(brandsForDropdown) ? brandsForDropdown : []).map((b: Brand) => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}</SelectContent>
+                        <SelectContent><SelectItem value="__none__">None</SelectItem>{(Array.isArray(brandsForDropdown) ? brandsForDropdown : []).map((b: Brand) => <SelectItem key={b.id} value={b.id}>{b.name}</SelectItem>)}</SelectContent>
                       </Select>
                     )} />
                   </div>
@@ -320,7 +320,7 @@ export default function ProductsPage() {
         page={page}
         pageCount={data?.totalPages ?? 1}
         onPageChange={setPage}
-        onSearch={setSearch}
+        onSearch={(v: string) => { setSearch(v); setPage(1) }}
         searchPlaceholder="Search products..."
         exportFilename="products"
         getExportRow={(p) => ({ Name: p.name, Price: p.basePrice, Status: p.status, Active: p.isActive ? 'Yes' : 'No', Created: p.createdAt })}

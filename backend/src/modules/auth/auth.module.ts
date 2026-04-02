@@ -12,20 +12,21 @@ import { AuthSession } from './entities/auth-session.entity';
 import { AuthToken } from './entities/auth-token.entity';
 import { User } from '../users/entities/user.entity';
 import { UserRole } from '../users/entities/user-role.entity';
+import { Role } from '../roles/entities/role.entity';
 import { NotificationsModule } from '../notifications/notifications.module';
 
 @Module({
   imports: [
     UsersModule,
     PassportModule,
-    TypeOrmModule.forFeature([AuthSession, AuthToken, User, UserRole]),
+    TypeOrmModule.forFeature([AuthSession, AuthToken, User, UserRole, Role]),
     NotificationsModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
         secret: config.get('JWT_SECRET'),
-        signOptions: { expiresIn: '7d' },
+        signOptions: { expiresIn: config.get('JWT_EXPIRES_IN', '7d') },
       }),
     }),
     ConfigModule,

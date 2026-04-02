@@ -37,7 +37,9 @@ const dataSource = new DataSource({
 
 // ─── Configurable credentials ────────────────────────────────────────
 if (!process.env.SUPER_ADMIN_EMAIL || !process.env.SUPER_ADMIN_PASSWORD) {
-  throw new Error('SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD env vars are required');
+  throw new Error(
+    'SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD env vars are required',
+  );
 }
 const SUPER_ADMIN = {
   name: process.env.SUPER_ADMIN_NAME || 'Super Admin',
@@ -98,7 +100,13 @@ async function seed() {
            is_active, is_email_verified
          ) VALUES ($1, $2, $3, $4, $5, true, true)
          RETURNING id`,
-        ['Super', 'Admin', SUPER_ADMIN.email, hashedPassword, SUPER_ADMIN.phone],
+        [
+          'Super',
+          'Admin',
+          SUPER_ADMIN.email,
+          hashedPassword,
+          SUPER_ADMIN.phone,
+        ],
       );
       userId = newUser.id;
       console.log(`  ✅ Created new user (${userId})`);
@@ -152,18 +160,26 @@ async function seed() {
     console.log('  SUPER ADMIN USER CREATED');
     console.log('═'.repeat(60));
     console.log(`  ID:               ${verifyUser.id}`);
-    console.log(`  Name:             ${verifyUser.first_name} ${verifyUser.last_name}`);
+    console.log(
+      `  Name:             ${verifyUser.first_name} ${verifyUser.last_name}`,
+    );
     console.log(`  Email:            ${verifyUser.email}`);
     console.log(`  Role (table):     ${roleAssignment?.role_name || 'N/A'}`);
     console.log(`  Active:           ${verifyUser.is_active}`);
     console.log(`  Email Verified:   ${verifyUser.is_email_verified}`);
-    console.log(`  Permissions:      ${permCount.count} (via super_admin role)`);
+    console.log(
+      `  Permissions:      ${permCount.count} (via super_admin role)`,
+    );
     console.log('═'.repeat(60));
     console.log('\n  🔑 Login credentials:');
     console.log(`     Email:    ${SUPER_ADMIN.email}`);
-    console.log('     Password: ******** (set via SUPER_ADMIN_PASSWORD env var)');
+    console.log(
+      '     Password: ******** (set via SUPER_ADMIN_PASSWORD env var)',
+    );
     console.log('\n  ⚠️  Change the password immediately in production!');
-    console.log('  💡 Configure via env vars: SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD\n');
+    console.log(
+      '  💡 Configure via env vars: SUPER_ADMIN_EMAIL, SUPER_ADMIN_PASSWORD\n',
+    );
     console.log('✅  Seed 3 complete — Super Admin user is ready.\n');
   } catch (error) {
     await qr.rollbackTransaction();

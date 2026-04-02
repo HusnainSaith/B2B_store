@@ -12,7 +12,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from '@/components/ui/dialog'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
-import { MoreHorizontal, CheckCircle, Trash2, Eye } from 'lucide-react'
+import { MoreHorizontal, CheckCircle, Trash2, Eye, XCircle } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { formatDate } from '@/lib/utils'
 import { toast } from 'sonner'
@@ -34,6 +34,7 @@ export default function SellersPage() {
   const [detail, setDetail] = useState<Seller | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Seller | null>(null)
   const [createOpen, setCreateOpen] = useState(false)
+  const [statusFilter, setStatusFilter] = useState<string>('all')
   const qc = useQueryClient()
 
   const { data, isLoading, isError, refetch } = useQuery({ queryKey: ['sellers'], queryFn: sellersApi.list })
@@ -50,6 +51,12 @@ export default function SellersPage() {
     mutationFn: (id: string) => sellersApi.approve(id),
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['sellers'] }); toast.success('Seller approved') },
     onError: (e) => toast.error(getErrorMessage(e, 'Failed to approve')),
+  })
+
+  const rejectM = useMutation({
+    mutationFn: (id: string) => sellersApi.update(id, { status: 'suspended' }),
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['sellers'] }); toast.success('Seller rejected') },
+    onError: (e) => toast.error(getErrorMessage(e, 'Failed to reject')),
   })
 
   const deleteM = useMutation({
@@ -75,6 +82,11 @@ export default function SellersPage() {
                 <CheckCircle className="mr-2 h-4 w-4" />Approve
               </DropdownMenuItem>
             )}
+            {row.original.status === 'pending' && (
+              <DropdownMenuItem onClick={() => rejectM.mutate(row.original.id)} className="text-orange-600">
+                <XCircle className="mr-2 h-4 w-4" />Reject
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={() => setDeleteTarget(row.original)} className="text-destructive">
               <Trash2 className="mr-2 h-4 w-4" />Delete
             </DropdownMenuItem>
@@ -84,10 +96,44 @@ export default function SellersPage() {
     },
   ]
 
+  const allSellers = data ?? []
+  const pendingCount = allSellers.filter((s) => s.status === 'pending').length
+  const filteredSellers = statusFilter === 'all' ? allSellers : allSellers.filter((s) => s.status === statusFilter)
+
   return (
     <div className="space-y-6 animate-fade-in">
       <PageHeader title="Sellers" description="View and manage sellers" action={{ label: 'Add Seller', onClick: () => { reset({ userId: '', displayName: '', legalName: '', taxId: '' }); setCreateOpen(true) } }} />
-      <DataTable columns={columns} data={data ?? []} isLoading={isLoading} isError={isError} onRetry={refetch} searchColumn="displayName" searchPlaceholder="Search sellers..."
+
+      {/* Status Filter Tabs */}
+      <div className="flex flex-wrap gap-2">
+        {[
+          { label: 'All', value: 'all', count: allSellers.length },
+          { label: 'Pending Approval', value: 'pending', count: pendingCount },
+          { label: 'Active', value: 'active', count: allSellers.filter((s) => s.status === 'active').length },
+          { label: 'Suspended', value: 'suspended', count: allSellers.filter((s) => s.status === 'suspended').length },
+        ].map((tab) => (
+          <button
+            key={tab.value}
+            onClick={() => setStatusFilter(tab.value)}
+            className={`inline-flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg border transition-colors cursor-pointer ${
+              statusFilter === tab.value
+                ? 'bg-primary text-primary-foreground border-primary'
+                : 'bg-card text-muted-foreground border-border hover:bg-accent'
+            }`}
+          >
+            {tab.label}
+            {tab.value === 'pending' && tab.count > 0 ? (
+              <span className="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-xs font-bold rounded-full bg-amber-500 text-white">
+                {tab.count}
+              </span>
+            ) : (
+              <span className="text-xs opacity-60">{tab.count}</span>
+            )}
+          </button>
+        ))}
+      </div>
+
+      <DataTable columns={columns} data={filteredSellers} isLoading={isLoading} isError={isError} onRetry={refetch} searchColumn="displayName" searchPlaceholder="Search sellers..."
         enableRowSelection
         onBulkDelete={(rows) => {
           Promise.allSettled(rows.map((r) => sellersApi.delete(r.id))).then((results) => {
@@ -128,7 +174,10 @@ export default function SellersPage() {
                 <div><span className="text-muted-foreground">Joined:</span><p className="font-medium">{formatDate(detail.createdAt)}</p></div>
               </div>
               {detail.status === 'pending' && (
-                <DialogFooter>
+                <DialogFooter className="gap-2">
+                  <Button variant="outline" className="text-orange-600 border-orange-300 hover:bg-orange-50" onClick={() => { rejectM.mutate(detail.id); setDetail(null) }}>
+                    <XCircle className="mr-1 h-4 w-4" />Reject
+                  </Button>
                   <Button onClick={() => { approveM.mutate(detail.id); setDetail(null) }}>
                     <CheckCircle className="mr-1 h-4 w-4" />Approve Seller
                   </Button>

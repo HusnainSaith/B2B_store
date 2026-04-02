@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClient, QueryClientProvider, useQuery } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import { ThemeProvider } from '@/providers/ThemeProvider'
 import { useAuthStore } from '@/store/auth.store'
@@ -9,6 +9,7 @@ import { AppLayout } from '@/components/layout/app-layout'
 import { AuthLayout } from '@/components/layout/auth-layout'
 import { LoadingPage as Loading } from '@/components/shared/loading'
 import { ErrorBoundary } from '@/components/shared/error-boundary'
+import { sellerApi } from '@/services/api'
 import { shouldRetry } from '@/lib/api-error'
 
 const queryClient = new QueryClient({
@@ -48,10 +49,12 @@ const Subscriptions = lazy(() => import('@/pages/subscriptions'))
 // Error pages
 const NotFound = lazy(() => import('@/pages/not-found'))
 const Unauthorized = lazy(() => import('@/pages/unauthorized'))
+const PendingApproval = lazy(() => import('@/pages/pending-approval'))
 
 function ProtectedRoute({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated)
-  if (!isAuthenticated) return <Navigate to="/login" replace />
+  const accessToken = useAuthStore((s) => s.accessToken)
+  if (!isAuthenticated || !accessToken) return <Navigate to="/login" replace />
   return <>{children}</>
 }
 
@@ -65,12 +68,38 @@ function SellerGuard({ children }: { children: React.ReactNode }) {
   return <>{children}</>
 }
 
+function ApprovalGuard({ children }: { children: React.ReactNode }) {
+  const user = useAuthStore((s) => s.user)
+  const { data: seller, isLoading } = useQuery({
+    queryKey: ['seller-approval-check', user?.id],
+    queryFn: () => sellerApi.getMyProfile(user?.id ?? ''),
+    enabled: !!user?.id,
+    staleTime: 60_000,
+  })
+
+  if (isLoading) return <Loading />
+
+  // admins/super_admins bypass approval check
+  const role = user?.role ?? user?.roles?.[0]?.role?.name ?? user?.userRoles?.[0]?.role?.name
+  if (role === 'admin' || role === 'super_admin') return <>{children}</>
+
+  if (!seller || seller.status === 'pending') {
+    return <Navigate to="/pending-approval" replace />
+  }
+  if (seller.status !== 'active') {
+    return <Navigate to="/unauthorized" replace />
+  }
+  return <>{children}</>
+}
+
 function AppShell() {
   useSessionTimeout()
   return (
     <ProtectedRoute>
       <SellerGuard>
-        <AppLayout />
+        <ApprovalGuard>
+          <AppLayout />
+        </ApprovalGuard>
       </SellerGuard>
     </ProtectedRoute>
   )
@@ -98,8 +127,20 @@ export function App() {
                   element={
                     <ProtectedRoute>
                       <SellerGuard>
-                        <Onboarding />
+                        <ApprovalGuard>
+                          <Onboarding />
+                        </ApprovalGuard>
                       </SellerGuard>
+                    </ProtectedRoute>
+                  }
+                />
+
+                {/* Pending Approval */}
+                <Route
+                  path="/pending-approval"
+                  element={
+                    <ProtectedRoute>
+                      <PendingApproval />
                     </ProtectedRoute>
                   }
                 />

@@ -32,6 +32,25 @@ export interface RegisterData {
   lastName: string
 }
 
+export interface SellerRegistrationData {
+  displayName: string
+  legalName?: string
+  taxId?: string
+}
+
+export interface SellerProfile {
+  id: string
+  userId: string
+  displayName: string
+  legalName?: string
+  taxId?: string
+  commissionRate: number
+  status: string
+  approvedBy?: string
+  createdAt: string
+  updatedAt: string
+}
+
 export interface AuthResponse {
   accessToken: string
   refreshToken: string

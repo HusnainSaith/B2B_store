@@ -28,7 +28,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Detect system preference on mount (only if user hasn't explicitly set one)
   useEffect(() => {
-    const stored = localStorage.getItem('admin-theme')
+    const stored = localStorage.getItem('seller-theme')
     if (!stored) {
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
       if (prefersDark) {

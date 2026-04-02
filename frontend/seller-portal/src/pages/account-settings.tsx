@@ -28,7 +28,16 @@ type PasswordFormData = z.infer<typeof passwordSchema>
 
 export default function AccountSettingsPage() {
   const user = useAuthStore((s) => s.user)
-  const logout = useAuthStore((s) => s.logout)
+  const refreshToken = useAuthStore((s) => s.refreshToken)
+  const clearAuth = useAuthStore((s) => s.logout)
+
+  const handleLogout = async () => {
+    if (refreshToken) {
+      try { await authApi.logout(refreshToken) } catch { /* ignore */ }
+    }
+    clearAuth()
+    window.location.href = '/login'
+  }
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<PasswordFormData>({
     resolver: zodResolver(passwordSchema) as never,
@@ -103,7 +112,7 @@ export default function AccountSettingsPage() {
           <p className="mb-4 text-sm text-muted-foreground">
             Sign out of your account. You will need to log in again to access the seller portal.
           </p>
-          <Button variant="destructive" onClick={logout}>Sign Out</Button>
+          <Button variant=\"destructive\" onClick={handleLogout}>Sign Out</Button>
         </CardContent>
       </Card>
     </div>

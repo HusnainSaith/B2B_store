@@ -13,6 +13,7 @@ import { AuthSession } from './entities/auth-session.entity';
 import { AuthToken } from './entities/auth-token.entity';
 import { User } from '../users/entities/user.entity';
 import { UserRole } from '../users/entities/user-role.entity';
+import { Role } from '../roles/entities/role.entity';
 import * as crypto from 'crypto';
 import { NotificationHelperService } from '../notifications/notification-helper.service';
 import { MailService } from '../../common/modules/mail/mail.service';
@@ -28,6 +29,7 @@ export class AuthService {
     @InjectRepository(AuthToken) private tokenRepo: Repository<AuthToken>,
     @InjectRepository(User) private userRepo: Repository<User>,
     @InjectRepository(UserRole) private userRoleRepo: Repository<UserRole>,
+    @InjectRepository(Role) private roleRepo: Repository<Role>,
     private jwtService: JwtService,
     private dataSource: DataSource,
     private notificationHelper: NotificationHelperService,
@@ -39,6 +41,7 @@ export class AuthService {
     password: string;
     firstName?: string;
     lastName?: string;
+    role?: string;
   }) {
     const existing = await this.userRepo.findOne({
       where: { email: dto.email },
@@ -53,6 +56,17 @@ export class AuthService {
       lastName: dto.lastName,
     });
     const saved = await this.userRepo.save(user);
+
+    // Assign requested role (default: 'customer', only 'customer' or 'seller' allowed)
+    const roleName = dto.role === 'seller' ? 'seller' : 'customer';
+    const assignedRole = await this.roleRepo.findOne({ where: { name: roleName } });
+    if (assignedRole) {
+      const userRole = this.userRoleRepo.create({
+        userId: saved.id,
+        roleId: assignedRole.id,
+      });
+      await this.userRoleRepo.save(userRole);
+    }
 
     // Send email verification token
     const rawVerifyToken = crypto.randomBytes(32).toString('hex');

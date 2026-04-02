@@ -1,4 +1,4 @@
-import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import { createParamDecorator, ExecutionContext, UnauthorizedException } from '@nestjs/common';
 import { User } from '../../users/entities/user.entity';
 
 export const CurrentUser = createParamDecorator(
@@ -6,7 +6,7 @@ export const CurrentUser = createParamDecorator(
     const request = ctx.switchToHttp().getRequest();
 
     if (!request.user) {
-      throw new Error(
+      throw new UnauthorizedException(
         'No user found in request. Ensure JwtAuthGuard is applied and successful.',
       );
     }

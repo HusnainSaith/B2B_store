@@ -3,6 +3,7 @@
  * - Injects JWT Bearer token from auth store on every request.
  * - Unwraps envelope responses (NestJS { success, data } format).
  * - Handles 401 errors with automatic token refresh + rotation.
+ * - Uses a refresh lock to prevent concurrent refresh races.
  * - On refresh failure, logs user out and redirects to /login.
  */
 import axios from 'axios'
@@ -25,6 +26,19 @@ api.interceptors.request.use((config) => {
   return config
 })
 
+// Refresh lock to prevent concurrent refresh attempts
+let isRefreshing = false
+let refreshSubscribers: ((token: string) => void)[] = []
+
+function onRefreshed(token: string) {
+  refreshSubscribers.forEach((cb) => cb(token))
+  refreshSubscribers = []
+}
+
+function addRefreshSubscriber(cb: (token: string) => void) {
+  refreshSubscribers.push(cb)
+}
+
 api.interceptors.response.use(
   (response) => {
     const body = response.data
@@ -38,21 +52,36 @@ api.interceptors.response.use(
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true
       const refreshToken = useAuthStore.getState().refreshToken
-      if (refreshToken) {
-        try {
-          const { data } = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken })
-          const inner = data?.data ?? data
-          useAuthStore.getState().setTokens(inner.accessToken, inner.refreshToken)
-          originalRequest.headers.Authorization = `Bearer ${inner.accessToken}`
-          return api(originalRequest)
-        } catch {
-          useAuthStore.getState().logout()
-          toast.error('Session expired. Please log in again.')
-          window.location.href = '/login'
-        }
-      } else {
+      if (!refreshToken) {
         useAuthStore.getState().logout()
         window.location.href = '/login'
+        return Promise.reject(error)
+      }
+
+      if (isRefreshing) {
+        // Queue this request until the ongoing refresh completes
+        return new Promise((resolve) => {
+          addRefreshSubscriber((newToken: string) => {
+            originalRequest.headers.Authorization = `Bearer ${newToken}`
+            resolve(api(originalRequest))
+          })
+        })
+      }
+
+      isRefreshing = true
+      try {
+        const { data } = await axios.post(`${BASE_URL}/auth/refresh`, { refreshToken })
+        const inner = data?.data ?? data
+        useAuthStore.getState().setTokens(inner.accessToken, inner.refreshToken)
+        originalRequest.headers.Authorization = `Bearer ${inner.accessToken}`
+        onRefreshed(inner.accessToken)
+        return api(originalRequest)
+      } catch {
+        useAuthStore.getState().logout()
+        toast.error('Session expired. Please log in again.')
+        window.location.href = '/login'
+      } finally {
+        isRefreshing = false
       }
     }
     return Promise.reject(error)

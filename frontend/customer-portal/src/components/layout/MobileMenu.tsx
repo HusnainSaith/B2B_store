@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { ChevronRight, Home, ShoppingBag, Heart, Bell, Settings, HelpCircle, LogOut, User, Flame, Tag } from 'lucide-react'
+import { ChevronRight, Home, ShoppingBag, Heart, Bell, Settings, HelpCircle, LogOut, User, Flame, Tag, Store } from 'lucide-react'
 import { Sheet, SheetContent } from '@/components/ui/sheet'
 import { useUIStore } from '@/store/ui.store'
 import { useAuthStore } from '@/store/auth.store'
 import { categoriesApi, authApi } from '@/services/api'
 import { ROUTES } from '@/constants/routes'
+import { SELLER_PORTAL_URL } from '@/constants/config'
 import { Separator } from '@/components/ui/separator'
 import type { Category } from '@/types'
 
@@ -60,6 +61,14 @@ export function MobileMenu() {
             <NavItem to="/" icon={<Home className="h-5 w-5" />} label="Home" onClose={() => setMobileMenuOpen(false)} />
             <NavItem to="/flash-sales" icon={<Flame className="h-5 w-5 text-primary" />} label="Flash Sales" onClose={() => setMobileMenuOpen(false)} />
             <NavItem to="/products" icon={<Tag className="h-5 w-5" />} label="All Products" onClose={() => setMobileMenuOpen(false)} />
+            <a
+              href={`${SELLER_PORTAL_URL}/register`}
+              className="flex items-center gap-3 px-3 py-2.5 text-sm text-text-primary hover:bg-surface rounded-lg"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <Store className="h-5 w-5 text-primary" />
+              <span>Become a Seller</span>
+            </a>
           </div>
 
           <Separator />

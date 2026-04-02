@@ -55,7 +55,7 @@ export class PermissionsGuard implements CanActivate {
       // For other users, check their role-based permissions
       const userPermissions = await this.userRepository.manager.query(
         `
-        SELECT DISTINCT p.module, p.action
+        SELECT DISTINCT p.code
         FROM permissions p
         JOIN role_permissions rp ON rp.permission_id = p.id
         JOIN user_roles ur ON ur.role_id = rp.role_id
@@ -65,7 +65,7 @@ export class PermissionsGuard implements CanActivate {
       );
 
       const permissionSet = new Set(
-        userPermissions.map((row: any) => `${row.module}.${row.action}`),
+        userPermissions.map((row: any) => row.code),
       );
 
       // Check if user has required permissions

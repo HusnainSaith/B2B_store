@@ -51,7 +51,7 @@ export class ProductsService {
     storeId?: string;
     categoryId?: string;
     search?: string;
-  }): Promise<{ data: Product[]; total: number }> {
+  }): Promise<{ data: Product[]; total: number; page: number; limit: number; totalPages: number }> {
     // Two-query strategy to avoid TypeORM pagination bug with one-to-many joins.
     // Step 1: Get paginated product IDs (no one-to-many joins that multiply rows).
     const idQb = this.productRepo.createQueryBuilder('p').select('p.id');
@@ -74,7 +74,8 @@ export class ProductsService {
       idQb.getCount(),
     ]);
 
-    if (idRows.length === 0) return { data: [], total };
+    if (idRows.length === 0)
+      return { data: [], total, page: pg, limit: lm, totalPages: Math.ceil(total / lm) };
 
     // Step 2: Load full entities with all relations for the fetched IDs.
     const ids = idRows.map((r) => r.p_id);
@@ -90,7 +91,7 @@ export class ProductsService {
       .addOrderBy('images.sortOrder', 'ASC')
       .getMany();
 
-    return { data, total };
+    return { data, total, page: pg, limit: lm, totalPages: Math.ceil(total / lm) };
   }
 
   async findOne(id: string): Promise<Product> {
@@ -333,7 +334,21 @@ export class ProductsService {
 
   async assignVariantAttribute(
     dto: Partial<VariantAttributeValue>,
+    callerId?: string,
+    callerRole?: string,
   ): Promise<VariantAttributeValue> {
+    if (callerId && dto.variantId) {
+      const v = await this.variantRepo.findOne({
+        where: { id: dto.variantId },
+        relations: ['product', 'product.store', 'product.store.seller'],
+      });
+      if (v?.product?.store?.seller)
+        enforceOwnerOrAdmin(
+          callerId,
+          callerRole,
+          (v.product.store.seller as any).userId,
+        );
+    }
     const va = this.variantAttrRepo.create(dto);
     return this.variantAttrRepo.save(va);
   }
@@ -350,7 +365,21 @@ export class ProductsService {
   async removeVariantAttribute(
     variantId: string,
     attributeKeyId: string,
+    callerId?: string,
+    callerRole?: string,
   ): Promise<void> {
+    if (callerId) {
+      const v = await this.variantRepo.findOne({
+        where: { id: variantId },
+        relations: ['product', 'product.store', 'product.store.seller'],
+      });
+      if (v?.product?.store?.seller)
+        enforceOwnerOrAdmin(
+          callerId,
+          callerRole,
+          (v.product.store.seller as any).userId,
+        );
+    }
     await this.variantAttrRepo.delete({ variantId, attributeKeyId });
   }
 
@@ -359,7 +388,21 @@ export class ProductsService {
   async addProductCategory(
     productId: string,
     categoryId: string,
+    callerId?: string,
+    callerRole?: string,
   ): Promise<ProductCategory> {
+    if (callerId) {
+      const p = await this.productRepo.findOne({
+        where: { id: productId },
+        relations: ['store', 'store.seller'],
+      });
+      if (p?.store?.seller)
+        enforceOwnerOrAdmin(
+          callerId,
+          callerRole,
+          (p.store.seller as any).userId,
+        );
+    }
     const pc = this.prodCatRepo.create({ productId, categoryId });
     return this.prodCatRepo.save(pc);
   }
@@ -374,7 +417,21 @@ export class ProductsService {
   async removeProductCategory(
     productId: string,
     categoryId: string,
+    callerId?: string,
+    callerRole?: string,
   ): Promise<void> {
+    if (callerId) {
+      const p = await this.productRepo.findOne({
+        where: { id: productId },
+        relations: ['store', 'store.seller'],
+      });
+      if (p?.store?.seller)
+        enforceOwnerOrAdmin(
+          callerId,
+          callerRole,
+          (p.store.seller as any).userId,
+        );
+    }
     await this.prodCatRepo.delete({ productId, categoryId });
   }
 }

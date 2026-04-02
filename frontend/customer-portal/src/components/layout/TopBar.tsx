@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
-import { MapPin, HelpCircle, Globe, Moon, Sun } from 'lucide-react'
+import { MapPin, HelpCircle, Globe, Moon, Sun, Store } from 'lucide-react'
 import { useThemeStore } from '@/store/theme.store'
+import { SELLER_PORTAL_URL } from '@/constants/config'
 
 export function TopBar() {
   const { theme, toggleTheme } = useThemeStore()
@@ -16,6 +17,10 @@ export function TopBar() {
         </div>
         <div className="flex items-center gap-4">
           <Link to="/flash-sales" className="hover:text-primary transition-colors">Today&apos;s Deals</Link>
+          <a href={`${SELLER_PORTAL_URL}/register`} className="flex items-center gap-1 hover:text-primary transition-colors font-medium">
+            <Store className="h-3 w-3" />
+            <span>Become a Seller</span>
+          </a>
           <Link to="/account/chat" className="hidden sm:flex items-center gap-1 hover:text-primary transition-colors">
             <HelpCircle className="h-3 w-3" />
             <span>Help</span>

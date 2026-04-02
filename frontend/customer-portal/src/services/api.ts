@@ -41,6 +41,8 @@ import type {
   SearchProductsResponse,
   SearchQuery,
   PaginatedResponse,
+  SellerRegistrationData,
+  SellerProfile,
 } from '@/types'
 
 function toPaginated<T>(data: unknown, params?: { page?: number; limit?: number }): PaginatedResponse<T> {
@@ -88,6 +90,14 @@ export const authApi = {
     api.post('/auth/reset-password', data),
   verifyEmail: (token: string) =>
     api.post('/auth/verify-email', { token }),
+}
+
+// ─── Sellers ───────────────────
+export const sellersApi = {
+  register: (data: SellerRegistrationData) =>
+    api.post<SellerProfile>('/sellers/register', data).then((r) => r.data),
+  getMyProfile: () =>
+    api.get<SellerProfile>('/sellers/me').then((r) => r.data),
 }
 
 // ─── Users / Profile ───────────

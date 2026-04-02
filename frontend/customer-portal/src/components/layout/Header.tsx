@@ -1,11 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Search, ShoppingCart, User, Menu, X } from 'lucide-react'
+import { Search, ShoppingCart, User, Menu, X, Store } from 'lucide-react'
 import { useAuthStore } from '@/store/auth.store'
 import { useCartStore } from '@/store/cart.store'
 import { useUIStore } from '@/store/ui.store'
 import { ROUTES } from '@/constants/routes'
-import { SEARCH_DEBOUNCE_MS } from '@/constants/config'
+import { SEARCH_DEBOUNCE_MS, SELLER_PORTAL_URL } from '@/constants/config'
 import { searchApi } from '@/services/api'
 import { sanitizeText } from '@/lib/sanitize'
 
@@ -106,6 +106,15 @@ export function Header() {
 
         {/* Right Actions */}
         <div className="flex items-center gap-2 shrink-0">
+          {/* Sell on Zaroox */}
+          <a
+            href={`${SELLER_PORTAL_URL}/register`}
+            className="flex items-center gap-2 px-4 py-2.5 text-sm text-primary hover:text-primary-dark hover:bg-primary/5 rounded-xl font-medium transition-all duration-200 shrink-0 hidden lg:flex"
+          >
+            <Store className="h-4 w-4" />
+            Sell on Zaroox
+          </a>
+
           {/* Account */}
           <Link
             to={isAuthenticated ? ROUTES.ACCOUNT : ROUTES.LOGIN}

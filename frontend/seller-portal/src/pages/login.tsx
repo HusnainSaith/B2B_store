@@ -37,8 +37,12 @@ export default function LoginPage() {
     setLoading(true)
     try {
       const res = await authApi.login(data)
-      const role = res.user?.role ?? (res.user as { roles?: { role?: { name?: string } }[] })?.roles?.[0]?.role?.name
-      if (role && role !== 'seller' && role !== 'admin' && role !== 'super_admin') {
+      const user = res.user
+      const role = user?.role
+        ?? (user as { roles?: { role?: { name?: string } }[] })?.roles?.[0]?.role?.name
+        ?? (user as { userRoles?: { role?: { name?: string } }[] })?.userRoles?.[0]?.role?.name
+      const allowedRoles = ['seller', 'admin', 'super_admin']
+      if (!role || !allowedRoles.includes(role)) {
         toast.error('Access denied. This portal is for sellers only.')
         setLoading(false)
         return

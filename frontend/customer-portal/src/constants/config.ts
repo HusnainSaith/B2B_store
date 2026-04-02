@@ -1,5 +1,6 @@
 export const APP_NAME = import.meta.env.VITE_APP_NAME || 'Zaroox'
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api'
+export const SELLER_PORTAL_URL = (import.meta.env.VITE_SELLER_PORTAL_URL || 'http://localhost:5174').replace(/\/+$/, '')
 
 export const PAGINATION = {
   DEFAULT_PAGE: 1,

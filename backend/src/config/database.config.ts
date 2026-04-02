@@ -1,5 +1,6 @@
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import * as dotenv from 'dotenv';
+import * as path from 'path';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 dotenv.config();
@@ -12,9 +13,14 @@ const databaseConfig = (): TypeOrmModuleOptions => ({
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE || 'postgres',
 
-  entities: [__dirname + '/../modules/**/entities/*.entity.{ts,js}'],
+  autoLoadEntities: true,
+  entities: [
+    path.join(__dirname, '..', 'modules', '**', 'entities', '*.entity.{ts,js}').replace(/\\/g, '/'),
+  ],
 
-  migrations: [__dirname + '/../migrations/*.{ts,js}'],
+  migrations: [
+    path.join(__dirname, '..', 'migrations', '*.{ts,js}').replace(/\\/g, '/'),
+  ],
 
   synchronize: false,
 

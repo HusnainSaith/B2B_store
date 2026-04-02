@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Seller } from './entities/seller.entity';
@@ -19,6 +19,29 @@ export class SellersService {
     private notificationHelper: NotificationHelperService,
     private mailService: MailService,
   ) {}
+
+  async registerAsSeller(
+    userId: string,
+    dto: Partial<Seller>,
+  ): Promise<Seller> {
+    const existing = await this.sellerRepo.findOne({ where: { userId } });
+    if (existing) {
+      throw new ConflictException('You already have a seller profile');
+    }
+    return this.createSeller({ ...dto, userId });
+  }
+
+  async findSellerByUserId(userId: string): Promise<Seller | null> {
+    const seller = await this.sellerRepo.findOne({
+      where: { userId },
+      relations: ['user'],
+    });
+    if (seller?.user) {
+      const { passwordHash: _pw, ...safe } = seller.user as any;
+      seller.user = safe as any;
+    }
+    return seller;
+  }
 
   async createSeller(dto: Partial<Seller>): Promise<Seller> {
     dto.status = dto.status || 'pending';
@@ -102,7 +125,7 @@ export class SellersService {
     Object.assign(s, dto);
     const saved = await this.sellerRepo.save(s);
 
-    if ((dto as any).status === 'approved' && s.userId) {
+    if (((dto as any).status === 'active' || (dto as any).status === 'approved') && s.userId) {
       this.notificationHelper
         .notify(s.userId, 'SELLER_APPROVED', {})
         .catch(() => {});
@@ -128,7 +151,7 @@ export class SellersService {
 
   async approveSeller(id: string, approvedBy: string): Promise<Seller> {
     const s = await this.findSellerEntity(id);
-    s.status = 'approved';
+    s.status = 'active';
     s.approvedBy = approvedBy;
     const saved = await this.sellerRepo.save(s);
 

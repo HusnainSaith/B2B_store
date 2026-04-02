@@ -105,7 +105,6 @@ export default function OnboardingPage() {
       const created = await storeApi.create({
         ...data,
         name: sanitizeText(data.name),
-        sellerId: seller?.id ?? '',
       })
       setStore(created)
       toast.success('Store created!')

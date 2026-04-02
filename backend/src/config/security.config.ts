@@ -4,8 +4,6 @@ const parseOrigins = (raw?: string): string[] =>
     .map((s) => s.trim())
     .filter(Boolean);
 
-const ALLOWED_ORIGINS = new Set(parseOrigins(process.env.FRONTEND_URLS));
-
 const localhostPattern = /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i;
 
 export const SecurityConfig = {
@@ -17,7 +15,10 @@ export const SecurityConfig = {
     ) => {
       if (!origin) return callback(null, true);
 
-      if (ALLOWED_ORIGINS.has(origin)) return callback(null, true);
+      // Re-read env at request time so ConfigModule .env values are available
+      const allowedOrigins = new Set(parseOrigins(process.env.FRONTEND_URLS));
+
+      if (allowedOrigins.has(origin)) return callback(null, true);
 
       if (
         process.env.NODE_ENV !== 'production' &&

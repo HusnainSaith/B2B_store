@@ -35,12 +35,13 @@ function toPaginated<T>(data: unknown, params?: { page?: number; limit?: number 
     return { data, total: data.length, page: params?.page ?? 1, limit: params?.limit ?? data.length, totalPages: 1 }
   }
   const obj = data as Record<string, unknown>
-  if (obj && Array.isArray(obj.data)) {
+  const items = Array.isArray(obj?.data) ? obj.data : Array.isArray(obj?.items) ? obj.items : null
+  if (obj && items) {
     return {
-      data: obj.data as T[],
-      total: (obj.total as number) ?? obj.data.length,
+      data: items as T[],
+      total: (obj.total as number) ?? items.length,
       page: (obj.page as number) ?? params?.page ?? 1,
-      limit: (obj.limit as number) ?? params?.limit ?? obj.data.length,
+      limit: (obj.limit as number) ?? params?.limit ?? items.length,
       totalPages: (obj.totalPages as number) ?? 1,
     }
   }
@@ -52,7 +53,7 @@ export const authApi = {
   login: (data: LoginCredentials) =>
     api.post<AuthResponse>('/auth/login', data).then((r) => r.data),
   register: (data: { email: string; password: string; firstName: string; lastName: string }) =>
-    api.post('/auth/register', data).then((r) => r.data),
+    api.post('/auth/register', { ...data, role: 'seller' }).then((r) => r.data),
   refresh: (refreshToken: string) =>
     api.post<AuthResponse>('/auth/refresh', { refreshToken }).then((r) => r.data),
   logout: (refreshToken: string) =>
@@ -70,10 +71,9 @@ export const authApi = {
 // ─── Seller ────────────────────
 export const sellerApi = {
   getMyProfile: (userId: string) =>
-    api.get<Seller[]>('/sellers').then((r) => {
-      const list = Array.isArray(r.data) ? r.data : []
-      return list.find((s) => s.userId === userId) ?? null
-    }) as Promise<Seller | null>,
+    api.get<Seller>('/sellers/me').then((r) => r.data).catch(() => null) as Promise<Seller | null>,
+  register: (data: { displayName: string; legalName?: string; taxId?: string }) =>
+    api.post<Seller>('/sellers/register', data).then((r) => r.data),
   create: (data: Partial<Seller>) =>
     api.post<Seller>('/sellers', data).then((r) => r.data),
   update: (id: string, data: Partial<Seller>) =>

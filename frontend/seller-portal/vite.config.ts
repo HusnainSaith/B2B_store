@@ -22,7 +22,7 @@ export default defineConfig({
     port: 3002,
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:3000',
         changeOrigin: true,
         rewrite: (p) => p.replace(/^\/api/, ''),
       },

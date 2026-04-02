@@ -29,6 +29,7 @@ import { memoryStorage } from 'multer';
 import { SellersService } from './sellers.service';
 import { CreateSellerDto } from './dto/create-seller.dto';
 import { UpdateSellerDto } from './dto/update-seller.dto';
+import { RegisterSellerDto } from './dto/register-seller.dto';
 import { CreateStoreDto } from './dto/create-store.dto';
 import { UpdateStoreDto } from './dto/update-store.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -45,10 +46,30 @@ import { Public } from '../../common/decorators/public.decorator';
 export class SellersController {
   constructor(private readonly svc: SellersService) {}
 
+  @Post('register')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Register as a seller (customer self-service)' })
+  @ApiResponse({ status: 201, description: 'Seller application submitted' })
+  @ApiResponse({ status: 409, description: 'Already registered as a seller' })
+  @Auditable({ action: 'CREATE', tableName: 'sellers' })
+  register(@Body() dto: RegisterSellerDto, @Req() req: any) {
+    return this.svc.registerAsSeller(req.user.id, dto);
+  }
+
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth('JWT-auth')
+  @ApiOperation({ summary: 'Get current user seller profile' })
+  @ApiResponse({ status: 200, description: 'Seller profile returned (or null)' })
+  getMyProfile(@Req() req: any) {
+    return this.svc.findSellerByUserId(req.user.id);
+  }
+
   @Post()
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Register as a seller' })
+  @ApiOperation({ summary: 'Create a seller (admin)' })
   @ApiResponse({ status: 201, description: 'Seller profile created' })
   @Auditable({ action: 'CREATE', tableName: 'sellers' })
   create(@Body() dto: CreateSellerDto, @Req() req: any) {

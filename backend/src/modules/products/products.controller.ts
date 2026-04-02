@@ -413,8 +413,13 @@ export class ProductsController {
   assignVariantAttribute(
     @Param('variantId') variantId: string,
     @Body() dto: AssignVariantAttributeDto,
+    @CurrentUser() user: any,
   ) {
-    return this.svc.assignVariantAttribute({ ...dto, variantId });
+    return this.svc.assignVariantAttribute(
+      { ...dto, variantId },
+      user.id,
+      user.role,
+    );
   }
 
   @Get('variants/:variantId/attributes')
@@ -436,8 +441,9 @@ export class ProductsController {
   removeVariantAttribute(
     @Param('variantId') variantId: string,
     @Param('keyId') keyId: string,
+    @CurrentUser() user: any,
   ) {
-    return this.svc.removeVariantAttribute(variantId, keyId);
+    return this.svc.removeVariantAttribute(variantId, keyId, user.id, user.role);
   }
 
   // ─── Product Categories ────────────────────────────────────────────────
@@ -452,8 +458,14 @@ export class ProductsController {
   addProductCategory(
     @Param('productId') productId: string,
     @Param('categoryId') categoryId: string,
+    @CurrentUser() user: any,
   ) {
-    return this.svc.addProductCategory(productId, categoryId);
+    return this.svc.addProductCategory(
+      productId,
+      categoryId,
+      user.id,
+      user.role,
+    );
   }
 
   @Get(':productId/categories')
@@ -475,7 +487,13 @@ export class ProductsController {
   removeProductCategory(
     @Param('productId') productId: string,
     @Param('categoryId') categoryId: string,
+    @CurrentUser() user: any,
   ) {
-    return this.svc.removeProductCategory(productId, categoryId);
+    return this.svc.removeProductCategory(
+      productId,
+      categoryId,
+      user.id,
+      user.role,
+    );
   }
 }
