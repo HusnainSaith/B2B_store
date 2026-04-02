@@ -4,6 +4,9 @@ import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { ProductCard } from './ProductCard'
 import type { Product } from '@/types'
+import { useWishlist } from '@/hooks/useWishlist'
+import { useAuthStore } from '@/store/auth.store'
+import { toast } from 'sonner'
 
 interface ProductCarouselProps {
   products: Product[]
@@ -12,6 +15,8 @@ interface ProductCarouselProps {
 }
 
 export function ProductCarousel({ products, title, className }: ProductCarouselProps) {
+  const { isAuthenticated } = useAuthStore()
+  const { isWishlisted, toggleWishlist } = useWishlist()
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'start', slidesToScroll: 2, containScroll: 'trimSnaps' })
   const [canPrev, setCanPrev] = useState(false)
   const [canNext, setCanNext] = useState(false)
@@ -41,7 +46,15 @@ export function ProductCarousel({ products, title, className }: ProductCarouselP
         <div className="flex gap-4">
           {products.map((product) => (
             <div key={product.id} className="flex-[0_0_200px] md:flex-[0_0_220px] min-w-0">
-              <ProductCard product={product} compact />
+              <ProductCard
+                product={product}
+                compact
+                isWishlisted={isAuthenticated && !!product.variants?.[0]?.id && isWishlisted(product.variants[0].id)}
+                onToggleWishlist={async () => {
+                  if (!isAuthenticated) { toast.error('Please login to use wishlist'); return }
+                  const vid = product.variants?.[0]?.id; if (vid) try { await toggleWishlist(vid) } catch { toast.error('Failed to update wishlist') }
+                }}
+              />
             </div>
           ))}
         </div>

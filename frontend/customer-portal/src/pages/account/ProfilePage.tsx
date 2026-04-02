@@ -45,7 +45,7 @@ export default function ProfilePage() {
     const file = e.target.files?.[0]
     if (!file || !user) return
     const formData = new FormData()
-    formData.append('avatar', file)
+    formData.append('file', file)
     try {
       await usersApi.uploadAvatar(user.id, formData)
       const updated = await usersApi.get(user.id)

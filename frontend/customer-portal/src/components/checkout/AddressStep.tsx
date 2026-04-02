@@ -10,6 +10,7 @@ import { useAuthStore } from '@/store/auth.store'
 import type { UserAddress } from '@/types'
 import { cn } from '@/lib/utils'
 import { MapPin, Plus } from 'lucide-react'
+import { COUNTRIES } from '@/constants/countries'
 
 interface AddressStepProps {
   onNext: (address: UserAddress) => void
@@ -113,7 +114,10 @@ export function AddressStep({ onNext, selectedAddressId }: AddressStepProps) {
             </div>
             <div>
               <Label className="mb-1 block text-xs">Country</Label>
-              <Input placeholder="Pakistan" {...register('country')} />
+              <select {...register('country')} className="w-full h-10 px-3 rounded-md border border-border bg-background text-sm text-text-primary focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary">
+                <option value="">Select country</option>
+                {COUNTRIES.map((c) => (<option key={c.code} value={c.code}>{c.name}</option>))}
+              </select>
               {errors.country && <p className="text-xs text-danger mt-1">{errors.country.message}</p>}
             </div>
           </div>

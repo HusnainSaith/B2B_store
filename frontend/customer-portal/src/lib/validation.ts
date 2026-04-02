@@ -66,7 +66,7 @@ export const addressSchema = z.object({
   city: z.string().min(1, 'City is required'),
   state: z.string().optional(),
   postalCode: z.string().optional(),
-  country: z.string().min(2, 'Country is required'),
+  country: z.string().length(2, 'Please select a country'),
   isDefault: z.boolean().optional(),
 })
 
