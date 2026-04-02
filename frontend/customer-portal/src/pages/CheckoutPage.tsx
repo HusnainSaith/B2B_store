@@ -109,7 +109,15 @@ export default function CheckoutPage() {
           )}
           {currentStep === 1 && (
             <ShippingStep
-              onNext={(method) => { setShippingMethod(method); setCurrentStep(2) }}
+              onNext={(method, codSelected) => {
+                setShippingMethod(method)
+                if (codSelected) {
+                  setPaymentMethod('cod')
+                  setCurrentStep(3) // Skip payment step, go directly to review
+                } else {
+                  setCurrentStep(2)
+                }
+              }}
               onBack={() => setCurrentStep(0)}
             />
           )}
