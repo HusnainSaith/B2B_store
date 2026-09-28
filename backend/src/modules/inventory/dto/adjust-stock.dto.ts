@@ -1,4 +1,4 @@
-import { IsUUID, IsInt } from 'class-validator';
+import { IsUUID, IsInt, Min } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class AdjustStockDto {
@@ -21,5 +21,20 @@ export class AdjustStockDto {
     description: 'Quantity delta (positive to add, negative to subtract)',
   })
   @IsInt()
+  delta: number;
+}
+
+export class ReserveStockDto {
+  @ApiProperty({ format: 'uuid' })
+  @IsUUID()
+  warehouseId: string;
+
+  @ApiProperty({ format: 'uuid' })
+  @IsUUID()
+  variantId: string;
+
+  @ApiProperty({ example: 1, minimum: 1 })
+  @IsInt()
+  @Min(1)
   delta: number;
 }

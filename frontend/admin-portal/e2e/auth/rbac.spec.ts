@@ -2,7 +2,7 @@ import { test, expect } from '../fixtures'
 
 test.describe('RBAC - Role-Based Access Control', () => {
   test('seller cannot access admin-only routes', async ({ sellerPage: page }) => {
-    const adminRoutes = ['/users', '/roles', '/permissions', '/role-permissions', '/payments', '/audit', '/search-analytics']
+    const adminRoutes = ['/users', '/roles', '/permissions', '/role-permissions', '/wholesale', '/audit', '/search-analytics']
     for (const route of adminRoutes) {
       await page.goto(route)
       await expect(page.getByRole('heading', { name: /403/i })).toBeVisible({ timeout: 10000 })
@@ -27,7 +27,7 @@ test.describe('RBAC - Role-Based Access Control', () => {
       { path: '/users', heading: /users/i },
       { path: '/roles', heading: /roles/i },
       { path: '/permissions', heading: /permissions/i },
-      { path: '/payments', heading: /payments/i },
+      { path: '/wholesale', heading: /wholesale inquiries/i },
       { path: '/audit', heading: /audit/i },
     ]
     for (const { path, heading } of adminRoutes) {

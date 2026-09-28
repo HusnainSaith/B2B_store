@@ -76,11 +76,10 @@ apt install -y rsync unzip awscli
 echo ">>> Creating directories..."
 mkdir -p /var/www/customer-portal
 mkdir -p /var/www/admin-portal
-mkdir -p /var/www/seller-portal
 mkdir -p /home/ubuntu/zerox-store
 mkdir -p /home/ubuntu/backups
 
-chown -R www-data:www-data /var/www/customer-portal /var/www/admin-portal /var/www/seller-portal
+chown -R www-data:www-data /var/www/customer-portal /var/www/admin-portal
 chown -R ubuntu:ubuntu /home/ubuntu/zerox-store /home/ubuntu/backups
 
 # -------------------------------------------
@@ -115,7 +114,7 @@ cp /home/ubuntu/deploy/nginx/zerox.conf /etc/nginx/sites-available/zerox.conf
 ln -sf /etc/nginx/sites-available/zerox.conf /etc/nginx/sites-enabled/
 
 # Create placeholder index for each portal
-for dir in customer-portal admin-portal seller-portal; do
+for dir in customer-portal admin-portal; do
     echo "<h1>$dir — deploy pending</h1>" > /var/www/$dir/index.html
 done
 
@@ -155,7 +154,6 @@ echo ""
 echo " Access:"
 echo "   Customer Portal: http://$(curl -s ifconfig.me)"
 echo "   Admin Portal:    http://$(curl -s ifconfig.me):8080"
-echo "   Seller Portal:   http://$(curl -s ifconfig.me):8081"
 echo "   API Health:      http://$(curl -s ifconfig.me)/api/health"
 echo ""
 echo " Next: Push to main branch to trigger GitHub Actions deployment"

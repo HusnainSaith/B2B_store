@@ -6,6 +6,7 @@ import {
   IsNumber,
   IsInt,
   IsBoolean,
+  Min,
   MaxLength,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
@@ -34,11 +35,13 @@ export class CreateProductVariantDto {
   })
   @IsOptional()
   @IsNumber()
+  @Min(0.01)
   price?: number;
 
   @ApiPropertyOptional({ example: 250, description: 'Weight in grams' })
   @IsOptional()
   @IsInt()
+  @Min(0)
   weightGrams?: number;
 
   @ApiPropertyOptional({

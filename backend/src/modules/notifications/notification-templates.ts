@@ -116,6 +116,15 @@ export const NotificationTemplates: Record<string, NotificationTemplate> = {
     actionUrl: '/seller/inventory',
   },
 
+  // ─── Wholesale ─────────────────────────────────────────────────────
+  WHOLESALE_QUOTE_READY: {
+    channel: 'in_app',
+    type: 'wholesale.quote_ready',
+    title: 'Your Wholesale Quotation Is Ready',
+    body: 'Quotation {{reference}} is ready for your wholesale inquiry.',
+    actionUrl: '/wholesale/inquiries/{{inquiryId}}',
+  },
+
   // ─── Returns & Refunds ─────────────────────────────────────────────
   RETURN_REQUESTED: {
     channel: 'in_app',

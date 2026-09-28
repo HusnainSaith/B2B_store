@@ -12,13 +12,6 @@ import {
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
 export class CreateProductDto {
-  @ApiProperty({
-    example: '550e8400-e29b-41d4-a716-446655440000',
-    description: 'Store UUID',
-  })
-  @IsUUID()
-  storeId: string;
-
   @ApiPropertyOptional({
     example: '550e8400-e29b-41d4-a716-446655440001',
     description: 'Category UUID',

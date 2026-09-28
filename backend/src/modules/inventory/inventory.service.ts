@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Warehouse } from './entities/warehouse.entity';
@@ -11,6 +11,13 @@ export class InventoryService {
     @InjectRepository(Inventory) private inventoryRepo: Repository<Inventory>,
     private dataSource: DataSource,
   ) {}
+
+  private hasReturnedRows(result: unknown): boolean {
+    const rows = Array.isArray(result) && Array.isArray(result[0])
+      ? result[0]
+      : result;
+    return Array.isArray(rows) && rows.length > 0;
+  }
 
   async createWarehouse(dto: Partial<Warehouse>): Promise<Warehouse> {
     const wh = this.warehouseRepo.create(dto);
@@ -45,15 +52,23 @@ export class InventoryService {
     warehouseId: string,
     variantId: string,
     qtyOnHand: number,
+    lowStockThreshold = 0,
   ): Promise<Inventory> {
     // Atomic upsert to avoid race condition
-    await this.dataSource.query(
-      `INSERT INTO inventory (warehouse_id, variant_id, qty_on_hand)
-       VALUES ($1, $2, $3)
+    const result = await this.dataSource.query(
+      `INSERT INTO inventory (warehouse_id, variant_id, qty_on_hand, low_stock_threshold)
+       VALUES ($1, $2, $3, $4)
        ON CONFLICT (warehouse_id, variant_id)
-       DO UPDATE SET qty_on_hand = $3`,
-      [warehouseId, variantId, qtyOnHand],
+       DO UPDATE SET qty_on_hand = $3, low_stock_threshold = $4
+       WHERE inventory.qty_reserved <= $3
+       RETURNING *`,
+      [warehouseId, variantId, qtyOnHand, lowStockThreshold],
     );
+    if (!this.hasReturnedRows(result)) {
+      throw new BadRequestException(
+        'Stock on hand cannot be lower than already reserved stock',
+      );
+    }
     return this.inventoryRepo.findOne({ where: { warehouseId, variantId } });
   }
 
@@ -66,11 +81,14 @@ export class InventoryService {
     const result = await this.dataSource.query(
       `UPDATE inventory SET qty_on_hand = qty_on_hand + $1
        WHERE warehouse_id = $2 AND variant_id = $3
+         AND qty_on_hand + $1 >= qty_reserved
        RETURNING *`,
       [delta, warehouseId, variantId],
     );
-    if (!result?.length)
-      throw new NotFoundException('Inventory record not found');
+    if (!this.hasReturnedRows(result))
+      throw new BadRequestException(
+        'Inventory not found or adjustment would make available stock negative',
+      );
     return this.inventoryRepo.findOne({ where: { warehouseId, variantId } });
   }
 
@@ -83,11 +101,12 @@ export class InventoryService {
     const result = await this.dataSource.query(
       `UPDATE inventory SET qty_reserved = qty_reserved + $1
        WHERE warehouse_id = $2 AND variant_id = $3
+         AND qty_reserved + $1 <= qty_on_hand
        RETURNING *`,
       [qty, warehouseId, variantId],
     );
-    if (!result?.length)
-      throw new NotFoundException('Inventory record not found');
+    if (!this.hasReturnedRows(result))
+      throw new BadRequestException('Insufficient available stock');
     return this.inventoryRepo.findOne({ where: { warehouseId, variantId } });
   }
 
@@ -103,7 +122,7 @@ export class InventoryService {
        RETURNING *`,
       [qty, warehouseId, variantId],
     );
-    if (!result?.length)
+    if (!this.hasReturnedRows(result))
       throw new NotFoundException('Inventory record not found');
     return this.inventoryRepo.findOne({ where: { warehouseId, variantId } });
   }

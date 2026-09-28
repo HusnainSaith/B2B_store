@@ -23,7 +23,7 @@ import { InventoryService } from './inventory.service';
 import { CreateWarehouseDto } from './dto/create-warehouse.dto';
 import { UpdateWarehouseDto } from './dto/update-warehouse.dto';
 import { SetStockDto } from './dto/set-stock.dto';
-import { AdjustStockDto } from './dto/adjust-stock.dto';
+import { AdjustStockDto, ReserveStockDto } from './dto/adjust-stock.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { Roles } from '../../common/decorators/roles.decorator';
@@ -93,7 +93,12 @@ export class InventoryController {
   @ApiOperation({ summary: 'Set stock level for a variant at a warehouse' })
   @ApiResponse({ status: 200, description: 'Stock set' })
   setStock(@Body() dto: SetStockDto) {
-    return this.svc.setStock(dto.warehouseId, dto.variantId, dto.qtyOnHand);
+    return this.svc.setStock(
+      dto.warehouseId,
+      dto.variantId,
+      dto.qtyOnHand,
+      dto.lowStockThreshold,
+    );
   }
 
   @Post('adjust')
@@ -106,14 +111,14 @@ export class InventoryController {
   @Post('reserve')
   @ApiOperation({ summary: 'Reserve stock for an order' })
   @ApiResponse({ status: 200, description: 'Stock reserved' })
-  reserveStock(@Body() dto: AdjustStockDto) {
+  reserveStock(@Body() dto: ReserveStockDto) {
     return this.svc.reserveStock(dto.warehouseId, dto.variantId, dto.delta);
   }
 
   @Post('release')
   @ApiOperation({ summary: 'Release reserved stock' })
   @ApiResponse({ status: 200, description: 'Reservation released' })
-  releaseReservation(@Body() dto: AdjustStockDto) {
+  releaseReservation(@Body() dto: ReserveStockDto) {
     return this.svc.releaseReservation(
       dto.warehouseId,
       dto.variantId,

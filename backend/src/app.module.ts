@@ -43,6 +43,8 @@ import { MailModule } from './common/modules/mail/mail.module';
 import { SchedulerModule } from './modules/scheduler/scheduler.module';
 import { StorageModule } from './modules/storage/storage.module';
 import { StripeModule } from './modules/stripe/stripe.module';
+import { CheckoutModule } from './modules/checkout/checkout.module';
+import { WholesaleModule } from './modules/wholesale/wholesale.module';
 
 @Module({
   imports: [
@@ -102,6 +104,8 @@ import { StripeModule } from './modules/stripe/stripe.module';
     AuditModule,
     SchedulerModule,
     StripeModule,
+    CheckoutModule,
+    WholesaleModule,
   ],
   controllers: [AppController],
   providers: [

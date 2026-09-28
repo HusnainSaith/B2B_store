@@ -1,7 +1,6 @@
 import {
   Injectable,
   NotFoundException,
-  ForbiddenException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -108,18 +107,12 @@ export class ReviewsService {
     };
   }
 
-  async reply(id: string, body: string, callerId: string): Promise<Review> {
+  async reply(id: string, body: string): Promise<Review> {
     const review = await this.reviewRepo.findOne({
       where: { id },
-      relations: ['product', 'product.store', 'product.store.seller'],
+      relations: ['product', 'product.store'],
     });
     if (!review) throw new NotFoundException('Review not found');
-    const seller = (review as any).product?.store?.seller;
-    if (!seller || seller.userId !== callerId) {
-      throw new ForbiddenException(
-        'Only the product owner can reply to reviews',
-      );
-    }
     review.sellerReply = body;
     review.sellerReplyAt = new Date();
     return this.reviewRepo.save(review);

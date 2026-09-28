@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, MaxLength } from 'class-validator';
+import { IsString, IsNotEmpty, IsIn, MaxLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateAttributeKeyDto {
@@ -15,11 +15,13 @@ export class CreateAttributeKeyDto {
   slug: string;
 
   @ApiProperty({
-    example: 'select',
-    description: 'Input type (text, select, color)',
+    example: 'swatch',
+    description: 'Input type',
+    enum: ['select', 'swatch', 'text', 'boolean'],
   })
   @IsString()
   @IsNotEmpty()
+  @IsIn(['select', 'swatch', 'text', 'boolean'])
   @MaxLength(30)
   inputType: string;
 }

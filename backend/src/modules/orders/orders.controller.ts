@@ -72,7 +72,7 @@ export class OrdersController {
     name: 'storeId',
     required: false,
     type: String,
-    description: 'Filter by store UUID (for sellers)',
+    description: 'Filter by the store UUID (legacy compatibility)',
   })
   @ApiQuery({ name: 'page', required: false, type: Number })
   @ApiQuery({ name: 'limit', required: false, type: Number })
@@ -85,10 +85,9 @@ export class OrdersController {
     @CurrentUser() user?: any,
   ) {
     const isAdmin = user.role === 'admin' || user.role === 'super_admin';
-    const isSeller = user.role === 'seller';
     return this.svc.findAll({
-      userId: isAdmin || (isSeller && storeId) ? undefined : user.id,
-      storeId: isSeller ? storeId : isAdmin ? storeId : undefined,
+      userId: isAdmin ? undefined : user.id,
+      storeId: isAdmin ? storeId : undefined,
       status,
       page: page ? Math.max(1, +page) : undefined,
       limit: limit ? Math.min(Math.max(1, +limit), 100) : undefined,

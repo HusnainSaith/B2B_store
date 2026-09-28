@@ -86,6 +86,10 @@ class EnvironmentVariables {
 
   @IsOptional()
   @IsString()
+  PAYMENT_PROVIDER?: string;
+
+  @IsOptional()
+  @IsString()
   STRIPE_PRICE_BASIC_MONTHLY?: string;
 
   @IsOptional()

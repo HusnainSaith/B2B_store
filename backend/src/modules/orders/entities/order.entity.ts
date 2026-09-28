@@ -15,12 +15,27 @@ export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Column({ name: 'order_number', type: 'varchar', length: 50, unique: true, nullable: true })
+  orderNumber: string | null;
+
+  @Column({ type: 'char', length: 3, default: 'PKR' })
+  currency: string;
+
+  @Column({ type: 'varchar', length: 30, default: 'retail' })
+  source: string;
+
+  @Column({ name: 'wholesale_quotation_id', type: 'uuid', nullable: true, unique: true })
+  wholesaleQuotationId: string | null;
+
   @Column({ name: 'user_id', type: 'uuid' })
   userId: string;
 
   @ManyToOne(() => User, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @Column({ name: 'idempotency_key', type: 'varchar', length: 100, nullable: true })
+  idempotencyKey: string | null;
 
   @Column({ name: 'coupon_id', type: 'uuid', nullable: true })
   couponId: string | null;

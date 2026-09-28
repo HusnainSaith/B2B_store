@@ -5,6 +5,7 @@ import {
   IsUUID,
   IsInt,
   IsBoolean,
+  IsUrl,
 } from 'class-validator';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
@@ -30,6 +31,7 @@ export class CreateProductImageDto {
   })
   @IsString()
   @IsNotEmpty()
+  @IsUrl({ require_protocol: true })
   url: string;
 
   @ApiPropertyOptional({

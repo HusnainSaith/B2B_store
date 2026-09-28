@@ -1,18 +1,36 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Stripe from 'stripe';
 import { SafeLogger } from '../../common/utils/logger.util';
 
 @Injectable()
 export class StripeService {
-  private stripe: Stripe;
+  private stripe: Stripe | null;
   private currency: string;
 
   constructor(private config: ConfigService) {
-    this.stripe = new Stripe(this.config.get<string>('STRIPE_SECRET_KEY'), {
-      apiVersion: '2026-02-25.clover',
-    });
+    const key = this.config.get<string>('STRIPE_SECRET_KEY', '').trim();
+    this.stripe = key && !key.includes('your_')
+      ? new Stripe(key, { apiVersion: '2026-02-25.clover' })
+      : null;
     this.currency = this.config.get<string>('STRIPE_CURRENCY') || 'pkr';
+  }
+
+  isConfigured(): boolean {
+    return this.stripe !== null;
+  }
+
+  private client(): Stripe {
+    if (!this.stripe) {
+      throw new ServiceUnavailableException(
+        'Online payments are not configured. Add Stripe credentials to .env.',
+      );
+    }
+    return this.stripe;
   }
 
   /**
@@ -26,7 +44,7 @@ export class StripeService {
     cancelUrl: string;
     metadata?: Record<string, string>;
   }): Promise<Stripe.Checkout.Session> {
-    return this.stripe.checkout.sessions.create({
+    return this.client().checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'payment',
       customer_email: params.customerEmail,
@@ -56,7 +74,7 @@ export class StripeService {
     successUrl: string;
     cancelUrl: string;
   }): Promise<Stripe.Checkout.Session> {
-    return this.stripe.checkout.sessions.create({
+    return this.client().checkout.sessions.create({
       payment_method_types: ['card'],
       mode: 'subscription',
       customer_email: params.customerEmail,
@@ -73,14 +91,14 @@ export class StripeService {
   async cancelSubscription(
     subscriptionId: string,
   ): Promise<Stripe.Subscription> {
-    return this.stripe.subscriptions.cancel(subscriptionId);
+    return this.client().subscriptions.cancel(subscriptionId);
   }
 
   /**
    * Retrieve a Stripe Checkout Session.
    */
   async retrieveSession(sessionId: string): Promise<Stripe.Checkout.Session> {
-    return this.stripe.checkout.sessions.retrieve(sessionId);
+    return this.client().checkout.sessions.retrieve(sessionId);
   }
 
   /**
@@ -89,12 +107,19 @@ export class StripeService {
   constructWebhookEvent(rawBody: Buffer, signature: string): Stripe.Event {
     const webhookSecret = this.config.get<string>('STRIPE_WEBHOOK_SECRET');
     try {
-      return this.stripe.webhooks.constructEvent(
+      const secret = this.config.get<string>('STRIPE_WEBHOOK_SECRET', '');
+      if (!secret || secret.includes('your_')) {
+        throw new ServiceUnavailableException(
+          'Stripe webhook secret is not configured',
+        );
+      }
+      return this.client().webhooks.constructEvent(
         rawBody,
         signature,
         webhookSecret,
       );
     } catch (err) {
+      if (err instanceof ServiceUnavailableException) throw err;
       SafeLogger.error(
         `Stripe webhook signature verification failed: ${err.message}`,
         'StripeService',
@@ -132,6 +157,6 @@ export class StripeService {
       payment_intent: paymentIntentId,
     };
     if (amount) params.amount = Math.round(amount * 100);
-    return this.stripe.refunds.create(params);
+    return this.client().refunds.create(params);
   }
 }

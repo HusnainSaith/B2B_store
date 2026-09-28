@@ -6,8 +6,10 @@ import {
   JoinColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  OneToMany,
 } from 'typeorm';
 import { Product } from './product.entity';
+import { VariantAttributeValue } from './variant-attribute-value.entity';
 
 @Entity('product_variants')
 export class ProductVariant {
@@ -20,6 +22,9 @@ export class ProductVariant {
   @ManyToOne(() => Product, (p) => p.variants, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'product_id' })
   product: Product;
+
+  @OneToMany(() => VariantAttributeValue, (value) => value.variant)
+  attributeValues: VariantAttributeValue[];
 
   @Column({ type: 'varchar', length: 200, unique: true })
   sku: string;

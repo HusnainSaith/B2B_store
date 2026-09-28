@@ -138,83 +138,6 @@ const ADMIN_PERMISSIONS: Record<string, string[]> = {
 };
 
 /**
- * SELLER — manages own products, orders, store, inventory.
- * Cannot access other users, system settings, admin tools, etc.
- */
-const SELLER_PERMISSIONS: Record<string, string[]> = {
-  // Own profile & addresses
-  users:              ['read', 'update'],
-  addresses:          ['create', 'read', 'update', 'delete'],
-
-  // Own seller profile & store
-  sellers:            ['read', 'update'],
-  stores:             ['read', 'update'],
-  seller_wallets:     ['read'],
-  seller_documents:   ['create', 'read'],
-
-  // Own products & catalog
-  products:           ['create', 'read', 'update', 'delete'],
-  product_questions:  ['read', 'create'],  // answer questions
-
-  // Own inventory & warehouses
-  inventory:          ['create', 'read', 'update'],
-  warehouses:         ['create', 'read', 'update', 'delete'],
-
-  // Orders where seller is involved
-  orders:             ['read', 'update'],
-  shipments:          ['create', 'read', 'update'],
-
-  // Payments & refunds involving seller
-  payments:           ['read'],
-  refunds:            ['read'],
-
-  // Returns for seller's products
-  returns:            ['read', 'update'],
-
-  // Disputes involving seller
-  disputes:           ['read', 'create', 'update'],
-
-  // Reviews of seller's products (read & reply)
-  reviews:            ['read'],
-
-  // Seller's own vouchers
-  vouchers:           ['create', 'read', 'update', 'delete'],
-
-  // Flash sales participation
-  flash_sales:        ['read'],
-
-  // Chat with customers
-  conversations:      ['read', 'create'],
-
-  // Seller analytics
-  search:             ['read'],
-
-  // Notifications
-  notifications:      ['read', 'update'],
-
-  // Own bundles
-  bundles:            ['create', 'read', 'update', 'delete'],
-
-  // Subscriptions to their products
-  subscriptions:      ['read', 'update'],
-
-  // Read categories, brands, attributes (needed for product creation)
-  categories:         ['read'],
-  brands:             ['read'],
-  attributes:         ['read'],
-
-  // Shipping rates / methods (read to configure)
-  shipping:           ['read'],
-  tax:                ['read'],
-
-  // Support tickets
-  tickets:            ['create', 'read', 'update'],
-
-  // Import/export own data
-  import_export:      ['create', 'read'],
-};
-
-/**
  * CUSTOMER — limited to own profile, orders, and interactions.
  * Cannot access admin, seller, or system resources.
  */
@@ -344,9 +267,6 @@ async function seed() {
     console.log(`   ✅ admin: ${adminCount} permissions across ${Object.keys(ADMIN_PERMISSIONS).length} modules`);
 
     // ── Assign to seller ─────────────────────────────────────────────
-    console.log('📋 Assigning permissions to seller…');
-    const sellerCount = await assignPermissions('seller', SELLER_PERMISSIONS);
-    console.log(`   ✅ seller: ${sellerCount} permissions across ${Object.keys(SELLER_PERMISSIONS).length} modules`);
 
     // ── Assign to customer ───────────────────────────────────────────
     console.log('📋 Assigning permissions to customer…');
@@ -357,7 +277,7 @@ async function seed() {
     await qr.commitTransaction();
 
     // Count totals from DB for verification
-    const roles = ['admin', 'seller', 'customer'];
+    const roles = ['admin', 'customer'];
     console.log('\n' + '═'.repeat(60));
     console.log('  ROLE PERMISSION SUMMARY');
     console.log('═'.repeat(60));
@@ -370,11 +290,7 @@ async function seed() {
         [roleName],
       );
       const moduleCount = Object.keys(
-        roleName === 'admin'
-          ? ADMIN_PERMISSIONS
-          : roleName === 'seller'
-            ? SELLER_PERMISSIONS
-            : CUSTOMER_PERMISSIONS,
+        roleName === 'admin' ? ADMIN_PERMISSIONS : CUSTOMER_PERMISSIONS,
       ).length;
       console.log(
         `  ${roleName.padEnd(12)} → ${String(count).padStart(3)} permissions across ${moduleCount} modules`,
@@ -382,7 +298,7 @@ async function seed() {
     }
 
     console.log('═'.repeat(60));
-    console.log('\n✅  Seed 2 complete — admin, seller, customer permissions assigned.\n');
+    console.log('\n✅  Seed 2 complete — admin and customer permissions assigned.\n');
   } catch (error) {
     await qr.rollbackTransaction();
     console.error('\n❌ Seed failed:', error);

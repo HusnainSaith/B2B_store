@@ -8,7 +8,9 @@ export class VariantAttributeValue {
   @PrimaryColumn({ name: 'variant_id', type: 'uuid' })
   variantId: string;
 
-  @ManyToOne(() => ProductVariant, { onDelete: 'CASCADE' })
+  @ManyToOne(() => ProductVariant, (variant) => variant.attributeValues, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'variant_id' })
   variant: ProductVariant;
 

@@ -19,11 +19,10 @@ const PermissionsPage = lazy(() => import('@/pages/permissions'))
 const RolePermissionsPage = lazy(() => import('@/pages/role-permissions'))
 const CategoriesPage = lazy(() => import('@/pages/categories'))
 const BrandsPage = lazy(() => import('@/pages/brands'))
-const SellersPage = lazy(() => import('@/pages/sellers'))
 const StoresPage = lazy(() => import('@/pages/stores'))
 const ProductsPage = lazy(() => import('@/pages/products'))
 const OrdersPage = lazy(() => import('@/pages/orders'))
-const PaymentsPage = lazy(() => import('@/pages/payments'))
+const WholesalePage = lazy(() => import('@/pages/wholesale'))
 const CouponsPage = lazy(() => import('@/pages/coupons'))
 const FlashSalesPage = lazy(() => import('@/pages/flash-sales'))
 const InventoryPage = lazy(() => import('@/pages/inventory'))
@@ -91,33 +90,117 @@ export default function App() {
             <BrowserRouter>
               <Suspense fallback={<LoadingPage />}>
                 <Routes>
-                  <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
-                  <Route path="/forgot-password" element={<PublicRoute><ForgotPasswordPage /></PublicRoute>} />
-                  <Route path="/reset-password" element={<PublicRoute><ResetPasswordPage /></PublicRoute>} />
+                  <Route
+                    path="/login"
+                    element={
+                      <PublicRoute>
+                        <LoginPage />
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    path="/forgot-password"
+                    element={
+                      <PublicRoute>
+                        <ForgotPasswordPage />
+                      </PublicRoute>
+                    }
+                  />
+                  <Route
+                    path="/reset-password"
+                    element={
+                      <PublicRoute>
+                        <ResetPasswordPage />
+                      </PublicRoute>
+                    }
+                  />
                   <Route path="/unauthorized" element={<UnauthorizedPage />} />
-                  <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>
+                  <Route
+                    element={
+                      <ProtectedRoute>
+                        <AppLayout />
+                      </ProtectedRoute>
+                    }
+                  >
                     <Route index element={<DashboardPage />} />
                     <Route path="forbidden" element={<ForbiddenPage />} />
-                    <Route path="users" element={<RbacRoute allowedRoles={ADMIN_ROLES}><UsersPage /></RbacRoute>} />
-                    <Route path="roles" element={<RbacRoute allowedRoles={ADMIN_ROLES}><RolesPage /></RbacRoute>} />
-                    <Route path="permissions" element={<RbacRoute allowedRoles={ADMIN_ROLES}><PermissionsPage /></RbacRoute>} />                      <Route path="role-permissions" element={<RbacRoute allowedRoles={ADMIN_ROLES}><RolePermissionsPage /></RbacRoute>} />                  <Route path="categories" element={<CategoriesPage />} />
+                    <Route
+                      path="users"
+                      element={
+                        <RbacRoute allowedRoles={ADMIN_ROLES}>
+                          <UsersPage />
+                        </RbacRoute>
+                      }
+                    />
+                    <Route
+                      path="roles"
+                      element={
+                        <RbacRoute allowedRoles={ADMIN_ROLES}>
+                          <RolesPage />
+                        </RbacRoute>
+                      }
+                    />
+                    <Route
+                      path="permissions"
+                      element={
+                        <RbacRoute allowedRoles={ADMIN_ROLES}>
+                          <PermissionsPage />
+                        </RbacRoute>
+                      }
+                    />{' '}
+                    <Route
+                      path="role-permissions"
+                      element={
+                        <RbacRoute allowedRoles={ADMIN_ROLES}>
+                          <RolePermissionsPage />
+                        </RbacRoute>
+                      }
+                    />{' '}
+                    <Route path="categories" element={<CategoriesPage />} />
                     <Route path="brands" element={<BrandsPage />} />
-                    <Route path="sellers" element={<SellersPage />} />
                     <Route path="stores" element={<StoresPage />} />
                     <Route path="products" element={<ProductsPage />} />
                     <Route path="orders" element={<OrdersPage />} />
-                    <Route path="payments" element={<RbacRoute allowedRoles={ADMIN_ROLES}><PaymentsPage /></RbacRoute>} />
+                    <Route
+                      path="wholesale"
+                      element={
+                        <RbacRoute allowedRoles={ADMIN_ROLES}>
+                          <WholesalePage />
+                        </RbacRoute>
+                      }
+                    />
                     <Route path="coupons" element={<CouponsPage />} />
                     <Route path="flash-sales" element={<FlashSalesPage />} />
                     <Route path="inventory" element={<InventoryPage />} />
                     <Route path="shipping" element={<ShippingPage />} />
                     <Route path="subscriptions" element={<SubscriptionsPage />} />
-                    <Route path="returns" element={<RbacRoute allowedRoles={MANAGEMENT_ROLES}><ReturnsPage /></RbacRoute>} />
+                    <Route
+                      path="returns"
+                      element={
+                        <RbacRoute allowedRoles={MANAGEMENT_ROLES}>
+                          <ReturnsPage />
+                        </RbacRoute>
+                      }
+                    />
                     <Route path="reviews" element={<ReviewsPage />} />
                     <Route path="notifications" element={<NotificationsPage />} />
                     <Route path="chat" element={<ChatPage />} />
-                    <Route path="audit" element={<RbacRoute allowedRoles={ADMIN_ROLES}><AuditPage /></RbacRoute>} />
-                    <Route path="search-analytics" element={<RbacRoute allowedRoles={ADMIN_ROLES}><SearchAnalyticsPage /></RbacRoute>} />
+                    <Route
+                      path="audit"
+                      element={
+                        <RbacRoute allowedRoles={ADMIN_ROLES}>
+                          <AuditPage />
+                        </RbacRoute>
+                      }
+                    />
+                    <Route
+                      path="search-analytics"
+                      element={
+                        <RbacRoute allowedRoles={ADMIN_ROLES}>
+                          <SearchAnalyticsPage />
+                        </RbacRoute>
+                      }
+                    />
                     <Route path="settings" element={<SettingsPage />} />
                     <Route path="*" element={<NotFoundPage />} />
                   </Route>

@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import { UserRole } from './entities/user-role.entity';
 import { UserAddress } from './entities/address.entity';
+import { Role } from '../roles/entities/role.entity';
 import * as bcrypt from 'bcryptjs';
 
 @Injectable()
@@ -102,6 +103,24 @@ export class UsersService {
     roleId: string,
     grantedBy?: string,
   ): Promise<UserRole> {
+    const role = await this.userRoleRepo.manager.findOne(Role, {
+      where: { id: roleId },
+    });
+    if (!role) throw new NotFoundException('Role not found');
+    if (role.name === 'seller') {
+      throw new ConflictException('Seller accounts are not supported in single-store mode');
+    }
+    if (role.name === 'admin' || role.name === 'super_admin') {
+      const existingAdmin = await this.userRoleRepo
+        .createQueryBuilder('ur')
+        .innerJoin('ur.role', 'role')
+        .where("role.name IN ('admin', 'super_admin')")
+        .andWhere('ur.userId <> :userId', { userId })
+        .getOne();
+      if (existingAdmin) {
+        throw new ConflictException('Only one administrative user is allowed');
+      }
+    }
     const ur = this.userRoleRepo.create({ userId, roleId, grantedBy });
     return this.userRoleRepo.save(ur);
   }

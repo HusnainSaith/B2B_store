@@ -12,7 +12,7 @@ const routeLabels: Record<string, string> = {
   stores: 'Stores',
   products: 'Products',
   orders: 'Orders',
-  payments: 'Payments',
+  wholesale: 'Wholesale Inquiries',
   coupons: 'Coupons',
   'flash-sales': 'Flash Sales',
   inventory: 'Inventory',
@@ -49,7 +49,9 @@ export function Breadcrumbs() {
             {isLast ? (
               <span className="font-semibold text-foreground text-[13px]">{label}</span>
             ) : (
-              <Link to={path} className="hover:text-foreground transition-colors">{label}</Link>
+              <Link to={path} className="hover:text-foreground transition-colors">
+                {label}
+              </Link>
             )}
           </span>
         )

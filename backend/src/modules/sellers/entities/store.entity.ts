@@ -1,25 +1,15 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  CreateDateColumn,
-  UpdateDateColumn,
-} from 'typeorm';
-import { Seller } from './seller.entity';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('stores')
 export class Store {
+  /** Removed marketplace relation; kept as a typed compatibility shim only. */
+  readonly seller?: undefined;
+
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ name: 'seller_id', type: 'uuid' })
-  sellerId: string;
-
-  @ManyToOne(() => Seller, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'seller_id' })
-  seller: Seller;
+  @Column({ name: 'singleton_key', type: 'boolean', default: true, unique: true })
+  singletonKey: boolean;
 
   @Column({ type: 'varchar', length: 200, nullable: true })
   name: string | null;

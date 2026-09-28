@@ -62,14 +62,28 @@ export class CartService {
     const cart = await this.getOrCreateCart(userId);
     const quantity = dto.quantity || 1;
 
-    // Look up the variant price server-side
+    // Resolve sellability, effective price and stock server-side.
     const variant = await this.dataSource.query(
-      'SELECT price FROM product_variants WHERE id = $1',
+      `SELECT COALESCE(pv.price, p.base_price) AS price,
+              COALESCE(SUM(i.qty_on_hand - i.qty_reserved), 0)::int AS available
+       FROM product_variants pv
+       JOIN products p ON p.id = pv.product_id
+       LEFT JOIN inventory i ON i.variant_id = pv.id
+       WHERE pv.id = $1 AND pv.is_active = TRUE
+         AND p.is_active = TRUE AND p.status = 'active'
+       GROUP BY pv.id, p.base_price`,
       [dto.variantId],
     );
     if (!variant?.length)
       throw new NotFoundException('Product variant not found');
     const unitPrice = Number(variant[0].price);
+    const existing = await this.cartItemRepo.findOne({
+      where: { cartId: cart.id, variantId: dto.variantId },
+    });
+    const requestedTotal = Number(existing?.quantity || 0) + quantity;
+    if (requestedTotal > Number(variant[0].available)) {
+      throw new BadRequestException('Requested quantity exceeds available stock');
+    }
 
     // Atomic upsert: INSERT or increment quantity on conflict
     await this.dataSource.query(
@@ -97,6 +111,14 @@ export class CartService {
     if (!item) throw new NotFoundException('Cart item not found');
     if (item.cart?.userId !== callerId)
       throw new ForbiddenException('You do not have access to this cart item');
+    const stock = await this.dataSource.query(
+      `SELECT COALESCE(SUM(qty_on_hand - qty_reserved), 0)::int AS available
+       FROM inventory WHERE variant_id = $1`,
+      [item.variantId],
+    );
+    if (quantity > Number(stock[0]?.available || 0)) {
+      throw new BadRequestException('Requested quantity exceeds available stock');
+    }
     item.quantity = quantity;
     return this.cartItemRepo.save(item);
   }
@@ -116,7 +138,14 @@ export class CartService {
     const cart = await this.getOrCreateCart(userId);
     return this.cartItemRepo.find({
       where: { cartId: cart.id },
-      relations: ['variant'],
+      relations: [
+        'variant',
+        'variant.product',
+        'variant.product.images',
+        'variant.attributeValues',
+        'variant.attributeValues.attributeKey',
+        'variant.attributeValues.attributeValue',
+      ],
     });
   }
 

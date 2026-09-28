@@ -141,11 +141,6 @@ const SYSTEM_ROLES = [
     is_system: true,
   },
   {
-    name: 'seller',
-    description: 'Manages own products, orders, and store.',
-    is_system: true,
-  },
-  {
     name: 'customer',
     description: 'Limited access scoped to own profile, orders, and interactions.',
     is_system: true,

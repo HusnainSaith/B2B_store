@@ -36,6 +36,24 @@ export class ReturnsService {
       if (!order) throw new NotFoundException('Order not found');
       if (order.userId !== dto.userId)
         throw new BadRequestException('Order does not belong to you');
+      if (order.status !== 'delivered') {
+        throw new BadRequestException('Only delivered orders can be returned');
+      }
+      if (!items?.length) throw new BadRequestException('Return items are required');
+      for (const item of items) {
+        const result = await this.dataSource.query(
+          `SELECT oi.quantity - COALESCE(SUM(CASE WHEN r.status <> 'rejected' THEN ri.quantity ELSE 0 END), 0)::int AS remaining
+           FROM order_items oi
+           LEFT JOIN return_items ri ON ri.order_item_id = oi.id
+           LEFT JOIN returns r ON r.id = ri.return_id
+           WHERE oi.id = $1 AND oi.order_id = $2 GROUP BY oi.id`,
+          [item.orderItemId, dto.orderId],
+        );
+        const rows = Array.isArray(result?.[0]) ? result[0] : result;
+        if (!rows?.length || Number(item.quantity) > Number(rows[0].remaining)) {
+          throw new BadRequestException('Invalid or excessive return quantity');
+        }
+      }
     }
     const saved = await this.dataSource.transaction(async (em) => {
       const ret = em.create(Return, dto);
@@ -134,10 +152,75 @@ export class ReturnsService {
     refundAmount?: number,
   ): Promise<Return> {
     const ret = await this.findOne(id);
-    ret.status = status;
-    if (reviewedBy) ret.reviewedBy = reviewedBy;
-    if (refundAmount !== undefined) ret.refundAmount = refundAmount;
-    const saved = await this.returnRepo.save(ret);
+    const transitions: Record<string, string[]> = {
+      requested: ['approved', 'rejected'], approved: ['item_shipped'],
+      item_shipped: ['item_received'], item_received: ['inspecting'],
+      inspecting: ['refund_processed', 'exchanged', 'rejected'],
+      refund_processed: ['closed'], exchanged: ['closed'], rejected: [], closed: [],
+    };
+    if (!(transitions[ret.status] || []).includes(status)) {
+      throw new BadRequestException(`Cannot transition return from ${ret.status} to ${status}`);
+    }
+    if (refundAmount !== undefined) {
+      const totals = await this.dataSource.query(
+        `SELECT COALESCE(SUM(ri.quantity * oi.unit_price), 0)::numeric AS maximum
+         FROM return_items ri JOIN order_items oi ON oi.id = ri.order_item_id
+         WHERE ri.return_id = $1`,
+        [id],
+      );
+      const totalRows = Array.isArray(totals?.[0]) ? totals[0] : totals;
+      if (refundAmount < 0 || refundAmount > Number(totalRows?.[0]?.maximum || 0)) {
+        throw new BadRequestException('Refund amount exceeds returned item value');
+      }
+    }
+    let saved: Return;
+    if (status === 'item_received') {
+      saved = await this.dataSource.transaction(async (manager) => {
+        const returnItems = await manager.query(
+          `SELECT ri.quantity, oi.variant_id
+           FROM return_items ri JOIN order_items oi ON oi.id = ri.order_item_id
+           WHERE ri.return_id = $1`,
+          [id],
+        );
+        const itemRows = Array.isArray(returnItems?.[0]) ? returnItems[0] : returnItems;
+        for (const item of itemRows || []) {
+          let remaining = Number(item.quantity);
+          const allocations = await manager.query(
+            `SELECT warehouse_id, -quantity AS sold
+             FROM inventory_movements
+             WHERE order_id = $1 AND variant_id = $2 AND movement_type = 'sale'
+             ORDER BY created_at`,
+            [ret.orderId, item.variant_id],
+          );
+          const allocationRows = Array.isArray(allocations?.[0]) ? allocations[0] : allocations;
+          for (const allocation of allocationRows || []) {
+            if (!remaining) break;
+            const qty = Math.min(remaining, Number(allocation.sold));
+            await manager.query(
+              `UPDATE inventory SET qty_on_hand = qty_on_hand + $1
+               WHERE warehouse_id = $2 AND variant_id = $3`,
+              [qty, allocation.warehouse_id, item.variant_id],
+            );
+            await manager.query(
+              `INSERT INTO inventory_movements
+              (order_id, warehouse_id, variant_id, movement_type, quantity, note, reference_id)
+               VALUES ($1, $2, $3, 'return', $4, $5, $6)`,
+              [ret.orderId, allocation.warehouse_id, item.variant_id, qty, `Return ${id}`, id],
+            );
+            remaining -= qty;
+          }
+        }
+        ret.status = status;
+        if (reviewedBy) ret.reviewedBy = reviewedBy;
+        if (refundAmount !== undefined) ret.refundAmount = refundAmount;
+        return manager.save(Return, ret);
+      });
+    } else {
+      ret.status = status;
+      if (reviewedBy) ret.reviewedBy = reviewedBy;
+      if (refundAmount !== undefined) ret.refundAmount = refundAmount;
+      saved = await this.returnRepo.save(ret);
+    }
 
     if (ret.userId) {
       const templateKey =

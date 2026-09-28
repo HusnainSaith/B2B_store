@@ -59,9 +59,10 @@ export class ProductsController {
   ) {}
 
   @Post()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Create a new product (Seller/Admin)' })
+  @ApiOperation({ summary: 'Create a new product (Admin only)' })
   @ApiResponse({ status: 201, description: 'Product created' })
   @Auditable({ action: 'CREATE', tableName: 'products' })
   create(@Body() dto: CreateProductDto, @CurrentUser() user: any) {
@@ -127,7 +128,8 @@ export class ProductsController {
   }
 
   @Put(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update a product (Seller/Admin)' })
   @ApiParam({ name: 'id', description: 'Product UUID' })
@@ -142,7 +144,8 @@ export class ProductsController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete a product (Seller/Admin)' })
   @ApiParam({ name: 'id', description: 'Product UUID' })
@@ -153,7 +156,8 @@ export class ProductsController {
   }
 
   @Post('variants')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Create a product variant' })
   @ApiResponse({ status: 201, description: 'Variant created' })
@@ -174,7 +178,8 @@ export class ProductsController {
   }
 
   @Put('variants/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Update a product variant' })
   @ApiParam({ name: 'id', description: 'Variant UUID' })
@@ -188,7 +193,8 @@ export class ProductsController {
   }
 
   @Delete('variants/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete a product variant' })
   @ApiParam({ name: 'id', description: 'Variant UUID' })
@@ -198,7 +204,8 @@ export class ProductsController {
   }
 
   @Post('images')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Add a product image' })
   @ApiResponse({ status: 201, description: 'Image added' })
@@ -216,7 +223,8 @@ export class ProductsController {
   }
 
   @Delete('images/:id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Delete a product image' })
   @ApiParam({ name: 'id', description: 'Image UUID' })
@@ -226,7 +234,8 @@ export class ProductsController {
   }
 
   @Post('images/upload')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({
     summary: 'Upload a product image file to R2 and create image record',
@@ -271,7 +280,8 @@ export class ProductsController {
   }
 
   @Post('images/upload-multiple')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Upload multiple product images to R2' })
   @ApiConsumes('multipart/form-data')
@@ -405,7 +415,8 @@ export class ProductsController {
   // ─── Variant Attributes ────────────────────────────────────────────────
 
   @Post('variants/:variantId/attributes')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Assign attribute to variant' })
   @ApiParam({ name: 'variantId', description: 'Variant UUID' })
@@ -432,7 +443,8 @@ export class ProductsController {
   }
 
   @Delete('variants/:variantId/attributes/:keyId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Remove attribute from variant' })
   @ApiParam({ name: 'variantId', description: 'Variant UUID' })
@@ -449,7 +461,8 @@ export class ProductsController {
   // ─── Product Categories ────────────────────────────────────────────────
 
   @Post(':productId/categories/:categoryId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Assign product to a category' })
   @ApiParam({ name: 'productId', description: 'Product UUID' })
@@ -478,7 +491,8 @@ export class ProductsController {
   }
 
   @Delete(':productId/categories/:categoryId')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
   @ApiOperation({ summary: 'Remove product from a category' })
   @ApiParam({ name: 'productId', description: 'Product UUID' })

@@ -1,5 +1,5 @@
-import { Button } from '@/components/ui/button'
-import { Smartphone, Download } from 'lucide-react'
+import { Button } from "@/components/ui/button";
+import { Smartphone, Download } from "lucide-react";
 
 export function AppDownloadBanner() {
   return (
@@ -15,16 +15,26 @@ export function AppDownloadBanner() {
               <Download className="h-4 w-4" /> Available on iOS & Android
             </div>
             <h2 className="text-2xl md:text-4xl font-bold mb-3 tracking-tight leading-tight">
-              Shop Smarter with<br />the Zaroox App
+              Shop Smarter with
+              <br />
+              the Zaroox App
             </h2>
             <p className="text-white/80 mb-8 text-base md:text-lg">
-              Get exclusive app-only deals, faster checkout, and real-time order tracking.
+              Browse the catalog, request bulk quantities, and track wholesale
+              quotations.
             </p>
             <div className="flex gap-3">
-              <Button size="lg" className="font-semibold bg-white text-gray-900 hover:bg-white/90 rounded-xl h-12 px-6">
+              <Button
+                size="lg"
+                className="font-semibold bg-white text-gray-900 hover:bg-white/90 rounded-xl h-12 px-6"
+              >
                 App Store
               </Button>
-              <Button size="lg" variant="outline" className="font-semibold border-white/30 text-white hover:bg-white/10 rounded-xl h-12 px-6">
+              <Button
+                size="lg"
+                variant="outline"
+                className="font-semibold border-white/30 text-white hover:bg-white/10 rounded-xl h-12 px-6"
+              >
                 Google Play
               </Button>
             </div>
@@ -46,5 +56,5 @@ export function AppDownloadBanner() {
         </div>
       </div>
     </section>
-  )
+  );
 }

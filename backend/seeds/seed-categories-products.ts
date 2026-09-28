@@ -12,7 +12,6 @@
  */
 
 import { DataSource } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -293,68 +292,15 @@ async function seed() {
     console.log('  ✅ Cleaned\n');
 
     // ──────────────────────────────────────────────────────────────────
-    // 1. Create seller user + seller + store
+    // 1. Create the single store
     // ──────────────────────────────────────────────────────────────────
-    console.log('👤 Creating seller user…');
-    const sellerEmail = 'seller@labverse.pk';
-    const sellerPassword = await bcrypt.hash('Seller@123!', 10);
-
-    let userId: string;
-    const [existingUser] = await qr.query(
-      `SELECT id FROM users WHERE email = $1`,
-      [sellerEmail],
-    );
-    if (existingUser) {
-      userId = existingUser.id;
-      await qr.query(
-        `UPDATE users SET password_hash = $2, is_active = true, is_email_verified = true, updated_at = NOW() WHERE id = $1`,
-        [userId, sellerPassword],
-      );
-      console.log(`  ✅ Updated existing seller user (${userId})`);
-    } else {
-      const [newUser] = await qr.query(
-        `INSERT INTO users (first_name, last_name, email, password_hash, phone, is_active, is_email_verified)
-         VALUES ('LabVerse', 'Seller', $1, $2, '+923001234567', true, true)
-         RETURNING id`,
-        [sellerEmail, sellerPassword],
-      );
-      userId = newUser.id;
-      console.log(`  ✅ Created seller user: ${sellerEmail} (${userId})`);
-    }
-
-    // Assign seller role
-    const [sellerRole] = await qr.query(
-      `SELECT id FROM roles WHERE name = 'seller'`,
-    );
-    if (sellerRole) {
-      await qr.query(
-        `INSERT INTO user_roles (user_id, role_id) VALUES ($1, $2) ON CONFLICT (user_id, role_id) DO NOTHING`,
-        [userId, sellerRole.id],
-      );
-      console.log(`  ✅ Assigned seller role`);
-    }
-
-    // Upsert seller
-    const [seller] = await qr.query(
-      `INSERT INTO sellers (user_id, display_name, status, commission_rate)
-       VALUES ($1, 'LabVerse Official Store', 'active', 5.00)
-       ON CONFLICT (user_id) DO UPDATE SET
-         display_name = 'LabVerse Official Store', status = 'active', updated_at = NOW()
-       RETURNING id`,
-      [userId],
-    );
-    const sellerId = seller.id;
-    console.log(`  ✅ Seller: ${sellerId}`);
-
-    // Upsert store
     const [store] = await qr.query(
-      `INSERT INTO stores (seller_id, name, slug, description, is_active)
-       VALUES ($1, 'LabVerse Official Store', 'labverse-official-store',
+      `INSERT INTO stores (singleton_key, name, slug, description, is_active)
+       VALUES (TRUE, 'LabVerse Official Store', 'labverse-official-store',
                'Your one-stop marketplace for quality products across all categories.', true)
-       ON CONFLICT (slug) DO UPDATE SET
+       ON CONFLICT (singleton_key) DO UPDATE SET
          name = 'LabVerse Official Store', is_active = true, updated_at = NOW()
        RETURNING id`,
-      [sellerId],
     );
     console.log(`  ✅ Store: ${store.id}\n`);
 
@@ -463,8 +409,7 @@ async function seed() {
     console.log(`  Categories:    ${catCount}`);
     console.log(`  Products:      ${totalProducts}`);
     console.log(`  Images:        ${totalImages}`);
-    console.log(`  Seller email:  seller@labverse.pk`);
-    console.log(`  Seller pass:   Seller@123!`);
+    console.log(`  Store:         LabVerse Official Store`);
     console.log('═'.repeat(60) + '\n');
   } catch (err) {
     await qr.rollbackTransaction();

@@ -1,18 +1,18 @@
-import { Link } from 'react-router-dom'
-import { Heart, ShoppingCart, Star } from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { formatPrice, calculateDiscount } from '@/lib/format'
-import { Badge } from '@/components/ui/badge'
-import type { Product } from '@/types'
+import { Link } from "react-router-dom";
+import { Heart, ShoppingCart, Star } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { formatPrice, calculateDiscount } from "@/lib/format";
+import { Badge } from "@/components/ui/badge";
+import type { Product } from "@/types";
 
 interface ProductCardProps {
-  product?: Product
-  flashPrice?: number
-  compact?: boolean
-  className?: string
-  onAddToCart?: () => void
-  onToggleWishlist?: () => void
-  isWishlisted?: boolean
+  product?: Product;
+  flashPrice?: number;
+  compact?: boolean;
+  className?: string;
+  onAddToCart?: () => void;
+  onToggleWishlist?: () => void;
+  isWishlisted?: boolean;
 }
 
 export function ProductCard({
@@ -24,29 +24,43 @@ export function ProductCard({
   onToggleWishlist,
   isWishlisted,
 }: ProductCardProps) {
-  if (!product) return null
+  if (!product) return null;
 
-  const primaryImage = product.images?.find((i) => i.isPrimary) || product.images?.[0]
-  const secondaryImage = product.images?.find((i) => !i.isPrimary && i.id !== primaryImage?.id)
-  const displayPrice = flashPrice ?? (product.variants?.[0]?.price ?? product.basePrice)
-  const originalPrice = flashPrice ? product.basePrice : undefined
-  const discountPercent = originalPrice ? calculateDiscount(originalPrice, displayPrice) : null
+  const primaryImage =
+    product.images?.find((i) => i.isPrimary) || product.images?.[0];
+  const secondaryImage = product.images?.find(
+    (i) => !i.isPrimary && i.id !== primaryImage?.id,
+  );
+  const displayPrice =
+    flashPrice ?? product.variants?.[0]?.price ?? product.basePrice;
+  const originalPrice = flashPrice ? product.basePrice : undefined;
+  const discountPercent = originalPrice
+    ? calculateDiscount(originalPrice, displayPrice)
+    : null;
 
-  const productLink = `/products/${product.slug}`
+  const productLink = `/products/${product.slug}`;
 
   return (
-    <div className={cn('group bg-card rounded-2xl border border-border overflow-hidden flex flex-col hover:border-primary/20 hover:shadow-[var(--shadow-card-hover)] transition-all duration-300', className)}>
+    <div
+      className={cn(
+        "group bg-card rounded-2xl border border-border overflow-hidden flex flex-col hover:border-primary/20 hover:shadow-[var(--shadow-card-hover)] transition-all duration-300",
+        className,
+      )}
+    >
       {/* Image Container */}
       <div className="relative overflow-hidden">
-        <Link to={productLink} className="block aspect-square overflow-hidden bg-surface">
+        <Link
+          to={productLink}
+          className="block aspect-square overflow-hidden bg-surface"
+        >
           {primaryImage ? (
             <>
               <img
                 src={primaryImage.url}
                 alt={primaryImage.altText ?? product.name}
                 className={cn(
-                  'h-full w-full object-cover transition-all duration-500',
-                  secondaryImage && 'group-hover:opacity-0',
+                  "h-full w-full object-cover transition-all duration-500",
+                  secondaryImage && "group-hover:opacity-0",
                 )}
                 loading="lazy"
               />
@@ -62,9 +76,13 @@ export function ProductCard({
           ) : (
             <div className="h-full w-full flex flex-col items-center justify-center bg-gradient-to-br from-surface to-surface-hover">
               <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-3">
-                <span className="text-2xl font-bold text-primary/60">{product.name?.charAt(0) || 'Z'}</span>
+                <span className="text-2xl font-bold text-primary/60">
+                  {product.name?.charAt(0) || "Z"}
+                </span>
               </div>
-              <p className="text-xs text-text-muted px-4 text-center line-clamp-1">{product.name}</p>
+              <p className="text-xs text-text-muted px-4 text-center line-clamp-1">
+                {product.name}
+              </p>
             </div>
           )}
         </Link>
@@ -85,29 +103,40 @@ export function ProductCard({
 
         {/* Wishlist Button */}
         <button
-          onClick={(e) => { e.preventDefault(); onToggleWishlist?.() }}
+          onClick={(e) => {
+            e.preventDefault();
+            onToggleWishlist?.();
+          }}
           className={cn(
-            'absolute top-2.5 right-2.5 h-9 w-9 rounded-full bg-card/90 backdrop-blur-sm flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer hover:bg-card hover:scale-110',
-            isWishlisted && 'opacity-100',
+            "absolute top-2.5 right-2.5 h-9 w-9 rounded-full bg-card/90 backdrop-blur-sm flex items-center justify-center shadow-sm opacity-0 group-hover:opacity-100 transition-all duration-200 cursor-pointer hover:bg-card hover:scale-110",
+            isWishlisted && "opacity-100",
           )}
-          aria-label={isWishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
-          <Heart className={cn('h-4 w-4', isWishlisted ? 'fill-danger text-danger' : 'text-text-secondary')} />
+          <Heart
+            className={cn(
+              "h-4 w-4",
+              isWishlisted ? "fill-danger text-danger" : "text-text-secondary",
+            )}
+          />
         </button>
 
         {/* Quick Add */}
         {!compact && (
           <button
-            onClick={(e) => { e.preventDefault(); onAddToCart?.() }}
+            onClick={(e) => {
+              e.preventDefault();
+              onAddToCart?.();
+            }}
             className="absolute bottom-0 inset-x-0 bg-primary/95 backdrop-blur-sm text-white text-sm font-semibold py-2.5 text-center translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex items-center justify-center gap-2 cursor-pointer"
           >
-            <ShoppingCart className="h-4 w-4" /> Add to Cart
+            <ShoppingCart className="h-4 w-4" /> Add to Inquiry
           </button>
         )}
       </div>
 
       {/* Content */}
-      <div className={cn('flex flex-col flex-1 p-4', compact && 'p-3')}>
+      <div className={cn("flex flex-col flex-1 p-4", compact && "p-3")}>
         {/* Store */}
         {product.store && !compact && (
           <Link
@@ -120,10 +149,12 @@ export function ProductCard({
 
         {/* Title */}
         <Link to={productLink} className="block mb-2.5">
-          <h3 className={cn(
-            'text-sm text-text-primary hover:text-primary line-clamp-2 font-medium leading-snug transition-colors',
-            compact && 'text-xs',
-          )}>
+          <h3
+            className={cn(
+              "text-sm text-text-primary hover:text-primary line-clamp-2 font-medium leading-snug transition-colors",
+              compact && "text-xs",
+            )}
+          >
             {product.name}
           </h3>
         </Link>
@@ -140,7 +171,12 @@ export function ProductCard({
         {/* Price */}
         <div className="mt-auto pt-1.5">
           <div className="flex items-baseline gap-2 flex-wrap">
-            <span className={cn('font-bold text-text-primary', compact ? 'text-sm' : 'text-base')}>
+            <span
+              className={cn(
+                "font-bold text-text-primary",
+                compact ? "text-sm" : "text-base",
+              )}
+            >
               {formatPrice(displayPrice)}
             </span>
             {originalPrice && originalPrice > displayPrice && (
@@ -152,5 +188,5 @@ export function ProductCard({
         </div>
       </div>
     </div>
-  )
+  );
 }

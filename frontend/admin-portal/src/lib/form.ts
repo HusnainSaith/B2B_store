@@ -7,4 +7,4 @@ import type { z } from 'zod'
  * requiring a cast. This centralizes the workaround in one place.
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const formResolver = (schema: z.ZodType<any>) => zodResolver(schema) as any
+export const formResolver = (schema: z.ZodType<any>) => zodResolver(schema as any) as any

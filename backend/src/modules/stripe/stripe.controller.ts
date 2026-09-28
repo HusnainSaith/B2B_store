@@ -41,6 +41,13 @@ export class StripeController {
     private readonly dataSource: DataSource,
   ) {}
 
+  @Get('status')
+  @Public()
+  @ApiOperation({ summary: 'Check whether online payments are configured' })
+  getStatus() {
+    return { provider: 'stripe', configured: this.stripeService.isConfigured() };
+  }
+
   @Post('checkout')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth('JWT-auth')
@@ -111,6 +118,17 @@ export class StripeController {
       req.rawBody || req.body,
       signature,
     );
+
+    const claimed = await this.dataSource.query(
+      `INSERT INTO payment_webhook_events (id, provider, event_type)
+       VALUES ($1, 'stripe', $2)
+       ON CONFLICT (id) DO NOTHING RETURNING id`,
+      [event.id, event.type],
+    );
+    const claimedRows = Array.isArray(claimed?.[0]) ? claimed[0] : claimed;
+    if (!claimedRows?.length) {
+      return { received: true, duplicate: true };
+    }
 
     switch (event.type) {
       case 'checkout.session.completed': {

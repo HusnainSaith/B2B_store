@@ -1,4 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
@@ -29,18 +34,14 @@ export class ProductsService {
 
   async create(
     dto: Partial<Product>,
-    callerId?: string,
-    callerRole?: string,
+    _callerId?: string,
+    _callerRole?: string,
   ): Promise<Product> {
-    if (callerId && dto.storeId) {
-      const store = (await this.productRepo.manager.findOne('Store', {
-        where: { id: dto.storeId },
-        relations: ['seller'],
-      })) as any;
-      if (!store) throw new NotFoundException('Store not found');
-      if (store.seller)
-        enforceOwnerOrAdmin(callerId, callerRole, store.seller.userId);
-    }
+    const store = (await this.productRepo.manager.findOne('Store', {
+      where: { singletonKey: true },
+    })) as any;
+    if (!store) throw new NotFoundException('Store has not been configured');
+    dto.storeId = store.id;
     const product = this.productRepo.create(dto);
     return this.productRepo.save(product);
   }
@@ -86,6 +87,9 @@ export class ProductsService {
       .leftJoinAndSelect('p.brand', 'brand')
       .leftJoinAndSelect('p.images', 'images')
       .leftJoinAndSelect('p.variants', 'variants')
+      .leftJoinAndSelect('variants.attributeValues', 'variantAttributes')
+      .leftJoinAndSelect('variantAttributes.attributeKey', 'variantAttributeKey')
+      .leftJoinAndSelect('variantAttributes.attributeValue', 'variantAttributeValue')
       .where('p.id IN (:...ids)', { ids })
       .orderBy('p.name', 'ASC')
       .addOrderBy('images.sortOrder', 'ASC')
@@ -97,7 +101,16 @@ export class ProductsService {
   async findOne(id: string): Promise<Product> {
     const p = await this.productRepo.findOne({
       where: { id },
-      relations: ['store', 'category', 'brand', 'images', 'variants'],
+      relations: [
+        'store',
+        'category',
+        'brand',
+        'images',
+        'variants',
+        'variants.attributeValues',
+        'variants.attributeValues.attributeKey',
+        'variants.attributeValues.attributeValue',
+      ],
     });
     if (!p) throw new NotFoundException('Product not found');
     return p;
@@ -106,7 +119,16 @@ export class ProductsService {
   async findBySlug(slug: string): Promise<Product> {
     const p = await this.productRepo.findOne({
       where: { slug },
-      relations: ['store', 'category', 'brand', 'images', 'variants'],
+      relations: [
+        'store',
+        'category',
+        'brand',
+        'images',
+        'variants',
+        'variants.attributeValues',
+        'variants.attributeValues.attributeKey',
+        'variants.attributeValues.attributeValue',
+      ],
     });
     if (!p) throw new NotFoundException('Product not found');
     return p;
@@ -120,7 +142,7 @@ export class ProductsService {
   ): Promise<Product> {
     const p = await this.productRepo.findOne({
       where: { id },
-      relations: ['store', 'store.seller'],
+      relations: ['store'],
     });
     if (!p) throw new NotFoundException('Product not found');
     if (callerId && p.store?.seller)
@@ -136,7 +158,7 @@ export class ProductsService {
   ): Promise<void> {
     const p = await this.productRepo.findOne({
       where: { id },
-      relations: ['store', 'store.seller'],
+      relations: ['store'],
     });
     if (!p) throw new NotFoundException('Product not found');
     if (callerId && p.store?.seller)
@@ -146,23 +168,25 @@ export class ProductsService {
 
   async createVariant(
     dto: Partial<ProductVariant>,
-    callerId?: string,
-    callerRole?: string,
+    _callerId?: string,
+    _callerRole?: string,
   ): Promise<ProductVariant> {
-    if (callerId && dto.productId) {
-      const p = await this.productRepo.findOne({
-        where: { id: dto.productId },
-        relations: ['store', 'store.seller'],
-      });
-      if (p?.store?.seller)
-        enforceOwnerOrAdmin(
-          callerId,
-          callerRole,
-          (p.store.seller as any).userId,
-        );
+    const product = dto.productId
+      ? await this.productRepo.findOne({ where: { id: dto.productId } })
+      : null;
+    if (!product) throw new NotFoundException('Product not found');
+    if (dto.price == null && product.basePrice == null) {
+      throw new BadRequestException('A variant or base product price is required');
     }
     const v = this.variantRepo.create(dto);
-    return this.variantRepo.save(v);
+    try {
+      return await this.variantRepo.save(v);
+    } catch (error: any) {
+      if (error?.code === '23505') {
+        throw new ConflictException('Variant SKU already exists');
+      }
+      throw error;
+    }
   }
 
   async findVariants(productId: string): Promise<ProductVariant[]> {
@@ -177,7 +201,7 @@ export class ProductsService {
   ): Promise<ProductVariant> {
     const v = await this.variantRepo.findOne({
       where: { id },
-      relations: ['product', 'product.store', 'product.store.seller'],
+      relations: ['product', 'product.store'],
     });
     if (!v) throw new NotFoundException('Variant not found');
     if (callerId && v.product?.store?.seller)
@@ -197,7 +221,7 @@ export class ProductsService {
   ): Promise<void> {
     const v = await this.variantRepo.findOne({
       where: { id },
-      relations: ['product', 'product.store', 'product.store.seller'],
+      relations: ['product', 'product.store'],
     });
     if (!v) throw new NotFoundException('Variant not found');
     if (callerId && v.product?.store?.seller)
@@ -211,23 +235,31 @@ export class ProductsService {
 
   async createImage(
     dto: Partial<ProductImage>,
-    callerId?: string,
-    callerRole?: string,
+    _callerId?: string,
+    _callerRole?: string,
   ): Promise<ProductImage> {
-    if (callerId && dto.productId) {
-      const p = await this.productRepo.findOne({
-        where: { id: dto.productId },
-        relations: ['store', 'store.seller'],
+    const product = dto.productId
+      ? await this.productRepo.findOne({ where: { id: dto.productId } })
+      : null;
+    if (!product) throw new NotFoundException('Product not found');
+    if (dto.variantId) {
+      const variant = await this.variantRepo.findOne({
+        where: { id: dto.variantId },
       });
-      if (p?.store?.seller)
-        enforceOwnerOrAdmin(
-          callerId,
-          callerRole,
-          (p.store.seller as any).userId,
-        );
+      if (!variant || variant.productId !== product.id) {
+        throw new BadRequestException('Variant does not belong to this product');
+      }
     }
-    const img = this.imageRepo.create(dto);
-    return this.imageRepo.save(img);
+    return this.productRepo.manager.transaction(async (manager) => {
+      if (dto.isPrimary) {
+        await manager.update(
+          ProductImage,
+          { productId: product.id, isPrimary: true },
+          { isPrimary: false },
+        );
+      }
+      return manager.save(ProductImage, manager.create(ProductImage, dto));
+    });
   }
 
   async findImages(productId: string): Promise<ProductImage[]> {
@@ -244,7 +276,7 @@ export class ProductsService {
   ): Promise<void> {
     const img = await this.imageRepo.findOne({
       where: { id },
-      relations: ['product', 'product.store', 'product.store.seller'],
+      relations: ['product', 'product.store'],
     });
     if (!img) throw new NotFoundException('Image not found');
     if (callerId && img.product?.store?.seller)
@@ -264,7 +296,7 @@ export class ProductsService {
   ): Promise<ProductImage> {
     const img = await this.imageRepo.findOne({
       where: { id },
-      relations: ['product', 'product.store', 'product.store.seller'],
+      relations: ['product', 'product.store'],
     });
     if (!img) throw new NotFoundException('Image not found');
     if (callerId && img.product?.store?.seller)
@@ -334,23 +366,68 @@ export class ProductsService {
 
   async assignVariantAttribute(
     dto: Partial<VariantAttributeValue>,
-    callerId?: string,
-    callerRole?: string,
+    _callerId?: string,
+    _callerRole?: string,
   ): Promise<VariantAttributeValue> {
-    if (callerId && dto.variantId) {
-      const v = await this.variantRepo.findOne({
-        where: { id: dto.variantId },
-        relations: ['product', 'product.store', 'product.store.seller'],
-      });
-      if (v?.product?.store?.seller)
-        enforceOwnerOrAdmin(
-          callerId,
-          callerRole,
-          (v.product.store.seller as any).userId,
-        );
+    const [variant, value] = await Promise.all([
+      dto.variantId
+        ? this.variantRepo.findOne({ where: { id: dto.variantId } })
+        : null,
+      dto.attributeValueId
+        ? this.attrValueRepo.findOne({ where: { id: dto.attributeValueId } })
+        : null,
+    ]);
+    if (!variant) throw new NotFoundException('Variant not found');
+    if (!value) throw new NotFoundException('Attribute value not found');
+    if (value.attributeKeyId !== dto.attributeKeyId) {
+      throw new BadRequestException(
+        'Attribute value does not belong to the specified attribute key',
+      );
     }
     const va = this.variantAttrRepo.create(dto);
-    return this.variantAttrRepo.save(va);
+    try {
+      return await this.productRepo.manager.transaction(async (manager) => {
+        const saved = await manager.save(VariantAttributeValue, va);
+        const duplicate = await manager.query(
+          `SELECT other.id
+           FROM product_variants current
+           JOIN product_variants other
+             ON other.product_id = current.product_id AND other.id <> current.id
+           WHERE current.id = $1
+             AND (SELECT COUNT(*) FROM variant_attribute_values WHERE variant_id = current.id) =
+                 (SELECT COUNT(*) FROM variant_attribute_values WHERE variant_id = other.id)
+             AND NOT EXISTS (
+               SELECT 1 FROM variant_attribute_values selected
+               WHERE selected.variant_id = current.id
+                 AND NOT EXISTS (
+                   SELECT 1 FROM variant_attribute_values candidate
+                   WHERE candidate.variant_id = other.id
+                     AND candidate.attribute_key_id = selected.attribute_key_id
+                     AND candidate.attribute_value_id = selected.attribute_value_id
+                 )
+             )
+           LIMIT 1`,
+          [variant.id],
+        );
+        const duplicateRows = Array.isArray(duplicate?.[0])
+          ? duplicate[0]
+          : duplicate;
+        if (duplicateRows?.length) {
+          throw new ConflictException(
+            'Another variant already uses this exact option combination',
+          );
+        }
+        return saved;
+      });
+    } catch (error: any) {
+      if (error instanceof ConflictException) throw error;
+      if (error?.code === '23505') {
+        throw new ConflictException(
+          'This attribute is already assigned to the variant',
+        );
+      }
+      throw error;
+    }
   }
 
   async findVariantAttributes(
@@ -371,7 +448,7 @@ export class ProductsService {
     if (callerId) {
       const v = await this.variantRepo.findOne({
         where: { id: variantId },
-        relations: ['product', 'product.store', 'product.store.seller'],
+        relations: ['product', 'product.store'],
       });
       if (v?.product?.store?.seller)
         enforceOwnerOrAdmin(
@@ -394,7 +471,7 @@ export class ProductsService {
     if (callerId) {
       const p = await this.productRepo.findOne({
         where: { id: productId },
-        relations: ['store', 'store.seller'],
+        relations: ['store'],
       });
       if (p?.store?.seller)
         enforceOwnerOrAdmin(
@@ -423,7 +500,7 @@ export class ProductsService {
     if (callerId) {
       const p = await this.productRepo.findOne({
         where: { id: productId },
-        relations: ['store', 'store.seller'],
+        relations: ['store'],
       });
       if (p?.store?.seller)
         enforceOwnerOrAdmin(

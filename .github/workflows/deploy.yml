@@ -35,7 +35,6 @@ jobs:
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
           VITE_APP_NAME: ShopVerse
-          VITE_SELLER_PORTAL_URL: ${{ secrets.VITE_SELLER_PORTAL_URL }}
 
       - name: Build Admin Portal
         working-directory: frontend/admin-portal
@@ -44,12 +43,6 @@ jobs:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
           VITE_APP_NAME: Admin Portal
 
-      - name: Build Seller Portal
-        working-directory: frontend/seller-portal
-        run: npm ci --legacy-peer-deps && npx vite build
-        env:
-          VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
-          VITE_APP_NAME: Seller Portal
           VITE_CUSTOMER_PORTAL_URL: ${{ secrets.VITE_CUSTOMER_PORTAL_URL }}
 
       - name: Package deployment
@@ -57,7 +50,6 @@ jobs:
           mkdir -p deploy-pkg/frontends
           cp -r frontend/customer-portal/dist deploy-pkg/frontends/customer-portal
           cp -r frontend/admin-portal/dist deploy-pkg/frontends/admin-portal
-          cp -r frontend/seller-portal/dist deploy-pkg/frontends/seller-portal
           rsync -a \
             --exclude=node_modules --exclude=dist --exclude='.env*' \
             --exclude=test --exclude=test_scripts --exclude=coverage \
@@ -103,7 +95,6 @@ jobs:
             # Deploy frontend assets
             sudo rsync -a --delete /tmp/zerox-deploy/frontends/customer-portal/ /var/www/customer-portal/
             sudo rsync -a --delete /tmp/zerox-deploy/frontends/admin-portal/ /var/www/admin-portal/
-            sudo rsync -a --delete /tmp/zerox-deploy/frontends/seller-portal/ /var/www/seller-portal/
 
             # Deploy nginx config
             sudo cp /tmp/zerox-deploy/nginx/zerox.conf /etc/nginx/sites-available/zerox.conf

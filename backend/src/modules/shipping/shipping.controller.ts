@@ -188,7 +188,7 @@ export class ShippingController {
 
   @Post('shipments')
   @UseGuards(RolesGuard)
-  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN, RoleEnum.SELLER)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiOperation({ summary: 'Create a shipment (Seller/Admin)' })
   @ApiResponse({ status: 201, description: 'Shipment created' })
   createShipment(@Body() dto: CreateShipmentDto) {
@@ -205,7 +205,7 @@ export class ShippingController {
 
   @Put('shipments/:id')
   @UseGuards(RolesGuard)
-  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN, RoleEnum.SELLER)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiOperation({ summary: 'Update a shipment (Seller/Admin)' })
   @ApiParam({ name: 'id', description: 'Shipment UUID' })
   @ApiResponse({ status: 200, description: 'Shipment updated' })
@@ -215,7 +215,7 @@ export class ShippingController {
 
   @Post('shipments/:id/events')
   @UseGuards(RolesGuard)
-  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN, RoleEnum.SELLER)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiOperation({ summary: 'Add tracking event to shipment' })
   @ApiParam({ name: 'id', description: 'Shipment UUID' })
   @ApiResponse({ status: 201, description: 'Event added' })

@@ -57,8 +57,9 @@ export class AuthService {
     });
     const saved = await this.userRepo.save(user);
 
-    // Assign requested role (default: 'customer', only 'customer' or 'seller' allowed)
-    const roleName = dto.role === 'seller' ? 'seller' : 'customer';
+    // Public registration always creates customers. Administrative access is
+    // provisioned separately and can never be requested by an API client.
+    const roleName = 'customer';
     const assignedRole = await this.roleRepo.findOne({ where: { name: roleName } });
     if (assignedRole) {
       const userRole = this.userRoleRepo.create({
@@ -164,7 +165,6 @@ export class AuthService {
     const ROLE_PRIORITY: Record<string, number> = {
       super_admin: 4,
       admin: 3,
-      seller: 2,
       customer: 1,
     };
     const topRole =

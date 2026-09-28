@@ -16,10 +16,8 @@ import {
   FolderTree,
   Tags,
   Store,
-  UserCheck,
   Package,
   ShoppingCart,
-  CreditCard,
   Ticket,
   Zap,
   Warehouse,
@@ -57,9 +55,7 @@ interface NavGroup {
 const navGroups: NavGroup[] = [
   {
     label: 'Overview',
-    items: [
-      { label: 'Dashboard', icon: LayoutDashboard, path: '/' },
-    ],
+    items: [{ label: 'Dashboard', icon: LayoutDashboard, path: '/' }],
   },
   {
     label: 'Access Control',
@@ -76,20 +72,14 @@ const navGroups: NavGroup[] = [
       { label: 'Categories', icon: FolderTree, path: '/categories' },
       { label: 'Brands', icon: Tags, path: '/brands' },
       { label: 'Products', icon: Package, path: '/products' },
-    ],
-  },
-  {
-    label: 'Marketplace',
-    items: [
-      { label: 'Sellers', icon: UserCheck, path: '/sellers' },
-      { label: 'Stores', icon: Store, path: '/stores' },
+      { label: 'Store Profile', icon: Store, path: '/stores' },
     ],
   },
   {
     label: 'Commerce',
     items: [
+      { label: 'Wholesale Inquiries', icon: FileText, path: '/wholesale', roles: ADMIN_ROLES },
       { label: 'Orders', icon: ShoppingCart, path: '/orders' },
-      { label: 'Payments', icon: CreditCard, path: '/payments', roles: ADMIN_ROLES },
       { label: 'Coupons', icon: Ticket, path: '/coupons' },
       { label: 'Flash Sales', icon: Zap, path: '/flash-sales' },
       { label: 'Inventory', icon: Warehouse, path: '/inventory' },
@@ -145,13 +135,13 @@ export function Sidebar() {
           sidebarCollapsed && 'justify-center px-2',
         )}
       >
-        <item.icon className={cn(
-          'h-[18px] w-[18px] shrink-0 transition-all duration-200',
-          isActive ? 'text-primary' : 'text-muted-foreground/50 group-hover:text-foreground/70',
-        )} />
-        {!sidebarCollapsed && (
-          <span className="truncate transition-opacity duration-200">{item.label}</span>
-        )}
+        <item.icon
+          className={cn(
+            'h-[18px] w-[18px] shrink-0 transition-all duration-200',
+            isActive ? 'text-primary' : 'text-muted-foreground/50 group-hover:text-foreground/70',
+          )}
+        />
+        {!sidebarCollapsed && <span className="truncate transition-opacity duration-200">{item.label}</span>}
         {isActive && !sidebarCollapsed && (
           <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary shadow-sm shadow-primary/50 animate-scale-in" />
         )}
@@ -162,7 +152,9 @@ export function Sidebar() {
       return (
         <Tooltip key={item.path} delayDuration={0}>
           <TooltipTrigger asChild>{link}</TooltipTrigger>
-          <TooltipContent side="right" className="font-medium text-xs">{item.label}</TooltipContent>
+          <TooltipContent side="right" className="font-medium text-xs">
+            {item.label}
+          </TooltipContent>
         </Tooltip>
       )
     }
@@ -172,18 +164,24 @@ export function Sidebar() {
   const sidebarContent = (
     <>
       {/* Logo / Brand */}
-      <div className={cn(
-        'flex h-16 items-center border-b border-border/30 px-4',
-        sidebarCollapsed ? 'justify-center' : 'gap-3',
-      )}>
+      <div
+        className={cn(
+          'flex h-16 items-center border-b border-border/30 px-4',
+          sidebarCollapsed ? 'justify-center' : 'gap-3',
+        )}
+      >
         {!sidebarCollapsed ? (
           <div className="flex items-center gap-3 min-w-0">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl gradient-accent text-primary-foreground shadow-lg shadow-primary/25 transition-transform hover:scale-105">
               <Sparkles className="h-4.5 w-4.5" />
             </div>
             <div className="flex flex-col min-w-0">
-              <span className="text-sm font-bold tracking-tight truncate" style={{ fontFamily: 'var(--font-display)' }}>Admin Portal</span>
-              <span className="text-[10px] text-muted-foreground/40 font-medium tracking-wide uppercase">Management</span>
+              <span className="text-sm font-bold tracking-tight truncate" style={{ fontFamily: 'var(--font-display)' }}>
+                Admin Portal
+              </span>
+              <span className="text-[10px] text-muted-foreground/40 font-medium tracking-wide uppercase">
+                Management
+              </span>
             </div>
           </div>
         ) : (
@@ -198,12 +196,8 @@ export function Sidebar() {
         <nav className="flex flex-col gap-0.5 px-3">
           {visibleGroups.map((group, gi) => (
             <div key={group.label}>
-              {!sidebarCollapsed && gi > 0 && (
-                <div className="nav-group-label">{group.label}</div>
-              )}
-              {sidebarCollapsed && gi > 0 && (
-                <div className="mx-3 my-2 h-px bg-border/50" />
-              )}
+              {!sidebarCollapsed && gi > 0 && <div className="nav-group-label">{group.label}</div>}
+              {sidebarCollapsed && gi > 0 && <div className="mx-3 my-2 h-px bg-border/50" />}
               {group.items.map(renderNavItem)}
             </div>
           ))}
@@ -221,18 +215,35 @@ export function Sidebar() {
               </AvatarFallback>
             </Avatar>
             <div className="flex flex-col min-w-0">
-              <span className="text-[13px] font-semibold truncate">{user.firstName} {user.lastName}</span>
-              <span className="text-[10px] text-muted-foreground/50 truncate capitalize">{userRole.replace(/_/g, ' ')}</span>
+              <span className="text-[13px] font-semibold truncate">
+                {user.firstName} {user.lastName}
+              </span>
+              <span className="text-[10px] text-muted-foreground/50 truncate capitalize">
+                {userRole.replace(/_/g, ' ')}
+              </span>
             </div>
           </div>
         )}
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => { toggleSidebar(); setMobileOpen(false) }}
-          className={cn('w-full justify-center text-muted-foreground/50 hover:text-foreground hover:bg-muted/40 rounded-xl h-9', !sidebarCollapsed && 'justify-start gap-2 px-3')}
+          onClick={() => {
+            toggleSidebar()
+            setMobileOpen(false)
+          }}
+          className={cn(
+            'w-full justify-center text-muted-foreground/50 hover:text-foreground hover:bg-muted/40 rounded-xl h-9',
+            !sidebarCollapsed && 'justify-start gap-2 px-3',
+          )}
         >
-          {sidebarCollapsed ? <ChevronRight className="h-4 w-4" /> : <><ChevronLeft className="h-4 w-4" /><span className="text-xs">Collapse</span></>}
+          {sidebarCollapsed ? (
+            <ChevronRight className="h-4 w-4" />
+          ) : (
+            <>
+              <ChevronLeft className="h-4 w-4" />
+              <span className="text-xs">Collapse</span>
+            </>
+          )}
         </Button>
       </div>
     </>
@@ -252,7 +263,10 @@ export function Sidebar() {
 
       {/* Mobile overlay */}
       {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-black/50 md:hidden animate-fade-in" onClick={() => setMobileOpen(false)} />
+        <div
+          className="fixed inset-0 z-40 bg-black/50 md:hidden animate-fade-in"
+          onClick={() => setMobileOpen(false)}
+        />
       )}
 
       {/* Mobile sidebar */}

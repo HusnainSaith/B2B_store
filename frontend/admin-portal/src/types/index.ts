@@ -545,3 +545,90 @@ export interface SearchQuery {
   clickedProductId?: string
   searchedAt: string
 }
+
+// Wholesale
+export type WholesaleInquiryStatus =
+  | 'submitted'
+  | 'under_review'
+  | 'quoted'
+  | 'accepted'
+  | 'declined'
+  | 'cancelled'
+  | 'closed'
+export type WholesaleQuotationStatus = 'draft' | 'sent' | 'accepted' | 'declined' | 'expired' | 'superseded'
+
+export interface WholesaleInquiryItem {
+  id: string
+  variantId: string
+  requestedQuantity: number
+  skuSnapshot: string
+  productNameSnapshot: string
+  targetUnitPrice?: number
+  notes?: string
+  variant?: ProductVariant
+}
+
+export interface WholesaleQuotationItem {
+  id: string
+  variantId: string
+  quantity: number
+  skuSnapshot: string
+  productNameSnapshot: string
+  unitPrice: number
+  lineTotal: number
+}
+
+export interface WholesaleQuotation {
+  id: string
+  reference: string
+  inquiryId: string
+  status: WholesaleQuotationStatus
+  currency: string
+  subtotal: number
+  discountAmount: number
+  shippingAmount: number
+  taxAmount: number
+  totalAmount: number
+  terms?: string
+  internalNotes?: string
+  expiresAt: string
+  respondedAt?: string
+  createdAt: string
+  items: WholesaleQuotationItem[]
+  order?: {
+    id: string
+    orderNumber?: string
+    status: string
+    currency: string
+  }
+}
+
+export interface WholesaleInquiry {
+  id: string
+  reference: string
+  customerId: string
+  customer?: User
+  companyName: string
+  contactName: string
+  contactEmail: string
+  contactPhone?: string
+  deliveryCountry: string
+  deliveryCity?: string
+  notes?: string
+  adminNotes?: string
+  status: WholesaleInquiryStatus
+  createdAt: string
+  items: WholesaleInquiryItem[]
+  quotations?: WholesaleQuotation[]
+}
+
+export interface CreateWholesaleQuotationPayload {
+  currency: string
+  discountAmount?: number
+  shippingAmount?: number
+  taxAmount?: number
+  terms?: string
+  internalNotes?: string
+  expiresAt: string
+  items: Array<{ variantId: string; quantity: number; unitPrice: number }>
+}

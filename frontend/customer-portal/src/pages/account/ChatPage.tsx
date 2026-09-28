@@ -10,7 +10,7 @@ export default function ChatPage() {
 
   if (isLoading) return <PageLoader />
 
-  const items = threads?.data?.items ?? threads?.data ?? []
+  const items = threads ?? []
 
   return (
     <div>

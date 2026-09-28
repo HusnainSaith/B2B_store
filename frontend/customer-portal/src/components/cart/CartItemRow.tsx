@@ -14,7 +14,7 @@ interface CartItemProps {
 export function CartItemRow({ item, onUpdateQuantity, onRemove, loading }: CartItemProps) {
   const product = item.variant?.product
   const primaryImage = product?.images?.find((i) => i.isPrimary) || product?.images?.[0]
-  const attrs = item.variant?.attributes ?? []
+  const attrs = item.variant?.attributeValues ?? item.variant?.attributes ?? []
 
   return (
     <div className="flex gap-4 py-5 first:pt-0 last:pb-0">

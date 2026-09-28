@@ -27,5 +27,6 @@ export class SetStockDto {
   })
   @IsOptional()
   @IsInt()
+  @Min(0)
   lowStockThreshold?: number;
 }

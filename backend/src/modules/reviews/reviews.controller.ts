@@ -116,17 +116,17 @@ export class ReviewsController {
   }
 
   @Patch(':id/reply')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles(RoleEnum.ADMIN, RoleEnum.SUPER_ADMIN)
   @ApiBearerAuth('JWT-auth')
-  @ApiOperation({ summary: 'Reply to a review (seller only)' })
+  @ApiOperation({ summary: 'Reply to a review (Admin only)' })
   @ApiParam({ name: 'id', description: 'Review UUID' })
   @ApiResponse({ status: 200, description: 'Reply added' })
   reply(
     @Param('id') id: string,
     @Body() dto: ReplyReviewDto,
-    @CurrentUser() user: any,
   ) {
-    return this.svc.reply(id, dto.body, user.id);
+    return this.svc.reply(id, dto.body);
   }
 
   @Delete(':id')
