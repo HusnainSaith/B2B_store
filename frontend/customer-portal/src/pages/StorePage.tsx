@@ -54,7 +54,7 @@ export default function StorePage() {
         <Breadcrumb items={[{ label: 'Stores' }, { label: store.name }]} />
 
         {/* Banner */}
-        <div className="relative h-48 md:h-64 bg-gradient-to-r from-[#1E293B] to-[#334155] rounded-xl overflow-hidden mt-4">
+        <div className="relative h-48 md:h-64 bg-gradient-to-r from-[#000000] via-[#14213D] to-[#FCA311] rounded-xl overflow-hidden mt-4">
           {store.bannerUrl && (
             <img src={store.bannerUrl} alt={store.name} className="absolute inset-0 h-full w-full object-cover opacity-40" />
           )}

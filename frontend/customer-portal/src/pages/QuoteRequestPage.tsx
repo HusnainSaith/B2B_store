@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { FileText, PackageCheck } from "lucide-react";
 import { toast } from "sonner";
@@ -51,20 +52,21 @@ export default function QuoteRequestPage() {
 
   const submit = async (event: FormEvent) => {
     event.preventDefault();
-    if (deliveryCountry.trim().length !== 2) {
+    const normalizedCountry = deliveryCountry.trim().toUpperCase();
+    if (!/^[A-Z]{2}$/.test(normalizedCountry)) {
       toast.error("Use a two-letter country code, for example PK or AE.");
       return;
     }
     setSubmitting(true);
     try {
       await wholesaleApi.createInquiry({
-        companyName,
-        contactName,
-        contactEmail,
-        contactPhone: contactPhone || undefined,
-        deliveryCountry: deliveryCountry.toUpperCase(),
-        deliveryCity: deliveryCity || undefined,
-        notes: notes || undefined,
+        companyName: companyName.trim(),
+        contactName: contactName.trim(),
+        contactEmail: contactEmail.trim(),
+        contactPhone: contactPhone.trim() || undefined,
+        deliveryCountry: normalizedCountry,
+        deliveryCity: deliveryCity.trim() || undefined,
+        notes: notes.trim() || undefined,
         items: items.map((item) => ({
           variantId: item.variantId,
           requestedQuantity: item.quantity,
@@ -74,9 +76,14 @@ export default function QuoteRequestPage() {
       clearLocalCart();
       toast.success("Your wholesale inquiry has been sent.");
       navigate(ROUTES.ACCOUNT_WHOLESALE, { replace: true });
-    } catch {
+    } catch (error) {
+      const response = axios.isAxiosError(error) ? error.response?.data : null;
+      const detail = Array.isArray(response?.details)
+        ? response.details[0]
+        : response?.message;
       toast.error(
-        "We could not send your inquiry. Please review the form and try again.",
+        detail ||
+          "We could not send your inquiry. Please review the form and try again.",
       );
     } finally {
       setSubmitting(false);

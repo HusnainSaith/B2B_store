@@ -15,7 +15,7 @@ export const banners: Banner[] = [
     subtitle: 'Shop thousands of deals on electronics, fashion, and home essentials',
     ctaText: 'Shop Now',
     ctaLink: '/products?sale=true',
-    bgGradient: 'from-[#4F46E5] via-[#6366F1] to-[#818CF8]',
+    bgGradient: 'from-[#000000] via-[#14213D] to-[#FCA311]',
     imageUrl: 'https://images.unsplash.com/photo-1607082349566-187342175e2f?w=500&h=500&fit=crop',
   },
   {
@@ -24,7 +24,7 @@ export const banners: Banner[] = [
     subtitle: 'Discover the latest smartphones, laptops, and gadgets',
     ctaText: 'Explore Tech',
     ctaLink: '/categories/electronics',
-    bgGradient: 'from-[#0F172A] via-[#1E293B] to-[#334155]',
+    bgGradient: 'from-[#14213D] via-[#000000] to-[#14213D]',
     imageUrl: 'https://images.unsplash.com/photo-1468495244123-6c6c332eeece?w=500&h=500&fit=crop',
   },
   {
@@ -33,7 +33,7 @@ export const banners: Banner[] = [
     subtitle: 'Premium sportswear and equipment at clearance prices',
     ctaText: 'Get Fit',
     ctaLink: '/categories/sports-outdoors',
-    bgGradient: 'from-[#059669] via-[#10B981] to-[#34D399]',
+    bgGradient: 'from-[#FCA311] via-[#14213D] to-[#000000]',
     imageUrl: 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=500&h=500&fit=crop',
   },
   {
@@ -42,7 +42,7 @@ export const banners: Banner[] = [
     subtitle: 'Skincare, makeup, and fragrance bundles starting at Rs. 2,999',
     ctaText: 'Shop Beauty',
     ctaLink: '/categories/beauty-health',
-    bgGradient: 'from-[#7C3AED] via-[#8B5CF6] to-[#A78BFA]',
+    bgGradient: 'from-[#000000] via-[#14213D] to-[#FCA311]',
     imageUrl: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=500&h=500&fit=crop',
   },
 ]

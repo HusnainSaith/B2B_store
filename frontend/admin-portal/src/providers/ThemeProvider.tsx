@@ -6,7 +6,7 @@ import { useThemeStore } from '@/store/theme.store'
  * Also detects system color-scheme preference on first load.
  */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const { theme, color } = useThemeStore()
+  const theme = useThemeStore((state) => state.theme)
 
   // Apply theme classes whenever theme or color changes
   useEffect(() => {
@@ -20,11 +20,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
     // Accent color
     root.className = root.className.replace(/\btheme-\w+/g, '').trim()
-    if (color !== 'blue') root.classList.add(`theme-${color}`)
 
     // Set color-scheme meta for native form elements
     root.style.colorScheme = theme
-  }, [theme, color])
+  }, [theme])
 
   // Detect system preference on mount (only if user hasn't explicitly set one)
   useEffect(() => {

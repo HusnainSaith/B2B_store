@@ -8,9 +8,9 @@ import { Package, ChevronRight } from 'lucide-react'
 
 const STATUS_COLORS: Record<string, string> = {
   pending: 'bg-yellow-100 text-yellow-800',
-  confirmed: 'bg-blue-100 text-blue-800',
-  processing: 'bg-blue-100 text-blue-800',
-  shipped: 'bg-purple-100 text-purple-800',
+  confirmed: 'bg-primary/20 text-secondary',
+  processing: 'bg-primary/20 text-secondary',
+  shipped: 'bg-secondary/10 text-secondary dark:bg-primary/20 dark:text-primary',
   delivered: 'bg-green-100 text-green-800',
   cancelled: 'bg-red-100 text-red-800',
   returned: 'bg-gray-100 text-gray-800',

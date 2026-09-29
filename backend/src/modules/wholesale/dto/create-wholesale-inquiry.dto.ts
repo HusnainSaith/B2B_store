@@ -1,4 +1,4 @@
-import { Type } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   ArrayMaxSize,
   ArrayMinSize,
@@ -8,7 +8,7 @@ import {
   IsISO31661Alpha2,
   IsNumber,
   IsOptional,
-  IsPhoneNumber,
+  Matches,
   IsString,
   IsUUID,
   Length,
@@ -47,37 +47,48 @@ export class CreateWholesaleInquiryItemDto {
 
 export class CreateWholesaleInquiryDto {
   @ApiProperty()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @Length(2, 200)
   companyName: string;
 
   @ApiProperty()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @Length(2, 200)
   contactName: string;
 
   @ApiProperty()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsEmail()
   @MaxLength(320)
   contactEmail: string;
 
   @ApiPropertyOptional()
   @IsOptional()
-  @IsPhoneNumber()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  @Matches(/^(?=.*\d)[+0-9(][0-9\s().-]{6,24}$/, {
+    message: 'contactPhone must be a valid phone or WhatsApp number',
+  })
   contactPhone?: string;
 
   @ApiProperty({ example: 'PK' })
+  @Transform(({ value }) =>
+    typeof value === 'string' ? value.trim().toUpperCase() : value,
+  )
   @IsISO31661Alpha2()
   deliveryCountry: string;
 
   @ApiPropertyOptional()
   @IsOptional()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @MaxLength(120)
   deliveryCity?: string;
 
   @ApiPropertyOptional()
   @IsOptional()
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
   @MaxLength(3000)
   notes?: string;

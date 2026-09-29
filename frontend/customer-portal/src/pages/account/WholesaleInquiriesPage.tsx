@@ -16,14 +16,14 @@ import { formatPrice } from "@/lib/format";
 import type { WholesaleInquiry, WholesaleQuotation } from "@/types";
 
 const statusClass: Record<string, string> = {
-  submitted: "bg-blue-100 text-blue-700",
+  submitted: "bg-primary/20 text-secondary",
   under_review: "bg-amber-100 text-amber-700",
-  quoted: "bg-violet-100 text-violet-700",
+  quoted: "bg-secondary/10 text-secondary dark:bg-primary/20 dark:text-primary",
   accepted: "bg-emerald-100 text-emerald-700",
   declined: "bg-red-100 text-red-700",
   cancelled: "bg-gray-100 text-gray-700",
   closed: "bg-gray-100 text-gray-700",
-  sent: "bg-violet-100 text-violet-700",
+  sent: "bg-secondary/10 text-secondary dark:bg-primary/20 dark:text-primary",
   expired: "bg-gray-100 text-gray-700",
   superseded: "bg-gray-100 text-gray-700",
 };

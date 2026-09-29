@@ -130,15 +130,15 @@ export function Sidebar() {
         className={cn(
           'group relative flex items-center gap-3 rounded-xl px-3 py-2.5 text-[13px] font-medium transition-all duration-200',
           isActive
-            ? 'nav-active-indicator bg-primary/8 text-primary font-semibold shadow-sm shadow-primary/5'
-            : 'text-muted-foreground/70 hover:bg-muted/50 hover:text-foreground',
+            ? 'nav-active-indicator bg-primary/15 text-primary font-semibold shadow-sm shadow-primary/10'
+            : 'text-sidebar-foreground/75 hover:bg-white/10 hover:text-white',
           sidebarCollapsed && 'justify-center px-2',
         )}
       >
         <item.icon
           className={cn(
             'h-[18px] w-[18px] shrink-0 transition-all duration-200',
-            isActive ? 'text-primary' : 'text-muted-foreground/50 group-hover:text-foreground/70',
+            isActive ? 'text-primary' : 'text-sidebar-foreground/65 group-hover:text-white',
           )}
         />
         {!sidebarCollapsed && <span className="truncate transition-opacity duration-200">{item.label}</span>}
@@ -166,7 +166,7 @@ export function Sidebar() {
       {/* Logo / Brand */}
       <div
         className={cn(
-          'flex h-16 items-center border-b border-border/30 px-4',
+          'flex h-16 items-center border-b border-white/10 px-4 text-sidebar-foreground',
           sidebarCollapsed ? 'justify-center' : 'gap-3',
         )}
       >
@@ -179,7 +179,7 @@ export function Sidebar() {
               <span className="text-sm font-bold tracking-tight truncate" style={{ fontFamily: 'var(--font-display)' }}>
                 Admin Portal
               </span>
-              <span className="text-[10px] text-muted-foreground/40 font-medium tracking-wide uppercase">
+              <span className="text-[10px] text-sidebar-foreground/55 font-medium tracking-wide uppercase">
                 Management
               </span>
             </div>
@@ -197,7 +197,7 @@ export function Sidebar() {
           {visibleGroups.map((group, gi) => (
             <div key={group.label}>
               {!sidebarCollapsed && gi > 0 && <div className="nav-group-label">{group.label}</div>}
-              {sidebarCollapsed && gi > 0 && <div className="mx-3 my-2 h-px bg-border/50" />}
+              {sidebarCollapsed && gi > 0 && <div className="mx-3 my-2 h-px bg-white/15" />}
               {group.items.map(renderNavItem)}
             </div>
           ))}
@@ -205,9 +205,9 @@ export function Sidebar() {
       </ScrollArea>
 
       {/* User Section & Collapse Toggle */}
-      <div className="border-t border-border/30 p-3 space-y-2">
+      <div className="border-t border-white/10 p-3 space-y-2 text-sidebar-foreground">
         {!sidebarCollapsed && user && (
-          <div className="flex items-center gap-2.5 rounded-xl bg-muted/30 px-3 py-2.5 transition-all duration-200 hover:bg-muted/50 border border-border/30">
+          <div className="flex items-center gap-2.5 rounded-xl bg-white/10 px-3 py-2.5 transition-all duration-200 hover:bg-white/15 border border-white/15">
             <Avatar className="h-8 w-8 ring-2 ring-primary/15">
               <AvatarImage src={user.avatarUrl} />
               <AvatarFallback className="text-[10px] font-bold bg-primary/10 text-primary">
@@ -218,7 +218,7 @@ export function Sidebar() {
               <span className="text-[13px] font-semibold truncate">
                 {user.firstName} {user.lastName}
               </span>
-              <span className="text-[10px] text-muted-foreground/50 truncate capitalize">
+              <span className="text-[10px] text-sidebar-foreground/60 truncate capitalize">
                 {userRole.replace(/_/g, ' ')}
               </span>
             </div>
@@ -232,7 +232,7 @@ export function Sidebar() {
             setMobileOpen(false)
           }}
           className={cn(
-            'w-full justify-center text-muted-foreground/50 hover:text-foreground hover:bg-muted/40 rounded-xl h-9',
+            'w-full justify-center text-sidebar-foreground/60 hover:text-white hover:bg-white/10 rounded-xl h-9',
             !sidebarCollapsed && 'justify-start gap-2 px-3',
           )}
         >

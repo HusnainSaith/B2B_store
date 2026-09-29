@@ -69,7 +69,7 @@ export default function ProfilePage() {
               <AvatarImage src={user?.avatarUrl} alt={user?.firstName} />
               <AvatarFallback className="text-xl">{user?.firstName?.charAt(0)}{user?.lastName?.charAt(0)}</AvatarFallback>
             </Avatar>
-            <label className="absolute bottom-0 right-0 h-7 w-7 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-[#E06520] transition-colors">
+            <label className="absolute bottom-0 right-0 h-7 w-7 bg-primary rounded-full flex items-center justify-center cursor-pointer hover:bg-secondary transition-colors">
               <Camera className="h-3.5 w-3.5 text-white" />
               <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" />
             </label>

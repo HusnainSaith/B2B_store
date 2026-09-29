@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form'
 import { formResolver } from '@/lib/form'
 import type { z } from 'zod'
 import { useAuthStore } from '@/store/auth.store'
-import { useThemeStore, type ThemeColor } from '@/store/theme.store'
+import { useThemeStore } from '@/store/theme.store'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -14,7 +14,6 @@ import { PageHeader } from '@/components/shared/page-header'
 import { Badge } from '@/components/ui/badge'
 import { authApi, usersApi } from '@/services/api'
 import { getErrorMessage } from '@/lib/api-error'
-import { cn } from '@/lib/utils'
 import { toast } from 'sonner'
 import { profileSchema, changePasswordSchema } from '@/lib/validation'
 import { FileUploader } from '@/components/shared/file-uploader'
@@ -23,19 +22,11 @@ import { Progress } from '@/components/ui/progress'
 type ProfileForm = z.infer<typeof profileSchema>
 type PasswordForm = z.infer<typeof changePasswordSchema>
 
-const THEME_COLORS: { name: ThemeColor; label: string; swatch: string }[] = [
-  { name: 'blue', label: 'Blue', swatch: 'bg-blue-500' },
-  { name: 'emerald', label: 'Emerald', swatch: 'bg-emerald-500' },
-  { name: 'rose', label: 'Rose', swatch: 'bg-rose-500' },
-  { name: 'orange', label: 'Orange', swatch: 'bg-orange-500' },
-  { name: 'violet', label: 'Violet', swatch: 'bg-violet-500' },
-]
-
 export default function SettingsPage() {
   const user = useAuthStore((s) => s.user)
   const setUser = useAuthStore((s) => s.setUser)
   const logout = useAuthStore((s) => s.logout)
-  const { theme, color, toggleTheme, setColor } = useThemeStore()
+  const { theme, toggleTheme } = useThemeStore()
   const [editingProfile, setEditingProfile] = useState(false)
   const [profileLoading, setProfileLoading] = useState(false)
   const [passwordLoading, setPasswordLoading] = useState(false)
@@ -202,21 +193,11 @@ export default function SettingsPage() {
             </div>
 
             <div>
-              <Label>Theme Color</Label>
-              <p className="text-sm text-muted-foreground mb-3">Choose your accent color</p>
-              <div className="flex gap-3">
-                {THEME_COLORS.map((t) => (
-                  <button
-                    key={t.name}
-                    onClick={() => setColor(t.name)}
-                    className={cn(
-                      'flex flex-col items-center gap-1.5 rounded-lg border-2 p-2 transition-all hover:scale-105',
-                      color === t.name ? 'border-primary shadow-sm' : 'border-transparent',
-                    )}
-                  >
-                    <div className={cn('h-8 w-8 rounded-full', t.swatch)} />
-                    <span className="text-xs">{t.label}</span>
-                  </button>
+              <Label>Brand Palette</Label>
+              <p className="text-sm text-muted-foreground mb-3">Black &amp; Gold Elegance</p>
+              <div className="flex gap-2" aria-label="Brand color palette">
+                {['#FFFFFF', '#E5E5E5', '#FCA311', '#14213D', '#000000'].map((swatch) => (
+                  <div key={swatch} className="h-9 w-9 rounded-full border border-border shadow-sm" style={{ backgroundColor: swatch }} title={swatch} />
                 ))}
               </div>
             </div>

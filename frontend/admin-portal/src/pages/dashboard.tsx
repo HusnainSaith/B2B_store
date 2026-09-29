@@ -23,7 +23,7 @@ import {
   AreaChart,
 } from 'recharts'
 
-const PIE_COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+const PIE_COLORS = ['#FCA311', '#14213D', '#000000', '#E5E5E5', '#FFFFFF']
 
 function getGreeting() {
   const h = new Date().getHours()
@@ -86,10 +86,10 @@ export default function DashboardPage() {
   }, [recentOrdersData])
 
   const stats = [
-    { label: 'Total Users', value: usersData?.total ?? 0, icon: Users, color: 'text-blue-500' },
-    { label: 'Total Products', value: productsData?.total ?? 0, icon: Package, color: 'text-green-500' },
-    { label: 'Total Orders', value: ordersData?.total ?? 0, icon: ShoppingCart, color: 'text-orange-500' },
-    { label: 'Total Reviews', value: reviewsData?.total ?? 0, icon: Star, color: 'text-purple-500' },
+    { label: 'Total Users', value: usersData?.total ?? 0, icon: Users, color: 'text-primary' },
+    { label: 'Total Products', value: productsData?.total ?? 0, icon: Package, color: 'text-secondary' },
+    { label: 'Total Orders', value: ordersData?.total ?? 0, icon: ShoppingCart, color: 'text-primary' },
+    { label: 'Total Reviews', value: reviewsData?.total ?? 0, icon: Star, color: 'text-secondary' },
   ]
 
   return (
@@ -119,7 +119,7 @@ export default function DashboardPage() {
         {stats.map((stat) => (
           <StatCard key={stat.label} label={stat.label} value={stat.value} icon={stat.icon} iconColor={stat.color} isLoading={isLoading} />
         ))}
-        <StatCard label="Revenue" value={`$${totalRevenue.toLocaleString()}`} icon={DollarSign} iconColor="text-emerald-500" isLoading={isLoading} />
+        <StatCard label="Revenue" value={`$${totalRevenue.toLocaleString()}`} icon={DollarSign} iconColor="text-primary" isLoading={isLoading} />
       </div>
 
       {/* Charts Row */}
@@ -130,8 +130,8 @@ export default function DashboardPage() {
               <CardTitle className="text-sm font-semibold" style={{ fontFamily: 'var(--font-display)' }}>Monthly Orders</CardTitle>
               <p className="text-xs text-muted-foreground/50">Order volume over time</p>
             </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-500/10">
-              <ShoppingCart className="h-4 w-4 text-blue-500" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/10">
+              <ShoppingCart className="h-4 w-4 text-primary" />
             </div>
           </CardHeader>
           <CardContent>
@@ -151,7 +151,7 @@ export default function DashboardPage() {
                   }}
                   cursor={{ fill: 'hsl(var(--muted) / 0.25)' }}
                 />
-                <Bar dataKey="orders" fill="hsl(221.2, 83.2%, 53.3%)" radius={[8, 8, 2, 2]} />
+                <Bar dataKey="orders" fill="hsl(var(--primary))" radius={[8, 8, 2, 2]} />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -163,8 +163,8 @@ export default function DashboardPage() {
               <CardTitle className="text-sm font-semibold" style={{ fontFamily: 'var(--font-display)' }}>Revenue Trend</CardTitle>
               <p className="text-xs text-muted-foreground/50">Revenue performance over time</p>
             </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10">
-              <TrendingUp className="h-4 w-4 text-emerald-500" />
+            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-secondary/10">
+              <TrendingUp className="h-4 w-4 text-secondary" />
             </div>
           </CardHeader>
           <CardContent>
@@ -172,8 +172,8 @@ export default function DashboardPage() {
               <AreaChart data={monthlyData}>
                 <defs>
                   <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="hsl(142.1, 76.2%, 36.3%)" stopOpacity={0.3} />
-                    <stop offset="95%" stopColor="hsl(142.1, 76.2%, 36.3%)" stopOpacity={0} />
+                    <stop offset="0%" stopColor="hsl(var(--primary))" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
                   </linearGradient>
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" className="stroke-border/20" vertical={false} />
@@ -190,7 +190,7 @@ export default function DashboardPage() {
                   }}
                   cursor={{ stroke: 'hsl(var(--muted-foreground) / 0.15)' }}
                 />
-                <Area type="monotone" dataKey="revenue" stroke="hsl(142.1, 76.2%, 36.3%)" strokeWidth={2.5} fill="url(#revenueGradient)" />
+                <Area type="monotone" dataKey="revenue" stroke="hsl(var(--primary))" strokeWidth={2.5} fill="url(#revenueGradient)" />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
