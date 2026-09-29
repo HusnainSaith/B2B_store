@@ -254,6 +254,17 @@ body {
   line-height: 1.6;
 }
 
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+textarea:-webkit-autofill {
+  -webkit-text-fill-color: #000000;
+  -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset;
+  box-shadow: 0 0 0 1000px #FFFFFF inset;
+  caret-color: #000000;
+  transition: background-color 9999s ease-out 0s;
+}
+
 /* Display headings use Jakarta Sans */
 h1, h2, h3 {
   font-family: var(--font-display);

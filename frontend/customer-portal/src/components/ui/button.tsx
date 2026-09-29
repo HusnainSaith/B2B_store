@@ -9,9 +9,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-primary text-white rounded-lg hover:bg-primary-hover focus-visible:ring-primary shadow-sm hover:shadow-md hover:shadow-primary/20',
+        default: 'bg-primary text-black rounded-xl hover:bg-primary-hover hover:text-white focus-visible:ring-primary shadow-sm shadow-primary/20 hover:shadow-lg hover:shadow-primary/20 active:translate-y-px',
         secondary: 'bg-secondary text-white rounded-lg hover:bg-secondary-hover focus-visible:ring-secondary shadow-sm',
-        outline: 'border border-border-hover bg-card text-text-primary rounded-lg hover:bg-surface focus-visible:ring-primary',
+        outline: 'border border-border bg-card text-text-primary rounded-xl hover:border-primary hover:bg-primary/5 focus-visible:ring-primary',
         danger: 'bg-danger text-white rounded-lg hover:bg-[#DC2626] focus-visible:ring-danger',
         ghost: 'text-text-primary hover:bg-surface rounded-lg',
         link: 'text-primary underline-offset-4 hover:underline hover:text-primary-hover p-0 h-auto',

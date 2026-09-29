@@ -11,7 +11,6 @@ import { PromoBannerRow } from '@/components/home/PromoBannerRow'
 import { BrandStrip } from '@/components/home/BrandStrip'
 import { AppDownloadBanner } from '@/components/home/AppDownloadBanner'
 import { productsApi, categoriesApi, storesApi } from '@/services/api'
-import { getMockProducts, getMockCategories, getMockStores } from '@/hooks/useMockData'
 import type { Product, Category, Store } from '@/types'
 import { Package } from 'lucide-react'
 
@@ -37,9 +36,9 @@ export default function HomePage() {
         setTrending(all.slice(0, 15))
       })
       .catch(() => {
-        setFeatured(getMockProducts({ limit: 10 }).data)
-        setNewArrivals(getMockProducts({ limit: 10, page: 2 }).data)
-        setTrending(getMockProducts({ limit: 15 }).data)
+        setFeatured([])
+        setNewArrivals([])
+        setTrending([])
       })
       .finally(() => {
         setLoadingFeatured(false)
@@ -59,23 +58,18 @@ export default function HomePage() {
               setCategoryProducts((prev) => ({ ...prev, [cat.id]: res.data }))
             })
             .catch(() => {
-              // fallback
-              setCategoryProducts((prev) => ({ ...prev, [cat.id]: getMockProducts({ categoryId: cat.id, limit: 5 }).data }))
+              setCategoryProducts((prev) => ({ ...prev, [cat.id]: [] }))
             })
         })
       })
       .catch(() => {
-        const mock = getMockCategories().slice(0, 4)
-        setCategories(mock)
-        mock.forEach((cat) => {
-          setCategoryProducts((prev) => ({ ...prev, [cat.id]: getMockProducts({ categoryId: cat.id, limit: 5 }).data }))
-        })
+        setCategories([])
       })
 
     // Vendors
     storesApi.list()
       .then((s) => setVendors(s.filter((v) => v.isActive).slice(0, 4)))
-      .catch(() => setVendors(getMockStores().slice(0, 4)))
+      .catch(() => setVendors([]))
       .finally(() => setLoadingVendors(false))
   }, [])
 

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Flame, ChevronRight } from 'lucide-react'
 import { flashSalesApi } from '@/services/api'
-import { getMockActiveFlashSale, getMockFlashSaleItems } from '@/hooks/useMockData'
 import type { FlashSale, FlashSaleItem } from '@/types'
 import { CountdownTimer } from '@/components/common/CountdownTimer'
 import { ProductCard } from '@/components/product/ProductCard'
@@ -17,16 +16,11 @@ export function FlashSaleSection() {
       const active = sales.find((s) => s.isActive && new Date(s.endsAt) > new Date())
       if (active) {
         setFlashSale(active)
-        flashSalesApi.getItems(active.id).then(setItems).catch(() => {
-          setItems(getMockFlashSaleItems(active.id))
-        })
+        flashSalesApi.getItems(active.id).then(setItems).catch(() => setItems([]))
       }
     }).catch(() => {
-      const mock = getMockActiveFlashSale()
-      if (mock) {
-        setFlashSale(mock)
-        setItems(mock.items ?? [])
-      }
+      setFlashSale(null)
+      setItems([])
     })
   }, [])
 

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import type { FormEvent } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { FileText, PackageCheck } from "lucide-react";
+import { ArrowRight, FileText, PackageCheck, ShieldCheck } from "lucide-react";
 import { toast } from "sonner";
 import { Breadcrumb } from "@/components/common/Breadcrumb";
 import { LoadingSpinner } from "@/components/common/LoadingSpinner";
@@ -100,33 +100,34 @@ export default function QuoteRequestPage() {
   return (
     <>
       <SEOHead title="Request a Wholesale Quote" />
-      <div className="container-main py-8">
+      <div className="container-main py-8 sm:py-10">
         <Breadcrumb
           items={[
             { label: "Inquiry Basket", to: ROUTES.CART },
             { label: "Request Quote" },
           ]}
         />
-        <div className="mx-auto mt-6 grid max-w-5xl gap-6 lg:grid-cols-[1fr_340px]">
+        <div className="mx-auto mt-6 grid max-w-6xl gap-7 lg:grid-cols-[minmax(0,1fr)_380px] lg:items-start">
           <form
             onSubmit={submit}
-            className="space-y-6 rounded-2xl border border-border bg-card p-6 sm:p-8"
+            className="relative space-y-7 overflow-hidden rounded-3xl border border-border bg-card p-6 shadow-card before:absolute before:inset-x-0 before:top-0 before:h-1 before:bg-gradient-to-r before:from-primary before:via-primary before:to-secondary sm:p-8"
           >
             <div>
-              <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                <FileText />
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-secondary text-primary shadow-lg shadow-secondary/15">
+                <FileText className="h-5 w-5" />
               </div>
-              <h1 className="text-2xl font-bold text-text-primary">
+              <p className="mb-1 text-xs font-bold uppercase tracking-[0.16em] text-primary">Wholesale inquiry</p>
+              <h1 className="text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
                 Request wholesale pricing
               </h1>
-              <p className="mt-2 text-sm text-text-secondary">
+              <p className="mt-2 max-w-2xl text-sm leading-6 text-text-secondary">
                 Tell us where the goods are needed. Our team will review
                 availability and send a formal quotation—no payment is collected
                 here.
               </p>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2">
+            <div className="grid gap-x-5 gap-y-6 border-t border-border pt-6 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="company">Company name</Label>
                 <Input
@@ -204,28 +205,33 @@ export default function QuoteRequestPage() {
             </div>
             <Button
               type="submit"
-              className="h-12 w-full font-bold"
+              className="h-13 w-full gap-2 font-bold"
               disabled={submitting || !items.length}
             >
               {submitting ? "Sending inquiry…" : "Send wholesale inquiry"}
+              {!submitting && <ArrowRight className="h-4 w-4" />}
             </Button>
+            <div className="flex items-center justify-center gap-2 text-center text-xs text-text-muted">
+              <ShieldCheck className="h-4 w-4 shrink-0 text-primary" />
+              No payment is collected when submitting this request.
+            </div>
           </form>
 
-          <aside className="h-fit rounded-2xl border border-border bg-card p-6 lg:sticky lg:top-24">
-            <div className="flex items-center gap-3">
-              <PackageCheck className="text-primary" />
+          <aside className="h-fit overflow-hidden rounded-3xl border border-border bg-card shadow-card lg:sticky lg:top-24">
+            <div className="flex items-center gap-3 bg-secondary px-6 py-5 text-white">
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary text-black"><PackageCheck className="h-5 w-5" /></div>
               <div>
-                <p className="font-bold text-text-primary">
+                <p className="font-bold text-white">
                   Requested products
                 </p>
-                <p className="text-xs text-text-muted">
+                <p className="text-xs text-white/60">
                   {totalPieces} total pieces
                 </p>
               </div>
             </div>
-            <div className="mt-5 divide-y divide-border">
+            <div className="divide-y divide-border px-6">
               {items.map((item) => (
-                <div key={item.id} className="py-4 text-sm">
+                <div key={item.id} className="py-5 text-sm">
                   <p className="font-medium text-text-primary">
                     {item.variant?.product?.name ??
                       item.variant?.sku ??
@@ -238,7 +244,7 @@ export default function QuoteRequestPage() {
                 </div>
               ))}
             </div>
-            <p className="mt-4 rounded-lg bg-surface p-3 text-xs text-text-secondary">
+            <p className="mx-6 mb-6 mt-2 rounded-xl border border-primary/20 bg-primary/10 p-4 text-xs leading-5 text-text-secondary">
               Final unit prices, delivery charges, taxes, and validity will
               appear in the admin-issued quotation.
             </p>

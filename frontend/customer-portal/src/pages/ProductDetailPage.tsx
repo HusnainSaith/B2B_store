@@ -17,11 +17,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { productsApi, reviewsApi, cartApi } from "@/services/api";
 import {
-  getMockProductBySlug,
-  getMockProducts,
   getMockReviewsByProduct,
   getMockRatingSummary,
 } from "@/hooks/useMockData";
+import { isUuid } from "@/lib/validation";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { useAuthStore } from "@/store/auth.store";
 import { useCartStore } from "@/store/cart.store";
@@ -103,37 +102,17 @@ export default function ProductDetailPage() {
               );
             })
             .catch(() => {
-              setRelatedProducts(
-                getMockProducts({ categoryId: p.categoryId, limit: 6 })
-                  .data.filter((x) => x.id !== p.id)
-                  .slice(0, 5),
-              );
+              setRelatedProducts([]);
             });
         }
 
         setLoading(false);
       })
       .catch(() => {
-        // Fallback to mock data
-        const mock = getMockProductBySlug(slug);
-        if (mock) {
-          setProduct(mock);
-          setVariants(mock.variants ?? []);
-          setImages(mock.images ?? []);
-          if (mock.variants?.length)
-            setSelectedVariant(
-              mock.variants.find((x) => x.isActive) ?? mock.variants[0],
-            );
-          setReviews(getMockReviewsByProduct(mock.id));
-          setRatingSummary(getMockRatingSummary(mock.id));
-          if (mock.categoryId) {
-            setRelatedProducts(
-              getMockProducts({ categoryId: mock.categoryId, limit: 6 })
-                .data.filter((x) => x.id !== mock.id)
-                .slice(0, 5),
-            );
-          }
-        }
+        setProduct(null);
+        setVariants([]);
+        setImages([]);
+        setSelectedVariant(null);
         setLoading(false);
       });
   }, [slug]);
@@ -142,6 +121,10 @@ export default function ProductDetailPage() {
     if (!selectedVariant || !isAuthenticated) {
       if (!isAuthenticated)
         toast.error("Please log in to add products to your inquiry");
+      return;
+    }
+    if (!isUuid(selectedVariant.id)) {
+      toast.error("This product is no longer available. Please refresh the catalog.");
       return;
     }
     setAddingToCart(true);

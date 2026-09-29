@@ -6,7 +6,6 @@ import { ProductGrid } from '@/components/product/ProductGrid'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Badge } from '@/components/ui/badge'
 import { storesApi, productsApi } from '@/services/api'
-import { getMockStoreBySlug, getMockProducts } from '@/hooks/useMockData'
 import type { Store, Product } from '@/types'
 import { ShieldCheck, Package, Star } from 'lucide-react'
 
@@ -24,11 +23,8 @@ export default function StorePage() {
       setProducts(res.data)
       setLoading(false)
     }).catch(() => {
-      const mock = getMockStoreBySlug(slug)
-      if (mock) {
-        setStore(mock)
-        setProducts(getMockProducts({ storeId: mock.id, limit: 20 }).data)
-      }
+      setStore(null)
+      setProducts([])
       setLoading(false)
     })
   }, [slug])

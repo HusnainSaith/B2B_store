@@ -1,4 +1,5 @@
 import api from "@/config/api";
+import { isUuid } from "@/lib/validation";
 import type {
   AuthResponse,
   LoginCredentials,
@@ -243,8 +244,12 @@ export const cartApi = {
     api
       .get<CartItem[]>("/cart/mine/items")
       .then((r) => toArray<CartItem>(r.data)),
-  addItem: (data: { variantId: string; quantity: number }) =>
-    api.post<CartItem>("/cart/mine/items", data).then((r) => r.data),
+  addItem: (data: { variantId: string; quantity: number }) => {
+    if (!isUuid(data.variantId)) {
+      return Promise.reject(new Error("Cannot add a non-persisted product variant to the cart"));
+    }
+    return api.post<CartItem>("/cart/mine/items", data).then((r) => r.data);
+  },
   updateItem: (itemId: string, data: { quantity: number }) =>
     api.put<CartItem>(`/cart/items/${itemId}`, data).then((r) => r.data),
   removeItem: (itemId: string) => api.delete(`/cart/items/${itemId}`),

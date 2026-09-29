@@ -68,12 +68,12 @@ export function Header() {
   }, []);
 
   return (
-    <header className="bg-card/80 backdrop-blur-xl border-b border-border sticky top-0 z-40 shadow-header">
+    <header className="bg-card/95 backdrop-blur-xl border-b border-border/80 sticky top-0 z-40 shadow-header">
       {/* Desktop Header */}
-      <div className="container-main hidden md:flex items-center h-[76px] gap-10">
+      <div className="container-main hidden md:flex items-center h-[72px] gap-8">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-          <div className="bg-gradient-to-br from-primary to-secondary text-white font-bold text-lg w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-primary/20 group-hover:shadow-primary/30 transition-shadow duration-300">
+          <div className="bg-gradient-to-br from-primary via-primary to-secondary text-white font-bold text-lg w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-primary/25 ring-1 ring-primary/20 group-hover:-translate-y-0.5 transition-all duration-300">
             Z
           </div>
           <span className="text-xl font-bold text-text-primary tracking-tight">
@@ -91,7 +91,7 @@ export function Header() {
               onChange={(e) => handleSearchInput(e.target.value)}
               onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
               placeholder="Search products, brands, categories..."
-              className="w-full h-12 pl-11 pr-5 rounded-full bg-surface border border-border/50 text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/15 focus:bg-card transition-all duration-300"
+              className="w-full h-11 pl-11 pr-5 rounded-xl bg-surface border border-border text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary focus:ring-4 focus:ring-primary/10 focus:bg-card transition-all duration-300"
               aria-label="Search"
             />
           </form>

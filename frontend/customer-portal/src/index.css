@@ -82,7 +82,7 @@
   --theme-bg: #FFFFFF;
   --theme-card: #FFFFFF;
   --theme-card-hover: #FFFFFF;
-  --theme-surface: #FFFFFF;
+  --theme-surface: #F8F9FB;
   --theme-surface-hover: #E5E5E5;
   --theme-input: #FFFFFF;
   --theme-input-border: #E5E5E5;
@@ -99,9 +99,9 @@
   --theme-footer-text: #E5E5E5;
   --theme-footer-divider: #14213D;
 
-  --theme-shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.06);
-  --theme-shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
-  --theme-shadow-header: 0 1px 0 rgba(0, 0, 0, 0.06);
+  --theme-shadow-card: 0 1px 2px rgba(20, 33, 61, 0.04), 0 10px 30px rgba(20, 33, 61, 0.04);
+  --theme-shadow-card-hover: 0 18px 48px rgba(20, 33, 61, 0.10), 0 2px 8px rgba(20, 33, 61, 0.05);
+  --theme-shadow-header: 0 1px 0 rgba(20, 33, 61, 0.08), 0 8px 30px rgba(20, 33, 61, 0.03);
   --theme-shadow-dropdown: 0 4px 24px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
   --theme-shadow-modal: 0 24px 48px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.06);
 
@@ -126,7 +126,7 @@
   --theme-bg: #FFFFFF;
   --theme-card: #FFFFFF;
   --theme-card-hover: #FFFFFF;
-  --theme-surface: #FFFFFF;
+  --theme-surface: #F8F9FB;
   --theme-surface-hover: #E5E5E5;
   --theme-input: #FFFFFF;
   --theme-input-border: #E5E5E5;
@@ -234,6 +234,17 @@
     min-height: 100vh;
     letter-spacing: -0.011em;
     transition: background-color 0.3s ease;
+  }
+
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  textarea:-webkit-autofill {
+    -webkit-text-fill-color: #000000;
+    -webkit-box-shadow: 0 0 0 1000px #FFFFFF inset;
+    box-shadow: 0 0 0 1000px #FFFFFF inset;
+    caret-color: #000000;
+    transition: background-color 9999s ease-out 0s;
   }
 }
 

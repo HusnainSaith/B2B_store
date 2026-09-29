@@ -6,6 +6,7 @@ import { useAuthStore } from "@/store/auth.store";
 import { useCartStore } from "@/store/cart.store";
 import { cartApi } from "@/services/api";
 import { toast } from "sonner";
+import { isUuid } from "@/lib/validation";
 
 interface ProductGridProps {
   products: Product[];
@@ -48,7 +49,7 @@ export function ProductGrid({
       return;
     }
     const variantId = product.variants?.[0]?.id;
-    if (!variantId) {
+    if (!variantId || !isUuid(variantId)) {
       toast.error("No variant available");
       return;
     }

@@ -9,7 +9,6 @@ import { ActiveFilters } from '@/components/product/ActiveFilters'
 import { EmptyState } from '@/components/common/EmptyState'
 import { Button } from '@/components/ui/button'
 import { productsApi } from '@/services/api'
-import { getMockProducts } from '@/hooks/useMockData'
 import type { Product, PaginatedResponse } from '@/types'
 import { DEFAULT_PAGE_SIZE } from '@/constants/config'
 import { LayoutGrid, List, SlidersHorizontal } from 'lucide-react'
@@ -39,8 +38,7 @@ export default function ProductListingPage() {
         setTotal(res.total)
       })
       .catch(() => {
-        const mock = getMockProducts({ page, limit: DEFAULT_PAGE_SIZE, search, categoryId })
-        if (!cancelled) { setProducts(mock.data); setTotal(mock.total) }
+        if (!cancelled) { setProducts([]); setTotal(0) }
       })
       .finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
